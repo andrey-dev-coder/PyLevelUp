@@ -36,6 +36,7 @@ class User(Base, TimestampMixin):
 
     total_correct: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     total_answered: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    total_starts: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     ranking_score: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     last_ranking_position: Mapped[int | None] = mapped_column(Integer, nullable=True)

@@ -4,6 +4,7 @@ from pylevelup.keyboards.inline import (
     build_finish_keyboard,
     build_main_menu,
     build_mode_keyboard,
+    build_profile_keyboard,
     build_purpose_keyboard,
     build_study_card_keyboard,
 )
@@ -14,6 +15,7 @@ __all__ = [
     "build_finish_keyboard",
     "build_main_menu",
     "build_mode_keyboard",
+    "build_profile_keyboard",
     "build_purpose_keyboard",
     "build_study_card_keyboard",
 ]

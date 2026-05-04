@@ -51,6 +51,24 @@ class UserRepository:
         await self.session.flush()
         return user
 
+    async def register_visit(self, user_id: int, today: date) -> User | None:
+        user = await self.get_by_id(user_id)
+        if user is None:
+            return None
+        user.total_starts = (user.total_starts or 0) + 1
+        if user.last_active_date == today:
+            await self.session.flush()
+            return user
+        if user.last_active_date == today - timedelta(days=1):
+            user.current_streak = (user.current_streak or 0) + 1
+        else:
+            user.current_streak = 1
+        if user.current_streak > (user.max_streak or 0):
+            user.max_streak = user.current_streak
+        user.last_active_date = today
+        await self.session.flush()
+        return user
+
     async def update_streak_after_session(self, user_id: int, session_date: date) -> None:
         user = await self.get_by_id(user_id)
         if user is None:

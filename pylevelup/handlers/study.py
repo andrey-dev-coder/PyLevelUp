@@ -1,8 +1,9 @@
 from html import escape
 
 from aiogram import F, Router
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 
 from pylevelup.categories import (
     ALL_CATEGORY_KEY,
@@ -21,9 +22,16 @@ from pylevelup.utils.text import clean_text
 router = Router(name="pylevelup_study")
 
 
+MISTAKES_KEY = "__mistakes__"
+
+
 def _format_card(card: StudyCard, category_key: str) -> str:
     parts: list[str] = []
-    parts.append(f"<i>Изучение - {escape(display_name(category_key))}, карточка #{card.position}</i>")
+    if category_key == MISTAKES_KEY:
+        header = f"<i>Работа над ошибками, карточка #{card.position} из {card.total}</i>"
+    else:
+        header = f"<i>Изучение - {escape(display_name(category_key))}, карточка #{card.position}</i>"
+    parts.append(header)
     parts.append("")
     parts.append(f"<b>{escape(clean_text(card.text))}</b>")
     parts.append("")
@@ -74,6 +82,52 @@ async def handle_purpose_study(
     await state.clear()
     await state.update_data(study_category=category_key)
     await callback.message.answer(_format_card(card, category_key), reply_markup=build_study_card_keyboard())
+
+
+async def _start_mistakes_session(
+    target: Message,
+    telegram_user,
+    study_service: StudyService,
+    state: FSMContext,
+) -> None:
+    card = await study_service.start_mistakes(telegram_user)
+    if card is None:
+        await target.answer(
+            "Ошибок пока нет - либо ты ещё не проходил тренажёр, либо отвечаешь идеально. "
+            "Запусти 'Начать тест' и потренируйся.",
+            reply_markup=build_main_menu(),
+        )
+        return
+    await state.clear()
+    await state.update_data(study_category=MISTAKES_KEY)
+    await target.answer(
+        _format_card(card, MISTAKES_KEY),
+        reply_markup=build_study_card_keyboard(),
+    )
+
+
+@router.callback_query(F.data == "mistakes:start")
+async def handle_mistakes_start(
+    callback: CallbackQuery,
+    study_service: StudyService,
+    state: FSMContext,
+) -> None:
+    if callback.message is None or callback.from_user is None:
+        await callback.answer()
+        return
+    await callback.answer()
+    await _start_mistakes_session(callback.message, callback.from_user, study_service, state)
+
+
+@router.message(Command("mistakes"))
+async def handle_mistakes_command(
+    message: Message,
+    study_service: StudyService,
+    state: FSMContext,
+) -> None:
+    if message.from_user is None:
+        return
+    await _start_mistakes_session(message, message.from_user, study_service, state)
 
 
 @router.callback_query(F.data == "study:next")

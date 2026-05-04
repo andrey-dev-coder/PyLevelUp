@@ -1,9 +1,21 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import date
 
-from sqlalchemy import func, select
+from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from pylevelup.db.models import User
+from pylevelup.db.models import Attempt, Question, User
+
+
+@dataclass
+class TopicStats:
+    topic: str
+    answered: int
+    correct: int
+
+    @property
+    def accuracy_percent(self) -> float:
+        return round(self.correct / self.answered * 100.0, 1) if self.answered else 0.0
 
 
 @dataclass
@@ -16,6 +28,11 @@ class UserStats:
     ranking_position: int | None
     ranking_score: float
     total_users: int
+    total_starts: int
+    last_active_date: date | None
+    member_since: date | None
+    mistakes_count: int
+    topics: list[TopicStats] = field(default_factory=list)
 
 
 class StatsService:
@@ -48,6 +65,36 @@ class StatsService:
             return None
 
         accuracy = (row.total_correct / row.total_answered * 100.0) if row.total_answered else 0.0
+
+        user_obj = await self.session.get(User, user_id)
+
+        topic_stmt = (
+            select(
+                Question.topic.label("topic"),
+                func.count(Attempt.id).label("answered"),
+                func.sum(case((Attempt.is_correct.is_(True), 1), else_=0)).label("correct"),
+            )
+            .join(Question, Question.id == Attempt.question_id)
+            .where(Attempt.user_id == user_id)
+            .group_by(Question.topic)
+        )
+        topic_rows = (await self.session.execute(topic_stmt)).all()
+        topics = [
+            TopicStats(
+                topic=str(r.topic),
+                answered=int(r.answered or 0),
+                correct=int(r.correct or 0),
+            )
+            for r in topic_rows
+        ]
+        topics.sort(key=lambda t: (-t.answered, t.topic))
+
+        mistakes_stmt = (
+            select(func.count(func.distinct(Attempt.question_id)))
+            .where(Attempt.user_id == user_id, Attempt.is_correct.is_(False))
+        )
+        mistakes_count = int((await self.session.execute(mistakes_stmt)).scalar_one() or 0)
+
         return UserStats(
             current_streak=row.current_streak,
             max_streak=row.max_streak,
@@ -57,4 +104,9 @@ class StatsService:
             ranking_position=int(row.position),
             ranking_score=round(float(row.ranking_score), 2),
             total_users=total_users,
+            total_starts=int(user_obj.total_starts) if user_obj else 0,
+            last_active_date=user_obj.last_active_date if user_obj else None,
+            member_since=user_obj.created_at.date() if user_obj and user_obj.created_at else None,
+            mistakes_count=mistakes_count,
+            topics=topics,
         )

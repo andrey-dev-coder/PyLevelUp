@@ -1,3 +1,5 @@
+from datetime import UTC, datetime
+
 from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
@@ -16,12 +18,13 @@ async def handle_start(message: Message, session_factory: async_sessionmaker) ->
         return
     async with session_factory() as db:
         repo = UserRepository(db)
-        await repo.upsert_from_telegram(
+        db_user = await repo.upsert_from_telegram(
             telegram_id=user.id,
             username=user.username,
             first_name=user.first_name,
             language_code=user.language_code,
         )
+        await repo.register_visit(db_user.id, datetime.now(UTC).date())
         await db.commit()
 
     text = (

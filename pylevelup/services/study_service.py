@@ -6,7 +6,7 @@ import orjson
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from pylevelup.repositories import QuestionRepository, UserRepository
+from pylevelup.repositories import AttemptRepository, QuestionRepository, UserRepository
 
 
 @dataclass
@@ -115,6 +115,34 @@ class StudyService:
             position=1,
             total=len(state.queue),
         )
+
+    async def start_mistakes(self, telegram_user) -> StudyCard | None:
+        async with self.session_factory() as db:
+            users = UserRepository(db)
+            user = await users.upsert_from_telegram(
+                telegram_id=telegram_user.id,
+                username=telegram_user.username,
+                first_name=telegram_user.first_name,
+                language_code=telegram_user.language_code,
+            )
+            user_id = user.id
+            question_ids = await AttemptRepository(db).list_mistake_question_ids(
+                user_id=user_id,
+                limit=self.BATCH_SIZE,
+            )
+            await db.commit()
+
+        if not question_ids:
+            return None
+
+        state = StudyState(
+            user_id=user_id,
+            topic_filter=["__mistakes__"],
+            queue=question_ids,
+            current_index=0,
+        )
+        await self._save(state)
+        return await self._build_card(state)
 
     async def next_card(self, user_id: int) -> StudyCard | None:
         state = await self._load(user_id)
