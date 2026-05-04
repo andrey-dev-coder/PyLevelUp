@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     daily_reminder_hour_utc: int = Field(default=9, alias="DAILY_REMINDER_HOUR_UTC")
     ranking_refresh_minutes: int = Field(default=15, alias="RANKING_REFRESH_MINUTES")
 
+    owner_telegram_id: int = Field(default=896090535, alias="OWNER_TELEGRAM_ID")
+    default_access_code: str = Field(default="pylevelup_2026", alias="DEFAULT_ACCESS_CODE")
+
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
 

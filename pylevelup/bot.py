@@ -4,13 +4,14 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage
-from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
+from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats, BotCommandScopeChat
 from redis.asyncio import Redis
 
 from pylevelup.config import Settings, get_settings
 from pylevelup.db.session import create_async_engine_instance, create_async_sessionmaker
 from pylevelup.handlers import build_root_router
 from pylevelup.logger import configure_logging, get_logger
+from pylevelup.middlewares import AccessControlMiddleware
 from pylevelup.services.session_cache import RedisSessionCache
 from pylevelup.services.spaced_repetition import SpacedRepetitionEngine
 from pylevelup.services.study_service import StudyService
@@ -27,13 +28,28 @@ BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand(command="info", description="О проекте и контакты"),
 )
 
+OWNER_COMMANDS: tuple[BotCommand, ...] = BOT_COMMANDS + (
+    BotCommand(command="setcode", description="Сменить кодовое слово"),
+    BotCommand(command="getcode", description="Показать текущее кодовое слово"),
+    BotCommand(command="ban", description="Забанить пользователя"),
+    BotCommand(command="unban", description="Разбанить пользователя"),
+    BotCommand(command="users", description="Список пользователей"),
+)
 
-async def _on_startup(bot: Bot) -> None:
+
+async def _on_startup(bot: Bot, settings_obj: Settings) -> None:
     me = await bot.get_me()
     await bot.set_my_commands(
         commands=list(BOT_COMMANDS),
         scope=BotCommandScopeAllPrivateChats(),
     )
+    try:
+        await bot.set_my_commands(
+            commands=list(OWNER_COMMANDS),
+            scope=BotCommandScopeChat(chat_id=settings_obj.owner_telegram_id),
+        )
+    except Exception as exc:
+        logger.warning("owner_commands_set_failed", error=str(exc))
     logger.info("bot_started", username=me.username, id=me.id)
 
 
@@ -75,8 +91,16 @@ async def _run(settings: Settings) -> None:
     dp["study_service"] = study_service
     dp["settings"] = settings
 
+    access_mw = AccessControlMiddleware()
+    dp.message.outer_middleware(access_mw)
+    dp.callback_query.outer_middleware(access_mw)
+
     dp.include_router(build_root_router())
-    dp.startup.register(_on_startup)
+
+    async def _startup_wrapper(bot: Bot) -> None:
+        await _on_startup(bot, settings)
+
+    dp.startup.register(_startup_wrapper)
     dp.shutdown.register(_on_shutdown)
 
     try:

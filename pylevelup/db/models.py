@@ -42,6 +42,10 @@ class User(Base, TimestampMixin):
 
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     reminders_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    is_authorized: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    is_banned: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    authorized_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    banned_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     progress: Mapped[list["UserProgress"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="raise"
@@ -121,6 +125,13 @@ class Attempt(Base):
 
     user: Mapped[User] = relationship(back_populates="attempts", lazy="raise")
     question: Mapped[Question] = relationship(lazy="raise")
+
+
+class BotSetting(Base, TimestampMixin):
+    __tablename__ = "bot_settings"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[str] = mapped_column(Text, nullable=False)
 
 
 class DailySession(Base, TimestampMixin):

@@ -1,6 +1,6 @@
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, timedelta
 
-from sqlalchemy import select, update
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pylevelup.db.models import User
@@ -88,3 +88,31 @@ class UserRepository:
     async def set_reminders_enabled(self, user_id: int, enabled: bool) -> None:
         stmt = update(User).where(User.id == user_id).values(reminders_enabled=enabled)
         await self.session.execute(stmt)
+
+    async def mark_authorized(self, telegram_id: int) -> None:
+        stmt = (
+            update(User)
+            .where(User.telegram_id == telegram_id)
+            .values(is_authorized=True, is_banned=False, authorized_at=datetime.now(UTC))
+        )
+        await self.session.execute(stmt)
+
+    async def set_banned(self, telegram_id: int, banned: bool) -> User | None:
+        user = await self.get_by_telegram_id(telegram_id)
+        if user is None:
+            return None
+        user.is_banned = banned
+        user.banned_at = datetime.now(UTC) if banned else None
+        if banned:
+            user.is_authorized = False
+        await self.session.flush()
+        return user
+
+    async def find_by_username(self, username: str) -> User | None:
+        normalized = username.lstrip("@")
+        stmt = select(User).where(func.lower(User.username) == normalized.lower())
+        return (await self.session.execute(stmt)).scalar_one_or_none()
+
+    async def list_for_admin(self, limit: int = 100) -> list[User]:
+        stmt = select(User).order_by(User.created_at.desc()).limit(limit)
+        return list((await self.session.execute(stmt)).scalars().all())
