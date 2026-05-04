@@ -4,7 +4,12 @@
     "topic": "python",
     "difficulty": 1,
     "text": "Какие из перечисленных типов в Python являются неизменяемыми (immutable)?",
-    "options": ["list, dict, set", "int, float, str, tuple, frozenset", "bytes, bytearray", "list, tuple, set"],
+    "options": [
+      "list, dict, set",
+      "int, float, str, tuple, frozenset",
+      "bytes, bytearray",
+      "list, tuple, set"
+    ],
     "correct_index": 1,
     "explanation": "К immutable относятся числа (int, float, complex), bool, tuple, str, bytes и frozenset. list, dict, set и bytearray - mutable."
   },
@@ -13,7 +18,12 @@
     "topic": "python",
     "difficulty": 1,
     "text": "Что выведет 'a' is 'a' для коротких строк в CPython?",
-    "options": ["False всегда", "True из-за интернирования коротких строк", "TypeError", "Не определено"],
+    "options": [
+      "False всегда",
+      "True из-за интернирования коротких строк",
+      "TypeError",
+      "Не определено"
+    ],
     "correct_index": 1,
     "explanation": "CPython интернирует короткие неизменяемые строки, поэтому литералы 'a' и 'a' указывают на один и тот же объект, и is возвращает True. Полагаться на это в проде нельзя."
   },
@@ -36,7 +46,12 @@
     "topic": "python",
     "difficulty": 2,
     "text": "Какая средняя сложность поиска ключа в dict в CPython?",
-    "options": ["O(log n)", "O(n)", "O(1) амортизированно", "O(n log n)"],
+    "options": [
+      "O(log n)",
+      "O(n)",
+      "O(1) амортизированно",
+      "O(n log n)"
+    ],
     "correct_index": 2,
     "explanation": "dict реализован через хеш-таблицу. Средняя сложность поиска по ключу O(1). В худшем случае при коллизиях O(n), но при нормальных хешах это редко."
   },
@@ -129,7 +144,12 @@
     "topic": "python",
     "difficulty": 2,
     "text": "Что выведет код: a = [1,2,3]; b = a; b.append(4); print(a)?",
-    "options": ["[1,2,3]", "[1,2,3,4]", "Ошибка", "[4,1,2,3]"],
+    "options": [
+      "[1,2,3]",
+      "[1,2,3,4]",
+      "Ошибка",
+      "[4,1,2,3]"
+    ],
     "correct_index": 1,
     "explanation": "b = a не копирует список, а создаёт ещё одну ссылку на тот же объект. append меняет объект, который виден через обе переменные."
   },
@@ -194,7 +214,12 @@
     "topic": "python",
     "difficulty": 2,
     "text": "Что вернёт type(lambda x: x)?",
-    "options": ["function", "lambda", "callable", "method"],
+    "options": [
+      "function",
+      "lambda",
+      "callable",
+      "method"
+    ],
     "correct_index": 0,
     "explanation": "lambda - это обычный объект function, разница только в синтаксисе и наличии единственного выражения."
   },
@@ -385,7 +410,12 @@
     "topic": "python",
     "difficulty": 2,
     "text": "Что выведет: print(0.1 + 0.2 == 0.3)?",
-    "options": ["True", "False, из-за бинарного представления float", "SyntaxError", "0.3"],
+    "options": [
+      "True",
+      "False, из-за бинарного представления float",
+      "SyntaxError",
+      "0.3"
+    ],
     "correct_index": 1,
     "explanation": "0.1 и 0.2 в IEEE 754 - бесконечные дроби. Сумма даёт ~0.30000000000000004. Для денежных вычислений используйте decimal.Decimal."
   },
@@ -394,7 +424,12 @@
     "topic": "algorithms",
     "difficulty": 1,
     "text": "Какова временная сложность поиска в отсортированном массиве бинарным поиском?",
-    "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
     "correct_index": 1,
     "explanation": "Бинарный поиск делит диапазон пополам на каждой итерации, поэтому log2(n) шагов в худшем случае."
   },
@@ -403,7 +438,12 @@
     "topic": "algorithms",
     "difficulty": 1,
     "text": "Какая средняя сложность quicksort?",
-    "options": ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)",
+      "O(log n)"
+    ],
     "correct_index": 1,
     "explanation": "В среднем quicksort работает за O(n log n). В худшем случае (плохой выбор pivot) деградирует до O(n^2). На практике рандомизированный pivot решает проблему."
   },
@@ -426,7 +466,12 @@
     "topic": "algorithms",
     "difficulty": 2,
     "text": "Какая структура данных лучше всего для проверки 'есть ли элемент в коллекции' за O(1)?",
-    "options": ["list", "tuple", "set / dict", "linked list"],
+    "options": [
+      "list",
+      "tuple",
+      "set / dict",
+      "linked list"
+    ],
     "correct_index": 2,
     "explanation": "set и dict в Python используют хеш-таблицу. Проверка x in s для set - O(1) в среднем. Для list - O(n)."
   },
@@ -463,7 +508,12 @@
     "topic": "algorithms",
     "difficulty": 2,
     "text": "Какой алгоритм сортировки гарантирует O(n log n) и стабильность?",
-    "options": ["quicksort", "mergesort", "selection sort", "bubble sort"],
+    "options": [
+      "quicksort",
+      "mergesort",
+      "selection sort",
+      "bubble sort"
+    ],
     "correct_index": 1,
     "explanation": "mergesort стабильный (сохраняет порядок равных элементов) и гарантирует O(n log n). Использует O(n) дополнительной памяти. Python sorted() основан на TimSort - гибрид merge и insertion."
   },
@@ -556,7 +606,12 @@
     "topic": "algorithms",
     "difficulty": 1,
     "text": "Какова сложность доступа по индексу в массиве?",
-    "options": ["O(log n)", "O(n)", "O(1)", "O(n log n)"],
+    "options": [
+      "O(log n)",
+      "O(n)",
+      "O(1)",
+      "O(n log n)"
+    ],
     "correct_index": 2,
     "explanation": "Массив - непрерывный блок памяти, адрес i-го элемента = base + i*stride. Доступ - O(1)."
   },
@@ -565,7 +620,12 @@
     "topic": "algorithms",
     "difficulty": 2,
     "text": "Что лучше использовать для частых операций append/pop с обеих сторон?",
-    "options": ["list", "tuple", "collections.deque", "set"],
+    "options": [
+      "list",
+      "tuple",
+      "collections.deque",
+      "set"
+    ],
     "correct_index": 2,
     "explanation": "deque реализует двустороннюю очередь с O(1) append/pop с обеих сторон. У list pop(0) - O(n)."
   },
@@ -602,7 +662,12 @@
     "topic": "algorithms",
     "difficulty": 3,
     "text": "Какой алгоритм находит кратчайший путь из одной вершины во взвешенном графе без отрицательных рёбер?",
-    "options": ["BFS", "Dijkstra", "Floyd-Warshall", "Bubble Sort"],
+    "options": [
+      "BFS",
+      "Dijkstra",
+      "Floyd-Warshall",
+      "Bubble Sort"
+    ],
     "correct_index": 1,
     "explanation": "Алгоритм Дейкстры с min-heap работает за O((V+E) log V). На неотрицательных рёбрах - стандарт. С отрицательными - Bellman-Ford."
   },
@@ -625,7 +690,12 @@
     "topic": "algorithms",
     "difficulty": 2,
     "text": "Какая сложность у поиска подстроки наивным алгоритмом?",
-    "options": ["O(n + m)", "O(n*m) в худшем случае", "O(log n)", "O(1)"],
+    "options": [
+      "O(n + m)",
+      "O(n*m) в худшем случае",
+      "O(log n)",
+      "O(1)"
+    ],
     "correct_index": 1,
     "explanation": "Наивный поиск перебирает каждую позицию в строке длины n и сравнивает с подстрокой длины m. Алгоритмы KMP/Boyer-Moore/Rabin-Karp дают O(n+m) или близко к этому."
   },
@@ -914,7 +984,12 @@
     "topic": "sql",
     "difficulty": 2,
     "text": "Какая команда покажет план выполнения запроса в PostgreSQL?",
-    "options": ["DESCRIBE", "EXPLAIN", "ANALYZE_ONLY", "PROFILE"],
+    "options": [
+      "DESCRIBE",
+      "EXPLAIN",
+      "ANALYZE_ONLY",
+      "PROFILE"
+    ],
     "correct_index": 1,
     "explanation": "EXPLAIN покажет план; EXPLAIN ANALYZE дополнительно выполнит и измерит фактическое время. Это первый инструмент в диагностике медленных запросов."
   },
@@ -1175,7 +1250,12 @@
     "topic": "http",
     "difficulty": 1,
     "text": "Какой HTTP-метод считается идемпотентным и безопасным?",
-    "options": ["POST", "PUT", "GET", "PATCH"],
+    "options": [
+      "POST",
+      "PUT",
+      "GET",
+      "PATCH"
+    ],
     "correct_index": 2,
     "explanation": "GET безопасен (не меняет состояние) и идемпотентен (повторный вызов даёт тот же результат). PUT/DELETE идемпотентны, но не безопасны. POST не гарантирует ни того, ни другого."
   },
@@ -1184,7 +1264,12 @@
     "topic": "http",
     "difficulty": 1,
     "text": "Какой статус возвращается при успешно созданном ресурсе через POST?",
-    "options": ["200 OK", "201 Created", "204 No Content", "302 Found"],
+    "options": [
+      "200 OK",
+      "201 Created",
+      "204 No Content",
+      "302 Found"
+    ],
     "correct_index": 1,
     "explanation": "201 Created подразумевает успешное создание, обычно с заголовком Location, указывающим на новый ресурс."
   },
@@ -1389,7 +1474,12 @@
     "topic": "http",
     "difficulty": 2,
     "text": "Какой статус используется для перенаправления?",
-    "options": ["200", "404", "301/302/303/307/308", "500"],
+    "options": [
+      "200",
+      "404",
+      "301/302/303/307/308",
+      "500"
+    ],
     "correct_index": 2,
     "explanation": "301 - постоянное, 302/307 - временное, 303 - см. другой ресурс через GET, 308 - постоянное с сохранением метода. Браузеры по-разному ретраят POST на 301/302."
   },
@@ -1748,7 +1838,12 @@
     "topic": "caching",
     "difficulty": 2,
     "text": "Какая команда Redis устанавливает TTL?",
-    "options": ["DEL", "EXPIRE / SET ... EX / PEXPIRE", "INCRBY", "SUBSCRIBE"],
+    "options": [
+      "DEL",
+      "EXPIRE / SET ... EX / PEXPIRE",
+      "INCRBY",
+      "SUBSCRIBE"
+    ],
     "correct_index": 1,
     "explanation": "EXPIRE key seconds или SET key value EX seconds. PEXPIRE - в миллисекундах. Без TTL ключ живёт до явного удаления."
   },
@@ -2059,5 +2154,1923 @@
     ],
     "correct_index": 1,
     "explanation": "Реализуется через сигналы (SIGTERM с грейс-периодом). Без этого можно потерять in-flight задачи и оборвать клиентские запросы посреди обработки."
+  },
+  {
+    "external_key": "pdf-py-001",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "К каким группам относятся встроенные типы Python: int, float, complex?",
+    "options": [
+      "К Sequence Type",
+      "К Mapping Type",
+      "К Numeric Type",
+      "К Set Type"
+    ],
+    "correct_index": 2,
+    "explanation": "Числовые типы Python (Numeric Type) - int (целое), float (с плавающей точкой) и complex (комплексное). Sequence Type - это list, tuple, range; Mapping Type - dict; Set Type - set и frozenset."
+  },
+  {
+    "external_key": "pdf-py-002",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "В чём ключевое отличие генератора от итератора в Python?",
+    "options": [
+      "Генератор - это функция с yield, итератор - объект с __iter__ и __next__; генератор сам является частным случаем итератора.",
+      "Итератор всегда быстрее генератора в любых задачах.",
+      "Генератор не сохраняет состояние между вызовами, итератор сохраняет.",
+      "Это синонимы, разницы нет."
+    ],
+    "correct_index": 0,
+    "explanation": "Итератор - любой объект, у которого реализованы __iter__ и __next__. Генератор - это итератор, который создаётся функцией с yield: ключевое слово приостанавливает функцию и возвращает значение, сохраняя локальное состояние до следующего вызова next(). Все генераторы - итераторы, но не наоборот."
+  },
+  {
+    "external_key": "pdf-py-003",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какие из перечисленных типов в Python являются изменяемыми (mutable)?",
+    "options": [
+      "tuple, str, frozenset",
+      "int, float, bool",
+      "list, set, dict",
+      "complex, bytes, range"
+    ],
+    "correct_index": 2,
+    "explanation": "Изменяемые типы: list, set, dict (и bytearray). Неизменяемые: int, float, complex, bool, tuple, str, frozenset, bytes. У неизменяемых при 'модификации' создаётся новый объект."
+  },
+  {
+    "external_key": "pdf-py-004",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какова средняя сложность поиска элемента в dict, list, set, tuple?",
+    "options": [
+      "Везде O(1)",
+      "dict и set: O(1); list и tuple: O(n)",
+      "list и tuple: O(1); dict и set: O(n)",
+      "Везде O(log n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Поиск по ключу/элементу в dict и set выполняется за O(1) благодаря хеш-таблицам. В list и tuple поиск по значению - линейный обход O(n). Кортежи неизменяемые и могут быть быстрее списков по чтению индекса за счёт оптимизаций интерпретатора."
+  },
+  {
+    "external_key": "pdf-py-005",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какая конструкция корректно ловит несколько типов исключений в одном блоке?",
+    "options": [
+      "except ValueError, KeyError:",
+      "except (ValueError, KeyError):",
+      "except [ValueError, KeyError]:",
+      "except ValueError | KeyError:"
+    ],
+    "correct_index": 1,
+    "explanation": "Несколько типов исключений перечисляют в кортеже: except (ValueError, KeyError). Полная конструкция try / except / else / finally позволяет ловить разные исключения, выполнять else только при отсутствии ошибок и finally - всегда."
+  },
+  {
+    "external_key": "pdf-py-006",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "В чём принципиальное отличие списка (list) от кортежа (tuple) в Python?",
+    "options": [
+      "Список упорядочен, кортеж - нет.",
+      "Список изменяем, кортеж - нет; кортежи могут использоваться как ключи dict.",
+      "В кортеже можно хранить только один тип данных.",
+      "Список занимает меньше памяти, чем кортеж."
+    ],
+    "correct_index": 1,
+    "explanation": "list - изменяемый, поддерживает append/remove/sort, не может быть ключом dict. tuple - неизменяемый, хеш-стабилен, поэтому может быть ключом dict или элементом set, и в среднем чуть экономнее по памяти."
+  },
+  {
+    "external_key": "pdf-py-007",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает конструкция if-elif-else в Python?",
+    "options": [
+      "Выполняет все ветки по очереди.",
+      "Выполняет первый блок, чьё условие истинно; иначе - блок else.",
+      "Заменяет switch-case без всяких отличий.",
+      "Это синтаксический сахар над while."
+    ],
+    "correct_index": 1,
+    "explanation": "if-elif-else проверяет условия по порядку и выполняет первое истинное. Если ни одно не истинно, выполняется блок else (если есть). Python не имеет нативного switch до 3.10; в 3.10+ появился match/case с расширенными возможностями."
+  },
+  {
+    "external_key": "pdf-py-008",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какие основные циклы существуют в Python?",
+    "options": [
+      "for, while и do-while",
+      "for и while; do-while нет, его эмулируют через while True + break",
+      "Только while",
+      "for, foreach и do-until"
+    ],
+    "correct_index": 1,
+    "explanation": "Python имеет только два цикла: for (по итерируемому объекту) и while (пока условие истинно). Цикла do-while в языке нет, но его поведение легко получить через while True с break внутри."
+  },
+  {
+    "external_key": "pdf-py-009",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое модуль (module) в Python и как его подключить?",
+    "options": [
+      "Файл .py с кодом, подключается через import; импортируемый модуль кешируется в sys.modules.",
+      "Только сторонняя библиотека из PyPI.",
+      "Скомпилированный бинарник, импорт невозможен.",
+      "Альтернативное название класса."
+    ],
+    "correct_index": 0,
+    "explanation": "Модуль - любой .py-файл (или пакет с __init__.py). Подключается через import name, from name import x, import name as alias. Python кеширует модули в sys.modules, чтобы повторный импорт не выполнял код заново."
+  },
+  {
+    "external_key": "pdf-py-010",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем метод класса отличается от обычной функции?",
+    "options": [
+      "Метод хранится в классе и при вызове через экземпляр первый аргумент (self) автоматически связывается с экземпляром.",
+      "Метод нельзя вызвать с аргументами.",
+      "Функция возвращает None, метод - всегда строку.",
+      "Метод исполняется только в основном потоке."
+    ],
+    "correct_index": 0,
+    "explanation": "Метод - это функция, определённая в теле класса. При обращении через экземпляр (obj.method()) Python создаёт связанный метод и автоматически передаёт сам экземпляр первым аргументом (self). Также есть @classmethod (cls вместо self) и @staticmethod (без неявных аргументов)."
+  },
+  {
+    "external_key": "pdf-py-011",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое словарь (dict) в Python?",
+    "options": [
+      "Упорядоченный массив значений с числовыми индексами.",
+      "Хеш-таблица с парами ключ-значение; ключи должны быть хешируемыми.",
+      "Только альтернатива JSON-объекту.",
+      "Тип, в котором ключи всегда строковые."
+    ],
+    "correct_index": 1,
+    "explanation": "dict - встроенная хеш-таблица: пары ключ-значение, доступ O(1) в среднем. Ключи должны быть hashable (immutable: int, str, tuple из immutable). С Python 3.7 dict сохраняет порядок вставки."
+  },
+  {
+    "external_key": "pdf-py-012",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Как работает рекурсия в Python и какое у неё ограничение?",
+    "options": [
+      "Это бесконечный цикл без выхода.",
+      "Функция вызывает саму себя; обязательно нужен базовый случай, иначе превышается RecursionLimit (по умолчанию ~1000).",
+      "Рекурсия запрещена в CPython.",
+      "Стандартный лимит глубины - 1 000 000."
+    ],
+    "correct_index": 1,
+    "explanation": "Рекурсия - функция, вызывающая себя для меньшей задачи. Нужен базовый случай (терминальное условие), иначе вылетит RecursionError. Дефолтный лимит можно посмотреть/изменить через sys.getrecursionlimit/setrecursionlimit. В CPython нет хвостовой оптимизации."
+  },
+  {
+    "external_key": "pdf-py-013",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое PEP 8?",
+    "options": [
+      "Стандарт интерпретатора CPython.",
+      "Стайл-гайд по оформлению Python-кода: отступы, имена, длина строк и т.п.",
+      "Документация по asyncio.",
+      "Спецификация для PyPI."
+    ],
+    "correct_index": 1,
+    "explanation": "PEP 8 - руководство по стилю Python: отступы 4 пробела, snake_case для функций и переменных, CamelCase для классов, ограничение длины строки и т.п. Цель - единообразие и читаемость кода в сообществе."
+  },
+  {
+    "external_key": "pdf-py-014",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Зачем нужно виртуальное окружение (venv) в Python?",
+    "options": [
+      "Чтобы шифровать исходный код.",
+      "Чтобы изолировать зависимости проекта от системного Python и других проектов.",
+      "Чтобы ускорить выполнение программы.",
+      "Чтобы автоматически писать тесты."
+    ],
+    "correct_index": 1,
+    "explanation": "venv создаёт изолированную среду со своим интерпретатором и набором пакетов. Это предотвращает конфликты версий зависимостей между проектами и системным Python. Создание: python -m venv .venv; активация: source .venv/bin/activate."
+  },
+  {
+    "external_key": "pdf-py-015",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое list comprehension и в чём его преимущество?",
+    "options": [
+      "Это синоним функции map().",
+      "Краткая декларативная запись для создания списка: [expr for x in iterable if cond]; быстрее и читаемее цикла с append.",
+      "Это C-расширение для CPython.",
+      "Это альтернативный синтаксис генератора с yield."
+    ],
+    "correct_index": 1,
+    "explanation": "list comprehension - выражение вида [f(x) for x in seq if cond]. Аналогично работают set/dict-comprehensions. Обычно быстрее цикла с append за счёт оптимизаций интерпретатора и более читаемо для коротких преобразований."
+  },
+  {
+    "external_key": "pdf-py-016",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое дандер-методы (dunder, magic methods) в Python?",
+    "options": [
+      "Внутренние методы CPython, недоступные пользователю.",
+      "Методы вида __name__, переопределяющие поведение операторов и встроенных функций (len, str, +, итерация и т.п.).",
+      "Только конструктор и деструктор класса.",
+      "Только для метаклассов."
+    ],
+    "correct_index": 1,
+    "explanation": "Дандер-методы (от 'double underscore') - __init__, __repr__, __len__, __getitem__, __iter__, __add__ и т.д. Они задают, как объект ведёт себя со встроенными конструкциями: len(obj) вызывает __len__, obj1 + obj2 - __add__ и т.д."
+  },
+  {
+    "external_key": "pdf-py-017",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "В чём разница между __new__ и __init__?",
+    "options": [
+      "Это синонимы.",
+      "__new__ создаёт и возвращает новый экземпляр (вызывается первым), __init__ инициализирует уже созданный экземпляр.",
+      "__init__ вызывается до __new__.",
+      "__new__ вызывается только в наследниках."
+    ],
+    "correct_index": 1,
+    "explanation": "__new__(cls, ...) - метод, отвечающий за создание экземпляра (возвращает объект). __init__(self, ...) - инициализирует уже созданный объект, ничего не возвращает. Переопределение __new__ нужно при создании immutable-наследников (например, потомков int) или для синглтонов."
+  },
+  {
+    "external_key": "pdf-py-018",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какая разница между одинарным (_) и двойным (__) префиксом подчёркивания у имени атрибута?",
+    "options": [
+      "Одинарное - просто соглашение 'для внутреннего использования'; двойное - вызывает name mangling и переименуется в _ClassName__name.",
+      "Это синтаксическая ошибка.",
+      "Двойное полностью скрывает атрибут от наследников.",
+      "Одинарное делает атрибут константой."
+    ],
+    "correct_index": 0,
+    "explanation": "_name - конвенция: 'снаружи трогать не надо', но технически доступно. __name (без trailing __) подвергается name mangling: компилятор переименует его в _ClassName__name, чтобы избежать конфликтов с одноимёнными атрибутами в подклассах."
+  },
+  {
+    "external_key": "pdf-py-019",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем отличаются @classmethod и @staticmethod?",
+    "options": [
+      "@classmethod получает первым аргументом класс (cls), @staticmethod не получает ни self, ни cls.",
+      "@classmethod устаревший, использовать только @staticmethod.",
+      "@staticmethod может изменять класс, @classmethod нет.",
+      "Это полные синонимы."
+    ],
+    "correct_index": 0,
+    "explanation": "@classmethod принимает первым аргументом сам класс (cls) - удобно для альтернативных конструкторов и работы с состоянием класса. @staticmethod вообще не получает ни self, ни cls - это просто функция, лежащая в неймспейсе класса для логической группировки."
+  },
+  {
+    "external_key": "pdf-py-020",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое property в Python?",
+    "options": [
+      "Это специальный класс для тестов.",
+      "Дескриптор, превращающий метод в атрибут с геттером/сеттером/делитером, чтобы доступ к свойству выглядел как obj.x, но был контролируемым.",
+      "Это псевдоним @staticmethod.",
+      "Поле, которое нельзя изменить."
+    ],
+    "correct_index": 1,
+    "explanation": "@property превращает метод в read-only атрибут: obj.x вызывает геттер. С @x.setter добавляется сеттер, с @x.deleter - удаление. Удобно для валидации, ленивых вычислений и сохранения обратной совместимости при превращении атрибута в вычисляемое свойство."
+  },
+  {
+    "external_key": "pdf-py-021",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает функция enumerate в Python?",
+    "options": [
+      "Сортирует итерируемый объект.",
+      "Возвращает итератор пар (index, value), упрощая обход с индексом.",
+      "Преобразует список в множество.",
+      "Считает количество элементов."
+    ],
+    "correct_index": 1,
+    "explanation": "enumerate(iterable, start=0) возвращает пары (index, value). Заменяет конструкцию for i in range(len(seq)): val = seq[i] на более идиоматичную for i, val in enumerate(seq): без потерь производительности."
+  },
+  {
+    "external_key": "pdf-py-022",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "В чём разница между copy.copy() и copy.deepcopy()?",
+    "options": [
+      "Это синонимы.",
+      "copy() делает поверхностную копию (вложенные объекты остаются общими), deepcopy() рекурсивно копирует всё дерево.",
+      "deepcopy() работает только со списками.",
+      "copy() копирует только числа."
+    ],
+    "correct_index": 1,
+    "explanation": "Поверхностная копия (copy()) создаёт новый контейнер, но вложенные ссылочные объекты внутри остаются общими: изменение вложенного списка скажется на оригинале. deepcopy() рекурсивно создаёт независимые копии всех вложенных объектов."
+  },
+  {
+    "external_key": "pdf-py-023",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Python - интерпретируемый или компилируемый язык?",
+    "options": [
+      "Чисто компилируемый, как C.",
+      "CPython сначала компилирует исходники в байт-код (.pyc), затем интерпретирует его виртуальной машиной; формально это гибрид с акцентом на интерпретацию.",
+      "Чисто интерпретируемый, никакой компиляции нет.",
+      "Только JIT, как Java."
+    ],
+    "correct_index": 1,
+    "explanation": "В CPython исходник переводится в байт-код, который кешируется в .pyc и исполняется виртуальной машиной (PVM). По принципу запуска Python ближе к интерпретируемым, но шаг компиляции в байт-код есть. PyPy добавляет JIT-компилятор поверх."
+  },
+  {
+    "external_key": "pdf-py-024",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какие виды импорта существуют в Python?",
+    "options": [
+      "Только import module.",
+      "import module, import module as alias, from module import x, from module import *, динамический importlib.import_module().",
+      "Только from module import *.",
+      "Только runtime через eval."
+    ],
+    "correct_index": 1,
+    "explanation": "Доступны: import name (целиком), import name as alias (псевдоним), from name import x (конкретные имена), from name import * (все публичные, не рекомендовано), и динамический importlib.import_module('name')."
+  },
+  {
+    "external_key": "pdf-py-025",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое область видимости переменных в Python (LEGB)?",
+    "options": [
+      "Local - Enclosing - Global - Built-in: порядок поиска имени интерпретатором.",
+      "Только Local и Global.",
+      "Local - Extended - Global - Bytecode.",
+      "Это про модуль logging."
+    ],
+    "correct_index": 0,
+    "explanation": "LEGB - Local (текущая функция) -> Enclosing (объемлющие функции при замыканиях) -> Global (модуль) -> Built-in (встроенные имена). При обращении к имени Python ищет его в этом порядке. global / nonlocal позволяют записывать в верхние области."
+  },
+  {
+    "external_key": "pdf-py-026",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Зачем нужен оператор pass в Python?",
+    "options": [
+      "Он останавливает программу.",
+      "Это пустой оператор-заглушка: используется там, где синтаксически нужен блок, но логики ещё нет (пустой класс, заготовка функции).",
+      "Это альтернатива return.",
+      "Он эквивалентен continue."
+    ],
+    "correct_index": 1,
+    "explanation": "pass - синтаксический no-op. break прерывает цикл, continue переходит к следующей итерации. pass нужен, когда нельзя оставить блок пустым: например, заготовка def foo(): pass или class Foo: pass."
+  },
+  {
+    "external_key": "pdf-py-027",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое класс в Python?",
+    "options": [
+      "Шаблон для создания объектов с общими атрибутами и методами; экземпляр создаётся через ClassName(...).",
+      "Это файл .py.",
+      "Тип данных без атрибутов.",
+      "Альтернатива модулю."
+    ],
+    "correct_index": 0,
+    "explanation": "Класс - шаблон/тип, описывающий структуру и поведение объектов. Экземпляры создаются вызовом класса (Foo()), при котором сначала вызывается __new__ (создание), затем __init__ (инициализация)."
+  },
+  {
+    "external_key": "pdf-py-028",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое слайсинг (slicing) в Python?",
+    "options": [
+      "Получение подпоследовательности через [start:stop:step] - работает для list, tuple, str и т.п.",
+      "Перебор всех элементов.",
+      "Сортировка списка на месте.",
+      "Копирование одного элемента."
+    ],
+    "correct_index": 0,
+    "explanation": "Слайс seq[start:stop:step] возвращает новую последовательность. Любой из параметров можно опустить (s[:5], s[5:], s[::2]). Отрицательные индексы считают с конца. Возвращается копия для list/tuple/str и нового объекта."
+  },
+  {
+    "external_key": "pdf-py-029",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое декоратор в Python?",
+    "options": [
+      "Функция (или класс), которая принимает функцию/класс и возвращает новую, оборачивая её поведение; применяется через @name над определением.",
+      "Это синоним lambda-функции.",
+      "Только встроенный механизм для классов.",
+      "Это режим интерпретатора."
+    ],
+    "correct_index": 0,
+    "explanation": "Декоратор - это вызываемый объект, принимающий функцию/класс и возвращающий новый объект, обычно с дополнительной логикой (логирование, кеш, авторизация). Применяется через @decorator. Часто используется functools.wraps, чтобы сохранить имя/докстринг."
+  },
+  {
+    "external_key": "pdf-py-030",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Зачем в Python нужны docstring?",
+    "options": [
+      "Это обычные комментарии.",
+      "Это строковые литералы в начале модуля/класса/функции, доступные через help() и атрибут __doc__; нужны для документирования API.",
+      "Они выполняются как код.",
+      "Они заменяют тесты."
+    ],
+    "correct_index": 1,
+    "explanation": "Docstring - тройная строка сразу после def/class/в начале модуля. Доступна через obj.__doc__ и инструмент help(). PEP 257 описывает соглашения; популярные форматы: reStructuredText, Google, NumPy. Используется автодокументацией (Sphinx, pydoc)."
+  },
+  {
+    "external_key": "pdf-py-031",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Можно ли применить несколько декораторов к одной функции?",
+    "options": [
+      "Нет, разрешён только один.",
+      "Да; они применяются снизу вверх: @a @b def f() эквивалентно f = a(b(f)).",
+      "Да, но только если все встроенные.",
+      "Только в Python 2."
+    ],
+    "correct_index": 1,
+    "explanation": "Декораторы можно стэкать. Порядок применения - снизу вверх: первый ближайший к функции применяется первым, верхний - последним. Это эквивалентно вложенному вызову a(b(f))."
+  },
+  {
+    "external_key": "pdf-py-032",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Можно ли создать декоратор из класса?",
+    "options": [
+      "Нет, декоратор всегда функция.",
+      "Да; класс с реализованным __call__ может быть декоратором. Он сохраняет состояние между вызовами обернутой функции.",
+      "Только в asyncio.",
+      "Только метаклассы."
+    ],
+    "correct_index": 1,
+    "explanation": "Класс становится декоратором, если в нём есть __call__. Конструктор принимает оборачиваемую функцию (или параметры), а __call__ выполняет логику обёртки. Удобно, когда нужна память между вызовами (счётчики, кеш)."
+  },
+  {
+    "external_key": "pdf-py-033",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какие из перечисленных пакетов входят в стандартную библиотеку Python?",
+    "options": [
+      "numpy, pandas, requests",
+      "json, os, datetime, collections",
+      "django, flask, fastapi",
+      "torch, sklearn, matplotlib"
+    ],
+    "correct_index": 1,
+    "explanation": "В stdlib входят json, os, sys, datetime, collections, itertools, functools, re, math, asyncio и др. numpy/pandas/requests/django - сторонние и ставятся через pip. Знание стандартной библиотеки - частый вопрос на собеседовании."
+  },
+  {
+    "external_key": "pdf-py-034",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое лямбда-функция в Python?",
+    "options": [
+      "Анонимная однострочная функция вида lambda args: expr; ограничена одним выражением.",
+      "Многострочная функция без имени.",
+      "Тип асинхронной функции.",
+      "Только синоним def."
+    ],
+    "correct_index": 0,
+    "explanation": "lambda args: expression создаёт анонимную функцию из одного выражения. Полезна для коротких колбеков (key= в sorted, в map/filter). Не поддерживает statements и аннотации; для сложного - используйте def."
+  },
+  {
+    "external_key": "pdf-py-035",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое *args и **kwargs в сигнатуре функции?",
+    "options": [
+      "Это синтаксические ошибки.",
+      "*args собирает остальные позиционные аргументы в кортеж, **kwargs - именованные в словарь.",
+      "Это типы данных.",
+      "Это соглашение для статических методов."
+    ],
+    "correct_index": 1,
+    "explanation": "В def f(*args, **kwargs): args - кортеж лишних позиционных, kwargs - словарь именованных. При вызове можно распаковать обратно: f(*list_, **dict_). Имена args/kwargs - конвенция, * и ** - синтаксис."
+  },
+  {
+    "external_key": "pdf-py-036",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какие классы из модуля collections знаете?",
+    "options": [
+      "Counter, defaultdict, OrderedDict, namedtuple, deque, ChainMap",
+      "Только list, dict",
+      "asyncio, threading, multiprocessing",
+      "json, csv, pickle"
+    ],
+    "correct_index": 0,
+    "explanation": "collections содержит Counter (счётчик), defaultdict (dict с дефолтным фабричным значением), OrderedDict (упорядоченный dict, до 3.7 был отдельным), namedtuple (именованный кортеж), deque (двусторонняя очередь O(1)), ChainMap (объединение нескольких dict)."
+  },
+  {
+    "external_key": "pdf-py-037",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Как Python работает с HTTP сервером?",
+    "options": [
+      "Только через сторонние библиотеки.",
+      "В stdlib есть http.server для простого сервера; для прода - WSGI/ASGI фреймворки (Django, Flask, FastAPI) и серверы (gunicorn, uvicorn).",
+      "Через системные сокеты, которых нет в Python.",
+      "HTTP в Python невозможен."
+    ],
+    "correct_index": 1,
+    "explanation": "В stdlib есть http.server (простейший сервер для разработки). Для прода используют WSGI (синхронные приложения) или ASGI (асинхронные). Серверы: gunicorn, uWSGI, uvicorn (ASGI). Фреймворки: Django, Flask, FastAPI, Starlette."
+  },
+  {
+    "external_key": "pdf-py-038",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое контекстный менеджер в Python?",
+    "options": [
+      "Объект с методами __enter__/__exit__, используемый в with-блоке для надёжного захвата и освобождения ресурсов.",
+      "Это альтернатива try/except.",
+      "Тип асинхронной функции.",
+      "Декоратор для классов."
+    ],
+    "correct_index": 0,
+    "explanation": "Контекстный менеджер реализует __enter__ (захват ресурса) и __exit__ (освобождение, в т.ч. при исключении). Используется в with: open, lock, transaction. Можно создать через @contextmanager из contextlib (генератор с yield)."
+  },
+  {
+    "external_key": "pdf-py-039",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "В чём разница между is и == в Python?",
+    "options": [
+      "Это синонимы.",
+      "== сравнивает значения (вызывает __eq__), is проверяет идентичность объектов (один и тот же id).",
+      "is сравнивает строки, == числа.",
+      "is только для None."
+    ],
+    "correct_index": 1,
+    "explanation": "== вызывает __eq__ и сравнивает по значению. is сравнивает id() (один и тот же объект в памяти). Для None, True, False всегда используется is. Маленькие int (-5..256) и короткие строки могут быть кешированы (interning), но это деталь реализации."
+  },
+  {
+    "external_key": "pdf-py-040",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Как работает хеширование в Python?",
+    "options": [
+      "Хеша нет, объекты сравниваются побайтово.",
+      "Встроенная hash() возвращает int для hashable-объектов; immutable-типы хешируемы; ключи dict/элементы set хранятся через хеш и equality.",
+      "Хеш всегда совпадает у разных объектов.",
+      "Хеш считается только у целых чисел."
+    ],
+    "correct_index": 1,
+    "explanation": "hash(obj) возвращает целочисленный хеш. Хешируемые - immutable: числа, строки, кортежи из immutable, frozenset. Изменяемые (list, dict, set) - не хешируемы. dict/set хранят данные в хеш-таблице: при коллизии хешей объекты сравниваются через __eq__."
+  },
+  {
+    "external_key": "pdf-py-041",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какие способы форматирования строк есть в Python?",
+    "options": [
+      "Только +",
+      "% форматирование, str.format(), f-строки (PEP 498), Template из string",
+      "Только str.format()",
+      "Только f-строки"
+    ],
+    "correct_index": 1,
+    "explanation": "В Python: 'Hello, %s' % name (старое), 'Hello, {}'.format(name), f'Hello, {name}' (3.6+, самые быстрые и читаемые), string.Template для безопасной подстановки. f-строки поддерживают выражения, форматирование (f'{x:.2f}') и =-debug (3.8+)."
+  },
+  {
+    "external_key": "pdf-py-042",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает встроенная функция map()?",
+    "options": [
+      "Сортирует итерируемый объект.",
+      "Возвращает итератор, применяющий функцию к каждому элементу: map(func, iterable).",
+      "Создаёт словарь из двух списков.",
+      "Удаляет дубликаты."
+    ],
+    "correct_index": 1,
+    "explanation": "map(func, *iterables) применяет func к каждому элементу (или элементам нескольких iterable одновременно). Возвращает ленивый итератор. Для list нужно list(map(...)). Аналогично filter() - оставляет элементы, на которых func возвращает True."
+  },
+  {
+    "external_key": "pdf-py-043",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает встроенная функция filter()?",
+    "options": [
+      "Возвращает итератор только из элементов, на которых функция-предикат вернула True.",
+      "Удаляет повторяющиеся элементы.",
+      "Сортирует элементы.",
+      "Считает сумму."
+    ],
+    "correct_index": 0,
+    "explanation": "filter(predicate, iterable) возвращает итератор, оставляя элементы, для которых predicate(x) == True. Если predicate is None - оставляет правдивые. Часто заменяется list comprehension с условием для большей читаемости."
+  },
+  {
+    "external_key": "pdf-py-044",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что делает functools.reduce()?",
+    "options": [
+      "Только суммирует список.",
+      "Сворачивает итерируемый в одно значение, последовательно применяя бинарную функцию: reduce(func, iter[, init]).",
+      "Удваивает каждый элемент.",
+      "Возвращает первый элемент."
+    ],
+    "correct_index": 1,
+    "explanation": "reduce(func, iterable[, initial]) накапливает результат: для [a,b,c] и func - func(func(a,b), c). С Python 3 функция перенесена в functools. Часто читаемее и быстрее заменяется на sum(), math.prod(), any/all() или явный цикл."
+  },
+  {
+    "external_key": "pdf-py-045",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что возвращает встроенная функция id(obj)?",
+    "options": [
+      "Хеш объекта.",
+      "Целочисленный идентификатор объекта (адрес в памяти в CPython), уникальный на время жизни объекта.",
+      "Имя класса.",
+      "Размер в байтах."
+    ],
+    "correct_index": 1,
+    "explanation": "id(obj) - целое число, уникальное для объекта на время его жизни. В CPython это адрес объекта в памяти. После уничтожения объекта тот же id может быть переиспользован новым."
+  },
+  {
+    "external_key": "pdf-py-046",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Зачем нужна функция dir()?",
+    "options": [
+      "Возвращает список имён атрибутов и методов объекта/модуля - удобно для интроспекции.",
+      "Удаляет файлы с диска.",
+      "Запускает интерпретатор.",
+      "Возвращает текущую директорию."
+    ],
+    "correct_index": 0,
+    "explanation": "dir(obj) возвращает отсортированный список доступных имён (атрибутов и методов) объекта. Без аргумента - имена в текущем scope. Используется для исследования API в REPL и отладке."
+  },
+  {
+    "external_key": "pdf-py-047",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое абстрактный класс в Python?",
+    "options": [
+      "Любой класс без атрибутов.",
+      "Класс, объявленный через abc.ABC/ABCMeta, который нельзя инстанцировать; в нём через @abstractmethod помечают методы, обязательные для переопределения.",
+      "Только встроенный object.",
+      "Класс без __init__."
+    ],
+    "correct_index": 1,
+    "explanation": "Из модуля abc: class Foo(ABC): @abstractmethod def bar(self): ... Нельзя создать экземпляр Foo, пока в подклассе не реализован bar. Используется для определения контрактов и типов в компонентах."
+  },
+  {
+    "external_key": "pdf-py-048",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое геттеры и сеттеры в Python?",
+    "options": [
+      "Это методы C-расширения.",
+      "Методы для контролируемого доступа к атрибуту; в Python обычно реализуются через @property и @x.setter.",
+      "Поля, доступные только в Java.",
+      "Альтернатива магическим методам."
+    ],
+    "correct_index": 1,
+    "explanation": "В Python нет 'private', поэтому геттеры/сеттеры - это обычно @property для чтения и @x.setter для записи: они выглядят как простой атрибут (obj.x = 1), но дают валидацию и инкапсуляцию без ломания публичного API."
+  },
+  {
+    "external_key": "pdf-py-049",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Как расшифровывается LEGB?",
+    "options": [
+      "Local, Enclosing, Global, Built-in - порядок поиска имени интерпретатором.",
+      "Local, Extra, Global, Built-in.",
+      "Local, External, Generic, Builtin.",
+      "Это название модуля."
+    ],
+    "correct_index": 0,
+    "explanation": "LEGB описывает scope-resolution: Local (внутри функции) -> Enclosing (объемлющая функция при замыканиях) -> Global (модуль) -> Built-in (sys.builtins, len, print). При обращении к имени Python ищет в этом порядке."
+  },
+  {
+    "external_key": "pdf-py-050",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает встроенная функция next()?",
+    "options": [
+      "Возвращает следующий элемент итератора; принимает default, чтобы не получить StopIteration.",
+      "Запускает следующую корутину.",
+      "Только для генераторов.",
+      "Возвращает индекс следующего элемента."
+    ],
+    "correct_index": 0,
+    "explanation": "next(iter[, default]) вызывает __next__ итератора. Без default при исчерпании поднимает StopIteration. С default возвращает его. Работает с любыми итераторами: генераторами, итерами по list, csv.reader и т.п."
+  },
+  {
+    "external_key": "pdf-py-051",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какой идиоматичный способ прочитать файл в Python?",
+    "options": [
+      "f = open('a.txt'); ... f.close()",
+      "with open('a.txt', encoding='utf-8') as f: data = f.read()",
+      "os.read('a.txt')",
+      "io.read_file('a.txt')"
+    ],
+    "correct_index": 1,
+    "explanation": "Идиоматично использовать with open(path, mode, encoding='utf-8') as f: блок гарантирует закрытие файла даже при исключении. Методы: f.read() (всё), f.readline()/readlines(), итерация по f (по строкам)."
+  },
+  {
+    "external_key": "pdf-py-052",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Как работать с JSON в Python?",
+    "options": [
+      "Только вручную парсить строки.",
+      "Использовать модуль json: json.loads/json.dumps для строк, json.load/json.dump для файловых объектов.",
+      "Через pickle.",
+      "Через csv."
+    ],
+    "correct_index": 1,
+    "explanation": "json - модуль stdlib. dumps/loads - сериализация в строку и обратно; dump/load - в файловый объект. Поддерживает default= и object_hook= для кастомных типов. Для большой нагрузки/UJSON совместимости используют orjson, ujson."
+  },
+  {
+    "external_key": "pdf-py-053",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Сколько у класса в Python может быть родителей и потомков?",
+    "options": [
+      "Только один родитель и один потомок.",
+      "Произвольное число потомков; Python поддерживает множественное наследование, MRO определяется по C3-линеаризации.",
+      "Множественное наследование запрещено.",
+      "Не более 256 потомков."
+    ],
+    "correct_index": 1,
+    "explanation": "Python поддерживает множественное наследование: class C(A, B). Порядок поиска методов задаётся MRO (C3-линеаризация), посмотреть можно через C.__mro__. Потомков (наследников) может быть сколько угодно."
+  },
+  {
+    "external_key": "pdf-py-054",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем .pyc отличается от .py?",
+    "options": [
+      "Это разные языки.",
+      ".py - исходник, .pyc - скомпилированный байт-код CPython, кешируется в __pycache__ для ускорения повторных импортов.",
+      ".pyc - бинарник, как exe.",
+      ".pyc можно редактировать в редакторе."
+    ],
+    "correct_index": 1,
+    "explanation": ".py - текстовый исходник. При первом импорте CPython компилирует его в байт-код и сохраняет .pyc в __pycache__. При следующих импортах сравнивается mtime: если исходник не менялся, используется .pyc и шаг компиляции пропускается."
+  },
+  {
+    "external_key": "pdf-py-055",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем строковые представления str(obj) и repr(obj) отличаются?",
+    "options": [
+      "str() - для людей (читабельно), repr() - для разработчиков (по возможности однозначно, чтобы можно было восстановить объект).",
+      "Это полные синонимы.",
+      "repr() работает только со строками.",
+      "str() возвращает байты."
+    ],
+    "correct_index": 0,
+    "explanation": "По соглашению: str() (= __str__) - человекочитаемое представление; repr() (= __repr__) - однозначное, желательно eval-совместимое (eval(repr(x)) == x). Если __str__ не определён, используется __repr__."
+  },
+  {
+    "external_key": "pdf-py-056",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое байт-код в Python?",
+    "options": [
+      "Это текст программы.",
+      "Промежуточное представление, в которое CPython компилирует .py перед выполнением виртуальной машиной; посмотреть можно через dis.dis().",
+      "Это машинный код процессора.",
+      "Это формат хранения JSON."
+    ],
+    "correct_index": 1,
+    "explanation": "Байт-код - набор инструкций для виртуальной машины CPython (LOAD_FAST, CALL_FUNCTION, RETURN_VALUE и др.). Хранится в .pyc, исполняется циклом интерпретатора. Модуль dis показывает инструкции для функции/модуля."
+  },
+  {
+    "external_key": "pdf-py-057",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какая типизация в Python?",
+    "options": [
+      "Статическая, без вариантов.",
+      "Динамическая (тип привязан к значению, а не к переменной) и сильная (нет автоматических преобразований int -> str и т.п.).",
+      "Только утиная.",
+      "Слабая статическая."
+    ],
+    "correct_index": 1,
+    "explanation": "Python - dynamic + strong typed: тип определяется во время выполнения и привязан к объекту, а не к имени; неявных приведений мало (1 + '2' выкинет TypeError). Опциональные аннотации типов (PEP 484) проверяет внешний инструмент (mypy/pyright)."
+  },
+  {
+    "external_key": "pdf-py-058",
+    "topic": "python",
+    "difficulty": 3,
+    "text": "Что такое GIL в CPython и какие у него последствия?",
+    "options": [
+      "Это garbage collector.",
+      "Global Interpreter Lock - mutex, гарантирующий, что в один момент времени байт-код CPython исполняется только одним потоком; ограничивает параллелизм CPU-bound потоков.",
+      "Это аналог async/await.",
+      "Это библиотека логирования."
+    ],
+    "correct_index": 1,
+    "explanation": "GIL - глобальный мьютекс CPython, упрощающий управление памятью (refcount). Из-за GIL CPU-bound потоки не дают реального параллелизма (используйте multiprocessing). I/O-bound потоки и asyncio работают эффективно: GIL отпускается на блокирующих операциях."
+  },
+  {
+    "external_key": "pdf-py-059",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "В чём разница между процессом и потоком в Python?",
+    "options": [
+      "Это одно и то же.",
+      "Процесс - отдельный экземпляр интерпретатора со своей памятью и GIL; поток - единица исполнения внутри процесса, делит память.",
+      "Поток имеет свой GIL.",
+      "Процесс может только один в системе."
+    ],
+    "correct_index": 1,
+    "explanation": "Поток (threading) разделяет память процесса; в CPython тормозится GIL для CPU-bound. Процесс (multiprocessing) имеет отдельный интерпретатор и свой GIL, работает действительно параллельно, но дороже создаётся и обменивается данными через IPC (Pipe, Queue, shared memory)."
+  },
+  {
+    "external_key": "pdf-py-060",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое pip и за что он отвечает?",
+    "options": [
+      "Это IDE.",
+      "Стандартный пакетный менеджер Python: устанавливает, обновляет и удаляет пакеты из PyPI и других индексов.",
+      "Линтер.",
+      "Тестовый раннер."
+    ],
+    "correct_index": 1,
+    "explanation": "pip - официальный пакетный менеджер. pip install x ставит пакет, pip freeze - список с версиями, pip install -r requirements.txt - из файла. Под капотом скачивает с PyPI или alternative-индекса. Современная альтернатива - uv."
+  },
+  {
+    "external_key": "pdf-py-061",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Каковы основные преимущества Python перед другими языками?",
+    "options": [
+      "Самый быстрый рантайм.",
+      "Простой синтаксис, огромная экосистема (numpy, ML, web), кросс-платформенность, динамическая типизация и широкое применение в данных, ML и web.",
+      "Только встроенная многопоточность.",
+      "Только статическая типизация."
+    ],
+    "correct_index": 1,
+    "explanation": "Python привлекателен читаемым синтаксисом, огромной стандартной и сторонней экосистемой (numpy/pandas/PyTorch для данных и ML, Django/FastAPI для web), кросс-платформенностью, активным сообществом. Минусы - GIL и скорость в CPU-bound, что компенсируется C-расширениями."
+  },
+  {
+    "external_key": "pdf-py-062",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Как передаются аргументы в функцию в Python?",
+    "options": [
+      "Только по значению.",
+      "Pass-by-object-reference: имя связывается с тем же объектом; мутировать изменяемые объекты можно, переприсваивание имени локально.",
+      "Только по ссылке, всегда меняется оригинал.",
+      "Через регистры процессора."
+    ],
+    "correct_index": 1,
+    "explanation": "В Python аргументы передаются как ссылки на объекты ('pass by object reference'). Если объект изменяемый (list, dict) - мутации видны снаружи. Переприсваивание имени внутри функции локальное и не меняет внешнюю переменную."
+  },
+  {
+    "external_key": "pdf-py-063",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какой результат у выражения 1 / 0 в Python?",
+    "options": [
+      "0",
+      "ZeroDivisionError: division by zero",
+      "inf",
+      "None"
+    ],
+    "correct_index": 1,
+    "explanation": "В Python деление на ноль для int/float возбуждает ZeroDivisionError. Для float бесконечности и NaN получают через math.inf, math.nan или float('inf')/float('nan'); сравнение NaN всегда False (кроме is)."
+  },
+  {
+    "external_key": "pdf-py-064",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что произойдёт, если в except указать base-класс, например, Exception?",
+    "options": [
+      "Поймаются только конкретно эти исключения.",
+      "Поймаются все ошибки-наследники Exception (включая ValueError, TypeError и т.д.) - часто это слишком широкий охват.",
+      "Будет SyntaxError.",
+      "Поймаются и системные исключения (KeyboardInterrupt)."
+    ],
+    "correct_index": 1,
+    "explanation": "except Exception ловит все обычные ошибки, унаследованные от Exception. KeyboardInterrupt и SystemExit наследуются от BaseException и не ловятся. Слишком широкий except скрывает баги, поэтому ловите конкретные типы и логируйте остальное."
+  },
+  {
+    "external_key": "pdf-py-065",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое generator expression и чем она отличается от list comprehension?",
+    "options": [
+      "Это синонимы.",
+      "(expr for x in seq) создаёт ленивый генератор; не строит весь список в памяти и обходится один раз.",
+      "Возвращает кортеж.",
+      "Возвращает множество."
+    ],
+    "correct_index": 1,
+    "explanation": "Genexp (x*x for x in range(N)) - ленивый итератор, экономит память на больших данных. Строит элементы по требованию через __next__. List comprehension [x*x for x in range(N)] немедленно строит список."
+  },
+  {
+    "external_key": "pdf-py-066",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Как создать singleton в Python?",
+    "options": [
+      "Это невозможно.",
+      "Через метакласс, переопределение __new__ или модуль с глобальной переменной (модуль и есть singleton).",
+      "Через @staticmethod.",
+      "Через f-строки."
+    ],
+    "correct_index": 1,
+    "explanation": "Варианты: 1) хранить экземпляр в _instance и возвращать в __new__; 2) метакласс, кеширующий экземпляры по классу; 3) самый простой и идиоматичный - модуль: при импорте инициализируется один раз и шарится по приложению."
+  },
+  {
+    "external_key": "pdf-py-067",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что произойдёт при изменении изменяемого аргумента по умолчанию?",
+    "options": [
+      "Каждый вызов получает свежий объект.",
+      "Дефолт вычисляется один раз при определении функции; мутации сохраняются между вызовами - частая ловушка.",
+      "Возникает SyntaxError.",
+      "Вызов будет проигнорирован."
+    ],
+    "correct_index": 1,
+    "explanation": "def f(x=[]): x.append(1) - список создаётся один раз при определении функции и используется во всех вызовах: вызовы накапливают мутации. Идиоматичный фикс: def f(x=None): x = [] if x is None else x."
+  },
+  {
+    "external_key": "pdf-dj-001",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Что такое Django?",
+    "options": [
+      "Лёгкий микрофреймворк без ORM.",
+      "Высокоуровневый Python web-framework по принципу 'batteries included' с ORM, admin, шаблонами и аутентификацией из коробки.",
+      "СУБД для PostgreSQL.",
+      "Шаблонизатор без HTTP."
+    ],
+    "correct_index": 1,
+    "explanation": "Django - high-level web-фреймворк на Python, поощряющий быструю разработку и DRY. В коробке: ORM, admin, аутентификация, шаблоны, миграции, формы, кеширование. Используется в крупных проектах: Instagram, Disqus, Mozilla."
+  },
+  {
+    "external_key": "pdf-dj-002",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое архитектура MVC?",
+    "options": [
+      "Model - View - Controller: модель данных, представление UI, контроллер - связующее звено логики и пользовательского ввода.",
+      "Только обозначение шаблонов Django.",
+      "Тип СУБД.",
+      "Способ деплоя."
+    ],
+    "correct_index": 0,
+    "explanation": "MVC - архитектурный шаблон: Model хранит данные и бизнес-логику, View отображает их, Controller обрабатывает ввод и обновляет модель/представление. Помогает отделить логику от представления."
+  },
+  {
+    "external_key": "pdf-dj-003",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое MVT в Django?",
+    "options": [
+      "Это Model - View - Controller.",
+      "Model - View - Template; Django называет 'view' то, что в MVC обычно называют контроллером, а отображение - Template.",
+      "Это архитектура только для DRF.",
+      "Системный шедулер."
+    ],
+    "correct_index": 1,
+    "explanation": "MVT - модель данных (Model), бизнес-логика обработки запроса (View), шаблон HTML/HTML-фрагмент (Template). Маршрутизатор URL связывает запрос с view; view возвращает HttpResponse, обычно через render(template, context)."
+  },
+  {
+    "external_key": "pdf-dj-004",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое сигналы Django?",
+    "options": [
+      "Только бизнес-нотификации SMS.",
+      "Механизм publish/subscribe внутри проекта: post_save, pre_delete, m2m_changed и др. позволяют отправителям уведомлять подписчиков о событиях.",
+      "Это middleware.",
+      "Это системные сигналы Linux."
+    ],
+    "correct_index": 1,
+    "explanation": "django.dispatch.signals - встроенная реализация observer. Стандартные: pre/post_save, pre/post_delete, m2m_changed, request_started/finished, user_logged_in. Подписаться: receiver(post_save, sender=Model). Выполняются синхронно в том же потоке, что и отправитель."
+  },
+  {
+    "external_key": "pdf-dj-005",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Какие стратегии кеширования предлагает Django?",
+    "options": [
+      "Только in-memory.",
+      "Site-wide (через middleware), per-view (cache_page), template fragment ({% cache %}), low-level (cache.get/set) и кеш QuerySet.",
+      "Кеширование в Django запрещено.",
+      "Только кеш на уровне БД."
+    ],
+    "correct_index": 1,
+    "explanation": "Backends: locmem (default), memcached, Redis, БД, файлы. Уровни: site-level (UpdateCacheMiddleware/FetchFromCacheMiddleware), per-view (@cache_page), фрагменты шаблона, low-level cache.set/get. Это компромисс между свежестью и нагрузкой."
+  },
+  {
+    "external_key": "pdf-dj-006",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "В чём разница между OneToOneField, ForeignKey и ManyToManyField?",
+    "options": [
+      "OneToOne - 1 к 1 (уникальный FK), ForeignKey - многие к одному, ManyToMany - многие ко многим (через таблицу-связь).",
+      "Это синонимы.",
+      "ForeignKey работает только с PostgreSQL.",
+      "M2M использует JSONB, остальные - нет."
+    ],
+    "correct_index": 0,
+    "explanation": "OneToOneField - FK с unique=True, удобно для расширения профиля. ForeignKey - многие к одному (FK на одной из сторон). ManyToManyField создаёт скрытую промежуточную таблицу или вы указываете её через through=."
+  },
+  {
+    "external_key": "pdf-dj-007",
+    "topic": "django",
+    "difficulty": 3,
+    "text": "Как реализовано ManyToMany под капотом в Django?",
+    "options": [
+      "Через JSON-поле.",
+      "Через скрытую промежуточную таблицу с двумя FK; можно явно задать модель связи через through=.",
+      "Через сериализацию list.",
+      "Только через сигнал post_save."
+    ],
+    "correct_index": 1,
+    "explanation": "Django создаёт промежуточную таблицу с двумя ForeignKey-полями. Если нужны дополнительные поля связи (например, дата добавления), задаётся through=Model. Этому также позволяет явно работать с записями связи (фильтры, сортировки)."
+  },
+  {
+    "external_key": "pdf-dj-008",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Q-объект в Django ORM?",
+    "options": [
+      "Класс для очередей.",
+      "Объект для построения сложных условий в filter/exclude через | (OR), & (AND), ~ (NOT).",
+      "Сериализатор в DRF.",
+      "Аналог exists()."
+    ],
+    "correct_index": 1,
+    "explanation": "Q позволяет писать сложные условия: User.objects.filter(Q(name='a') | Q(name='b')). Обычные kwargs соединяются по AND. Q важен, когда нужно OR или динамическое построение условий."
+  },
+  {
+    "external_key": "pdf-dj-009",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое middleware в Django?",
+    "options": [
+      "Только система авторизации.",
+      "Слой между запросом и view: цепочка функций, обрабатывающих request/response (security, sessions, csrf, auth, common, и кастомные).",
+      "Это шаблонный тег.",
+      "Это библиотека asyncio."
+    ],
+    "correct_index": 1,
+    "explanation": "Middleware - вызываемые объекты в settings.MIDDLEWARE. Каждый получает request, опционально возвращает response рано или передаёт дальше. На обратном пути обрабатывает response. Стандартные: SecurityMiddleware, SessionMiddleware, CsrfViewMiddleware, AuthenticationMiddleware."
+  },
+  {
+    "external_key": "pdf-dj-010",
+    "topic": "django",
+    "difficulty": 3,
+    "text": "Как работает CSRF middleware в Django?",
+    "options": [
+      "Никак, защиты нет.",
+      "Сравнивает токен из cookie csrftoken с токеном из формы/заголовка X-CSRFToken; если не совпали - 403.",
+      "Шифрует тело запроса.",
+      "Проверяет IP-адрес."
+    ],
+    "correct_index": 1,
+    "explanation": "Django выдаёт уникальный csrftoken cookie. На POST-запросах middleware ожидает токен в скрытом поле формы или заголовке X-CSRFToken и сравнивает с cookie. Несовпадение - 403 Forbidden. Шаблонный тег {% csrf_token %} вставляет hidden input."
+  },
+  {
+    "external_key": "pdf-dj-011",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое миграции в Django?",
+    "options": [
+      "Переезд проекта на новый сервер.",
+      "Версионируемые описания изменений схемы БД, генерируемые makemigrations и применяемые migrate.",
+      "Только сериализация данных.",
+      "Дамп БД в JSON."
+    ],
+    "correct_index": 1,
+    "explanation": "Миграции - Python-файлы, описывающие ddl-операции (create_table, add_field). makemigrations генерирует их по моделям, migrate применяет в БД и пишет в django_migrations. Поддерживают rollback и кастомные операции (RunPython)."
+  },
+  {
+    "external_key": "pdf-dj-012",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Какова стандартная структура проекта Django?",
+    "options": [
+      "Только один файл main.py.",
+      "Корень с manage.py, settings-папка проекта (settings.py, urls.py, wsgi.py), и приложения-папки с models.py, views.py, urls.py, migrations/.",
+      "Произвольная структура без условностей.",
+      "Один app внутри проекта запрещён."
+    ],
+    "correct_index": 1,
+    "explanation": "Стандартно: manage.py + проект/ (settings.py, urls.py, wsgi.py, asgi.py) + одно или несколько приложений (models, views, urls, admin, apps, migrations/). Это разделение позволяет переиспользовать приложения и масштабировать кодовую базу."
+  },
+  {
+    "external_key": "pdf-dj-013",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "В чём ключевые преимущества Django?",
+    "options": [
+      "Это самый быстрый микрофреймворк.",
+      "ORM из коробки, admin, миграции, продуманная безопасность (CSRF, XSS, clickjacking), большая экосистема и активное сообщество.",
+      "Полностью асинхронный с самого начала.",
+      "Не нуждается в БД."
+    ],
+    "correct_index": 1,
+    "explanation": "Django - 'batteries included': ORM, миграции, admin, аутентификация, формы, шаблоны, кеш, подсистема безопасности. Подходит для CRUD-приложений, контентных проектов и API (вместе с DRF). Ускоряет старт за счёт готовых решений."
+  },
+  {
+    "external_key": "pdf-dj-014",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Какие команды manage.py вы знаете?",
+    "options": [
+      "Только runserver.",
+      "runserver, migrate, makemigrations, createsuperuser, shell, collectstatic, test, dbshell, startapp, и кастомные management-команды.",
+      "Только createsuperuser.",
+      "manage.py не имеет команд."
+    ],
+    "correct_index": 1,
+    "explanation": "manage.py - точка входа для управления проектом. runserver - dev-сервер; makemigrations/migrate - миграции; createsuperuser - админ; shell - REPL с подгруженными настройками; collectstatic - сбор статики; test - запуск тестов; startapp - новое приложение."
+  },
+  {
+    "external_key": "pdf-dj-015",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Как реализована аутентификация пользователей в Django?",
+    "options": [
+      "Только через сторонние библиотеки.",
+      "Через модель User, sessions, AuthenticationMiddleware, login()/logout()/authenticate(), permissions и groups.",
+      "Через системные пароли Linux.",
+      "Только через JWT."
+    ],
+    "correct_index": 1,
+    "explanation": "django.contrib.auth: модель User (или кастомная через AUTH_USER_MODEL), функции authenticate/login/logout/check_password, AuthenticationMiddleware кладёт request.user, декоратор @login_required, разрешения и группы. JWT/OAuth - через сторонние пакеты (djangorestframework-simplejwt, django-allauth)."
+  },
+  {
+    "external_key": "pdf-dj-016",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Чем FBV отличается от CBV в Django?",
+    "options": [
+      "Это синонимы.",
+      "FBV - функция request -> response, проще; CBV - класс с методами (get/post/...), удобен для повторного использования и микширования через mixins.",
+      "FBV - только для admin, CBV - для остального.",
+      "CBV нельзя использовать с DRF."
+    ],
+    "correct_index": 1,
+    "explanation": "FBV - простая функция-вью: лаконично, удобно для уникальных эндпоинтов. CBV (View, ListView, DetailView, FormView, ...) дают наследование, mixins (LoginRequiredMixin), уменьшают повторение для типовых страниц. DRF тоже использует CBV (APIView, ViewSet)."
+  },
+  {
+    "external_key": "pdf-dj-017",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Как работает маршрутизация URL в Django?",
+    "options": [
+      "Через annotations.",
+      "В urls.py перечисляются path()/re_path() с шаблонами и view; namespaces включают модули (include); reverse и {% url %} строят URL по имени.",
+      "Через декораторы как в Flask.",
+      "Только через regex."
+    ],
+    "correct_index": 1,
+    "explanation": "URL-конфигурация: path('books/<int:pk>/', views.detail, name='book-detail'). re_path с regex. include() подключает urls приложений. Имена позволяют делать reverse('book-detail', args=[1]) и {% url %} в шаблонах. С 2.0 path удобнее re_path."
+  },
+  {
+    "external_key": "pdf-dj-018",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Какие встроенные представления есть в Django?",
+    "options": [
+      "Только TemplateView.",
+      "TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView и др.",
+      "Никаких готовых нет.",
+      "Только админка."
+    ],
+    "correct_index": 1,
+    "explanation": "Generic-CBV: TemplateView (шаблон), ListView/DetailView (список/деталка модели), CreateView/UpdateView/DeleteView (CRUD на основе формы), FormView (общая форма), RedirectView. Они уменьшают шаблонный код для типовых страниц."
+  },
+  {
+    "external_key": "pdf-dj-019",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "В чём разница между Flask и Django?",
+    "options": [
+      "Это одно и то же.",
+      "Flask - микрофреймворк (минимум из коробки, гибкие компоненты), Django - полноценный фреймворк с ORM, admin, миграциями и большим стеком 'из коробки'.",
+      "Flask - только для API.",
+      "Django не имеет шаблонизатора."
+    ],
+    "correct_index": 1,
+    "explanation": "Flask минималистичен и расширяется плагинами. Django даёт большой готовый стек: ORM, admin, миграции, формы, security middleware. Flask проще для микросервисов и нетипичных архитектур, Django выигрывает для CRUD/контентных проектов."
+  },
+  {
+    "external_key": "pdf-dj-020",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django REST Framework?",
+    "options": [
+      "Это альтернатива Django ORM.",
+      "Сторонняя библиотека для построения REST API в Django: сериализаторы, ViewSet, роутеры, аутентификация, права, пагинация.",
+      "Это шаблонный движок.",
+      "Это менеджер пакетов."
+    ],
+    "correct_index": 1,
+    "explanation": "DRF - расширение Django для API: Serializer/ModelSerializer (валидация и сериализация), APIView/ViewSet (вью), Router (URL), Authentication/Permissions/Throttling, browsable API. Стандарт де-факто для REST API в Django."
+  },
+  {
+    "external_key": "pdf-dj-021",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Какой класс наследуется для создания views в DRF?",
+    "options": [
+      "django.views.generic.View",
+      "rest_framework.views.APIView (и ViewSet/ModelViewSet для CRUD)",
+      "django.contrib.admin.ModelAdmin",
+      "wsgi.Application"
+    ],
+    "correct_index": 1,
+    "explanation": "В DRF базовый класс - APIView (расширяет Django View, добавляет parsers/renderers, request.data, content-negotiation). Для CRUD удобнее ModelViewSet, объединяющий list/create/retrieve/update/destroy и работающий через router."
+  },
+  {
+    "external_key": "pdf-dj-022",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Какие типы аутентификации поддерживает DRF?",
+    "options": [
+      "Только Basic.",
+      "Session, Basic, Token, JWT (через сторонние пакеты), OAuth2, кастомные классы Authentication.",
+      "Только OAuth1.",
+      "DRF не имеет аутентификации."
+    ],
+    "correct_index": 1,
+    "explanation": "Из коробки: SessionAuthentication, BasicAuthentication, TokenAuthentication. Сторонние пакеты добавляют JWT (simplejwt), OAuth (django-oauth-toolkit). Можно писать кастомные класс - наследуют BaseAuthentication.authenticate()."
+  },
+  {
+    "external_key": "pdf-dj-023",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое пагинация в DRF?",
+    "options": [
+      "Это limit-offset query.",
+      "Способ разбить большие списки на страницы; в DRF - PageNumberPagination, LimitOffsetPagination, CursorPagination, можно делать кастомную.",
+      "Это сериализация в JSON.",
+      "Это замена filter_backends."
+    ],
+    "correct_index": 1,
+    "explanation": "DRF предоставляет несколько встроенных классов: PageNumberPagination (?page=2), LimitOffsetPagination (?limit=10&offset=20), CursorPagination (по непрерывному ключу, лучше для больших данных). Включается через DEFAULT_PAGINATION_CLASS или per-view."
+  },
+  {
+    "external_key": "pdf-dj-024",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Как ограничить доступ к представлениям в DRF?",
+    "options": [
+      "Только через middleware.",
+      "Через permission_classes (IsAuthenticated, IsAdminUser, DjangoModelPermissions, кастомные BasePermission).",
+      "Через throttle_classes.",
+      "Через signals."
+    ],
+    "correct_index": 1,
+    "explanation": "permission_classes на уровне view или DEFAULT_PERMISSION_CLASSES. Встроенные: AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissions. Кастомные наследуют BasePermission и определяют has_permission/has_object_permission."
+  },
+  {
+    "external_key": "pdf-dj-025",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое ViewSet в DRF?",
+    "options": [
+      "Класс для статики.",
+      "Класс, объединяющий несколько связанных view (list/retrieve/create/update/destroy), маршрутизируемый через Router; меньше boilerplate для CRUD.",
+      "Это сериализатор.",
+      "Это middleware."
+    ],
+    "correct_index": 1,
+    "explanation": "ViewSet группирует операции над ресурсом в одном классе. ModelViewSet даёт стандартный CRUD одной строкой. Регистрация через Router: router.register('users', UserViewSet) автоматически выдаёт urls для всех методов."
+  },
+  {
+    "external_key": "pdf-dj-026",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Serializer в DRF?",
+    "options": [
+      "Аналог Django Form.",
+      "Класс для валидации входящих данных и преобразования объектов в JSON-структуры; ModelSerializer строится по модели автоматически.",
+      "Это шаблон.",
+      "Это маршрутизатор."
+    ],
+    "correct_index": 1,
+    "explanation": "Serializer описывает поля и валидацию (как Form). is_valid() проверяет; .save() создаёт/обновляет объект. ModelSerializer выводит поля из Meta.model. Сериализация - obj -> dict, десериализация - dict -> obj. Поддерживает вложенные сериализаторы."
+  },
+  {
+    "external_key": "pdf-dj-027",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Как проходит валидация в DRF?",
+    "options": [
+      "Только в clean() как в Django Form.",
+      "По полям (validators=[...] и validate_<field>), затем общая validate(self, data); ошибки собираются и возвращаются в errors.",
+      "Только через сигналы.",
+      "Через middleware."
+    ],
+    "correct_index": 1,
+    "explanation": "Поля имеют встроенные валидаторы (max_length, regex). Можно добавить validators=[...]. validate_<field>(value) валидирует одно поле. validate(self, data) - кросс-полевая валидация. Ошибки бросаются как ValidationError и отдаются клиенту 400."
+  },
+  {
+    "external_key": "pdf-dj-028",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое WSGI?",
+    "options": [
+      "Это формат БД.",
+      "Web Server Gateway Interface - стандарт интерфейса между web-сервером и Python-приложением (PEP 3333).",
+      "Это библиотека asyncio.",
+      "Это шаблонный движок."
+    ],
+    "correct_index": 1,
+    "explanation": "WSGI - синхронный интерфейс application(environ, start_response). Позволяет любому WSGI-серверу (gunicorn, uWSGI) запускать любое WSGI-приложение (Django, Flask). Для асинхронности - аналогичный ASGI (PEP 3333 для async)."
+  },
+  {
+    "external_key": "pdf-dj-029",
+    "topic": "django",
+    "difficulty": 3,
+    "text": "Что такое Django Channels?",
+    "options": [
+      "Это шаблонный фильтр.",
+      "Расширение Django для асинхронных протоколов (WebSocket, HTTP/2 long-poll, MQTT) поверх ASGI; работает с group/messaging через channel layer.",
+      "Это middleware для CSRF.",
+      "Сборщик статики."
+    ],
+    "correct_index": 1,
+    "explanation": "Channels превращает Django в ASGI-приложение и поддерживает WebSocket, чат, real-time нотификации. Consumer - класс-обработчик. Channel layer (обычно Redis) обеспечивает обмен сообщениями между процессами и группами клиентов."
+  },
+  {
+    "external_key": "pdf-dj-030",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое QuerySet и какова его особенность?",
+    "options": [
+      "Это просто список моделей.",
+      "Ленивая абстракция над выборкой: формирует SQL только при итерации/срезе/list(); поддерживает chain (filter().exclude().order_by()).",
+      "Всегда исполняется немедленно.",
+      "Не поддерживает фильтрацию."
+    ],
+    "correct_index": 1,
+    "explanation": "QuerySet ленив: User.objects.filter(...) не делает SQL, пока не материализуется (итерация, list(), len(), индексация). Можно chain'ить методы - всё компилируется в один запрос. Кеширует результат после первого выполнения."
+  },
+  {
+    "external_key": "pdf-dj-031",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "В чём разница между select_related и prefetch_related?",
+    "options": [
+      "Это синонимы.",
+      "select_related делает SQL JOIN для FK/OneToOne (один запрос); prefetch_related делает отдельный запрос и склеивает данные на стороне Python (для M2M и обратных FK).",
+      "select_related только для M2M.",
+      "prefetch_related только для FK."
+    ],
+    "correct_index": 1,
+    "explanation": "select_related - SQL JOIN, удобно для FK и OneToOne, минимизирует число запросов. prefetch_related - отдельный запрос на каждое отношение и склейка в Python, нужно для ManyToMany и обратных FK. Оба борются с проблемой N+1."
+  },
+  {
+    "external_key": "pdf-db-001",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что такое база данных (БД)?",
+    "options": [
+      "Это любой текстовый файл.",
+      "Структурированная коллекция данных, хранящаяся и управляемая на компьютерной системе для приложений и задач.",
+      "Это таблица в Excel.",
+      "Только Microsoft SQL Server."
+    ],
+    "correct_index": 1,
+    "explanation": "База данных - организованная по структуре коллекция данных с поддержкой долговременного хранения, многопользовательского доступа, эффективного поиска/фильтрации, безопасности и резервирования. Используется в любых приложениях, работающих с состоянием."
+  },
+  {
+    "external_key": "pdf-db-002",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Какие СУБД относятся к реляционным (SQL)?",
+    "options": [
+      "MongoDB, Cassandra, Redis",
+      "MySQL, PostgreSQL, Oracle, Microsoft SQL Server, SQLite, MariaDB",
+      "Neo4j, DynamoDB, HBase",
+      "Couchbase, Firestore"
+    ],
+    "correct_index": 1,
+    "explanation": "Реляционные СУБД (SQL): MySQL, PostgreSQL, Oracle, MS SQL Server, SQLite, MariaDB, Db2. Нереляционные (NoSQL): MongoDB (документная), Cassandra (колоночная), Redis (key-value), Neo4j (граф), DynamoDB, Firestore, HBase."
+  },
+  {
+    "external_key": "pdf-db-003",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что такое СУБД?",
+    "options": [
+      "Только язык запросов.",
+      "Система Управления Базами Данных - программное обеспечение для создания, хранения, извлечения и управления данными в БД.",
+      "Это HTTP-сервер.",
+      "Это операционная система."
+    ],
+    "correct_index": 1,
+    "explanation": "СУБД (DBMS) обеспечивает создание схемы, физическое хранение, извлечение через язык запросов (SQL), обновление, целостность, безопасность доступа и резервное копирование. Примеры: PostgreSQL, MySQL, MongoDB."
+  },
+  {
+    "external_key": "pdf-db-004",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "В чём ключевое отличие реляционных БД от нереляционных?",
+    "options": [
+      "Реляционные хранят только числа.",
+      "Реляционные используют таблицы с фиксированной схемой и SQL; нереляционные - документы/ключ-значение/графы с гибкой схемой и собственными языками.",
+      "Реляционные не поддерживают транзакции.",
+      "Это синонимы."
+    ],
+    "correct_index": 1,
+    "explanation": "Реляционные (SQL): жёсткая схема, нормализация, ACID, JOIN. Нереляционные (NoSQL): гибкая/безсхемная модель (document, key-value, column, graph), часто eventual consistency, горизонтальное масштабирование. Выбор зависит от модели данных и требований к консистентности."
+  },
+  {
+    "external_key": "pdf-db-005",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что означает аббревиатура ACID?",
+    "options": [
+      "Atomicity, Consistency, Isolation, Durability",
+      "Authentication, Caching, Indexing, Distribution",
+      "Async, Concurrent, Idempotent, Distributed",
+      "Atomic, Compressed, Indexed, Durable"
+    ],
+    "correct_index": 0,
+    "explanation": "ACID - свойства транзакций: Atomicity (всё или ничего), Consistency (БД переходит из одного валидного состояния в другое), Isolation (параллельные транзакции не мешают), Durability (после COMMIT данные сохраняются и переживают сбой)."
+  },
+  {
+    "external_key": "pdf-db-006",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем PostgreSQL отличается от MongoDB?",
+    "options": [
+      "Это одно и то же.",
+      "PostgreSQL - реляционная БД с ACID и SQL; MongoDB - документная NoSQL с BSON-документами и горизонтальным масштабированием.",
+      "MongoDB строго реляционная.",
+      "PostgreSQL не поддерживает SQL."
+    ],
+    "correct_index": 1,
+    "explanation": "PostgreSQL: таблицы, ACID, SQL, JOIN, мощные индексы, JSONB-поля. MongoDB: коллекции BSON-документов, гибкая схема, sharding из коробки, eventual consistency по умолчанию (с настройкой). Выбор - по типу данных и нагрузке."
+  },
+  {
+    "external_key": "pdf-db-007",
+    "topic": "sql",
+    "difficulty": 3,
+    "text": "Какие уровни изоляции транзакций существуют в SQL?",
+    "options": [
+      "Только READ COMMITTED",
+      "READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ, SERIALIZABLE",
+      "ATOMIC, DURABLE, ISOLATED, CONSISTENT",
+      "FAST, SLOW, MEDIUM"
+    ],
+    "correct_index": 1,
+    "explanation": "Стандарт SQL: READ UNCOMMITTED (видны грязные чтения), READ COMMITTED (только закоммиченные данные), REPEATABLE READ (нет non-repeatable read), SERIALIZABLE (как будто транзакции выполнялись последовательно). PostgreSQL по умолчанию READ COMMITTED, MySQL InnoDB - REPEATABLE READ."
+  },
+  {
+    "external_key": "pdf-db-008",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое индекс в БД?",
+    "options": [
+      "Резервная копия данных.",
+      "Структура данных (обычно B-tree), ускоряющая поиск по столбцу за счёт дополнительной памяти и стоимости при INSERT/UPDATE.",
+      "Это ограничение целостности.",
+      "Это процесс репликации."
+    ],
+    "correct_index": 1,
+    "explanation": "Индекс ускоряет SELECT/JOIN/WHERE по столбцу с O(log n). Замедляет INSERT/UPDATE/DELETE и занимает место. Виды: B-tree (по умолчанию), hash, GIN, GiST, BRIN. Уникальный индекс гарантирует уникальность значений."
+  },
+  {
+    "external_key": "pdf-db-009",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое ForeignKey (внешний ключ)?",
+    "options": [
+      "Это уникальный идентификатор строки.",
+      "Поле в таблице, ссылающееся на первичный ключ другой таблицы; обеспечивает ссылочную целостность.",
+      "Это индекс.",
+      "Это псевдоним SELECT."
+    ],
+    "correct_index": 1,
+    "explanation": "ForeignKey связывает строки: значение в дочерней таблице должно существовать в родительской. Обеспечивает ссылочную целостность; на удаление можно настроить CASCADE/SET NULL/RESTRICT. В Django ORM описывается как models.ForeignKey."
+  },
+  {
+    "external_key": "pdf-db-010",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое JOIN в SQL?",
+    "options": [
+      "Это команда удаления.",
+      "Операция объединения строк двух или более таблиц по условию; виды: INNER, LEFT, RIGHT, FULL, CROSS.",
+      "Это аналог GROUP BY.",
+      "Это создание индекса."
+    ],
+    "correct_index": 1,
+    "explanation": "JOIN объединяет таблицы по условию (обычно ON t1.fk = t2.id). INNER возвращает только совпавшие строки; LEFT - все из левой + совпавшие из правой (NULL, если нет); RIGHT - наоборот; FULL - все строки из обеих; CROSS - декартово произведение."
+  },
+  {
+    "external_key": "pdf-db-011",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какой запрос вернёт количество заказов на каждого пользователя?",
+    "options": [
+      "SELECT user_id, orders FROM users",
+      "SELECT user_id, COUNT(*) FROM orders GROUP BY user_id",
+      "SELECT user_id FROM orders WHERE COUNT(*) > 0",
+      "COUNT orders BY user_id"
+    ],
+    "correct_index": 1,
+    "explanation": "Агрегация делается через GROUP BY. SELECT user_id, COUNT(*) AS cnt FROM orders GROUP BY user_id - стандартный паттерн. Для фильтрации после агрегации используется HAVING (например, HAVING COUNT(*) > 5)."
+  },
+  {
+    "external_key": "pdf-gen-001",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое DRY?",
+    "options": [
+      "Don't Repeat Yourself - не повторяйся; общую логику выделяй в одно место.",
+      "Do Repeat Yourself - дублируй для надёжности.",
+      "Документ-структура для тестов.",
+      "Это формат логов."
+    ],
+    "correct_index": 0,
+    "explanation": "DRY (Don't Repeat Yourself) - принцип, который запрещает дублирование знания. Каждое значимое 'правило' должно жить в одном месте. Полезен для уменьшения багов, но не нужно злоупотреблять: преждевременная абстракция тоже опасна."
+  },
+  {
+    "external_key": "pdf-gen-002",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое KISS?",
+    "options": [
+      "Keep It Simple, Stupid - выбирай простейшее решение, которое работает.",
+      "Тип системного теста.",
+      "Сетевой протокол.",
+      "Метод оптимизации."
+    ],
+    "correct_index": 0,
+    "explanation": "KISS призывает делать решения как можно проще: чем меньше движущихся частей, тем меньше ошибок и проще сопровождение. Сложность добавляется только когда она оправдана задачей."
+  },
+  {
+    "external_key": "pdf-gen-003",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое YAGNI?",
+    "options": [
+      "You Aren't Gonna Need It - не реализуй функционал, пока он реально не понадобился.",
+      "Это библиотека asyncio.",
+      "Это вид кеша.",
+      "Это аббревиатура HTTP."
+    ],
+    "correct_index": 0,
+    "explanation": "YAGNI - не пиши код 'на будущее' без подтверждённой необходимости. Преждевременная функциональность увеличивает сложность, поверхность багов и стоимость поддержки. Лучше добавлять, когда есть реальный кейс."
+  },
+  {
+    "external_key": "pdf-gen-004",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое GRASP?",
+    "options": [
+      "Это шаблон асинхронного программирования.",
+      "General Responsibility Assignment Software Patterns - набор принципов распределения ответственности в ООП (Information Expert, Creator, Controller, Low Coupling, High Cohesion и др.).",
+      "Это формат логов.",
+      "Метод сжатия данных."
+    ],
+    "correct_index": 1,
+    "explanation": "GRASP описывает, как назначать ответственности классам: Information Expert (тот, у кого есть данные, и должен делать операцию), Creator, Controller, Low Coupling, High Cohesion, Polymorphism, Pure Fabrication, Indirection, Protected Variations."
+  },
+  {
+    "external_key": "pdf-gen-005",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое SOLID?",
+    "options": [
+      "Это название библиотеки.",
+      "5 принципов ООП: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.",
+      "Это аббревиатура HTTP.",
+      "Это файловая система."
+    ],
+    "correct_index": 1,
+    "explanation": "SOLID: SRP (один класс - одна причина для изменения), OCP (открыт для расширения, закрыт для модификации), LSP (наследник заменяем родителем), ISP (много узких интерфейсов лучше одного широкого), DIP (зависим от абстракций, не от конкретных реализаций)."
+  },
+  {
+    "external_key": "pdf-gen-006",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое REST?",
+    "options": [
+      "Это протокол.",
+      "Архитектурный стиль сервиса: ресурсы по URI, использование HTTP-методов (GET/POST/PUT/PATCH/DELETE), stateless, представления (JSON/XML).",
+      "Это база данных.",
+      "Это шаблонизатор."
+    ],
+    "correct_index": 1,
+    "explanation": "REST - архитектурный стиль (Roy Fielding): ресурсы идентифицируются URI, манипуляции через стандартные HTTP-методы, без состояния (каждый запрос самодостаточен), кешируемость, единообразие интерфейса. Часто используется JSON, но это не часть REST."
+  },
+  {
+    "external_key": "pdf-gen-007",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CORS?",
+    "options": [
+      "Это вид XSS.",
+      "Cross-Origin Resource Sharing - механизм, позволяющий браузеру отправлять кросс-доменные запросы; сервер выдаёт заголовки Access-Control-Allow-Origin и др.",
+      "Это библиотека JS.",
+      "Это формат БД."
+    ],
+    "correct_index": 1,
+    "explanation": "CORS - стандарт W3C, позволяющий браузеру разрешать кросс-origin запросы. Сервер отвечает заголовками Access-Control-Allow-Origin/Methods/Headers/Credentials. Для preflight (OPTIONS) браузер заранее проверяет, разрешён ли метод и заголовки."
+  },
+  {
+    "external_key": "pdf-gen-008",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что такое HTTP?",
+    "options": [
+      "Это формат БД.",
+      "HyperText Transfer Protocol - текстовый протокол прикладного уровня для обмена ресурсами в web (запрос-ответ, stateless).",
+      "Это шаблонизатор.",
+      "Это библиотека asyncio."
+    ],
+    "correct_index": 1,
+    "explanation": "HTTP - прикладной протокол поверх TCP (HTTP/1.1, HTTP/2) или QUIC (HTTP/3). Запрос: метод, URL, заголовки, тело. Ответ: статус-код, заголовки, тело. Stateless: сервер не обязан хранить состояние между запросами; для этого нужны cookie/сессии."
+  },
+  {
+    "external_key": "pdf-gen-009",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какие методы HTTP вы знаете?",
+    "options": [
+      "Только GET и POST.",
+      "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS, TRACE, CONNECT.",
+      "PRINT, SAVE, OPEN.",
+      "SELECT, INSERT, UPDATE."
+    ],
+    "correct_index": 1,
+    "explanation": "Основные: GET (чтение), POST (создание/действие), PUT (полная замена), PATCH (частичное обновление), DELETE (удаление). Сервисные: HEAD (как GET, без тела), OPTIONS (поддерживаемые методы, preflight CORS), TRACE/CONNECT (диагностика, прокси)."
+  },
+  {
+    "external_key": "pdf-gen-010",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Какие методы HTTP считаются идемпотентными?",
+    "options": [
+      "GET, HEAD, PUT, DELETE, OPTIONS",
+      "Только POST",
+      "Все методы идемпотентны",
+      "Идемпотентных методов нет"
+    ],
+    "correct_index": 0,
+    "explanation": "Идемпотентный = многократный одинаковый запрос даёт тот же результат на сервере. GET/HEAD - безопасные и идемпотентные; PUT/DELETE/OPTIONS - идемпотентные. POST по умолчанию не идемпотентен (создание дубликатов); чтобы сделать его таким - используется идемпотентный ключ."
+  },
+  {
+    "external_key": "pdf-gen-011",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое MVC (Model-View-Controller)?",
+    "options": [
+      "Архитектурный шаблон: данные (Model), представление (View) и логика обработки ввода (Controller).",
+      "Это база данных.",
+      "Это сетевой протокол.",
+      "Это шаблонизатор."
+    ],
+    "correct_index": 0,
+    "explanation": "MVC разделяет приложение на три уровня: Model (домен и данные), View (UI/представление), Controller (контроль ввода и оркестрация). Помогает разделять ответственности и тестировать слои отдельно. Django называет это MVT (View играет роль Controller)."
+  },
+  {
+    "external_key": "pdf-gen-012",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Назовите принципы ООП.",
+    "options": [
+      "Инкапсуляция, наследование, полиморфизм, абстракция.",
+      "Только наследование.",
+      "Кеширование, индексирование, репликация.",
+      "TCP, UDP, IP, ICMP."
+    ],
+    "correct_index": 0,
+    "explanation": "4 принципа ООП: Инкапсуляция (скрытие деталей за интерфейсом), Наследование (расширение класса), Полиморфизм (один интерфейс - разное поведение), Абстракция (выделение существенного, скрытие несущественного)."
+  },
+  {
+    "external_key": "pdf-gen-013",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое композиция в ООП?",
+    "options": [
+      "Это синоним наследования.",
+      "Создание объекта, состоящего из других объектов как полей; отношение 'has-a' вместо 'is-a' наследования.",
+      "Это интерфейс.",
+      "Это часть SQL."
+    ],
+    "correct_index": 1,
+    "explanation": "Композиция (has-a) - объект содержит другие объекты как поля и делегирует им работу. Это альтернатива наследованию (is-a). Обычно гибче и менее связно: 'предпочитайте композицию наследованию' (GoF)."
+  },
+  {
+    "external_key": "pdf-gen-014",
+    "topic": "caching",
+    "difficulty": 1,
+    "text": "Что такое кеширование?",
+    "options": [
+      "Это резервное копирование.",
+      "Сохранение часто запрашиваемых данных в быстром хранилище (память, Redis), чтобы повторно не считать/тянуть из медленного источника.",
+      "Это сжатие файлов.",
+      "Это шифрование."
+    ],
+    "correct_index": 1,
+    "explanation": "Кеширование экономит время и нагрузку на источник: один раз посчитал/прочитал - в следующий раз отдал из кеша. Уровни: CPU, OS page cache, in-process, distributed (Redis, Memcached), CDN. Главные сложности: инвалидация и согласованность."
+  },
+  {
+    "external_key": "pdf-gen-015",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое Docker?",
+    "options": [
+      "Платформа контейнеризации: пакует приложение и зависимости в образ и запускает изолированно через контейнеры.",
+      "Это альтернатива Git.",
+      "Это IDE.",
+      "Только для Linux-серверов."
+    ],
+    "correct_index": 0,
+    "explanation": "Docker - платформа для упаковки приложений в контейнеры (легковесные изолированные процессы поверх ядра ОС). Образ (image) - immutable снимок с приложением и зависимостями; контейнер - запущенный экземпляр образа. Решает 'у меня работает'."
+  },
+  {
+    "external_key": "pdf-gen-016",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое Dockerfile?",
+    "options": [
+      "Это формат логов.",
+      "Текстовый файл с инструкциями (FROM/RUN/COPY/CMD/...) для сборки образа Docker.",
+      "Это шаблон Compose.",
+      "Это конфиг Kubernetes."
+    ],
+    "correct_index": 1,
+    "explanation": "Dockerfile - сценарий сборки образа. FROM - базовый образ, RUN - команда внутри образа, COPY/ADD - копирование файлов, ENV/ARG - переменные, CMD/ENTRYPOINT - команда запуска контейнера. Каждый слой кешируется для быстрой пересборки."
+  },
+  {
+    "external_key": "pdf-gen-017",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое Docker Compose?",
+    "options": [
+      "Это синоним Dockerfile.",
+      "Инструмент для описания и запуска многоконтейнерных приложений в одном YAML (docker-compose.yml): сервисы, сети, volume.",
+      "Это система мониторинга.",
+      "Это linter."
+    ],
+    "correct_index": 1,
+    "explanation": "Compose описывает несколько контейнеров и их связи в одном файле: services, networks, volumes. docker compose up поднимает всё сразу. Удобно для локальной разработки и интеграционных тестов (web + db + redis + worker)."
+  },
+  {
+    "external_key": "pdf-gen-018",
+    "topic": "system_design",
+    "difficulty": 3,
+    "text": "Что такое Kubernetes?",
+    "options": [
+      "Это IDE.",
+      "Оркестратор контейнеров: управляет деплоем, масштабированием, self-healing и сетью между контейнерами в кластере.",
+      "Это менеджер пакетов.",
+      "Это шаблонизатор."
+    ],
+    "correct_index": 1,
+    "explanation": "Kubernetes (k8s) автоматизирует деплой контейнеров на кластере узлов: Pod (группа контейнеров), Deployment (декларативный rollout), Service (стабильный endpoint), Ingress (HTTP-роутинг), ConfigMap/Secret. Делает self-healing, масштабирование и rolling-обновления."
+  },
+  {
+    "external_key": "pdf-gen-019",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "В чём разница между образом Docker и контейнером Docker?",
+    "options": [
+      "Это синонимы.",
+      "Образ - immutable снимок (как класс), контейнер - запущенный экземпляр образа (как объект); один образ может породить много контейнеров.",
+      "Образ запускается, контейнер - нет.",
+      "Контейнер - это файл .iso."
+    ],
+    "correct_index": 1,
+    "explanation": "Образ (image) - read-only сборка с приложением и зависимостями. Контейнер - запущенный процесс из этого образа со своей writable-слой ФС. Один образ - много контейнеров. Контейнеры эфемерны, обычно состояние выносят в volume."
+  },
+  {
+    "external_key": "pdf-gen-020",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Для чего нужен Git?",
+    "options": [
+      "Только для бэкапа.",
+      "Распределённая система контроля версий: история изменений, ветки, слияния, коллаборация в распределённой команде.",
+      "Это IDE.",
+      "Это менеджер пакетов."
+    ],
+    "correct_index": 1,
+    "explanation": "Git - distributed VCS: каждый клон содержит полную историю. Управляет изменениями кода: commits, branches, merges, tags, remotes. Основа для коллаборации (GitHub/GitLab) и CI/CD. Обычные операции: clone, branch, commit, push, pull, merge, rebase."
+  },
+  {
+    "external_key": "pdf-gen-021",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "В чём разница между git merge и git rebase?",
+    "options": [
+      "Это синонимы.",
+      "merge создаёт коммит-слияния и сохраняет историю как есть; rebase 'переписывает' ветку поверх другой, делая историю линейной, но изменяет хеши.",
+      "rebase запрещён в Git.",
+      "merge применим только к main."
+    ],
+    "correct_index": 1,
+    "explanation": "merge сохраняет историю обеих веток с коммитом-слияния (часто). rebase переносит коммиты поверх другой ветки, переписывая их (новые хеши). Rebase даёт линейную историю, но не делается на shared-ветках, чтобы не ломать чужие clone."
+  },
+  {
+    "external_key": "pdf-gen-022",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое commit в Git?",
+    "options": [
+      "Это удаление файла.",
+      "Снимок состояния репозитория в данный момент с сообщением и автором; идентифицируется хешем SHA-1/SHA-256.",
+      "Это копия репозитория.",
+      "Это удалённая ветка."
+    ],
+    "correct_index": 1,
+    "explanation": "Commit - неизменяемый снимок состояния файлов плюс метаданные (parent, автор, дата, сообщение). Идентифицируется хешем. История - DAG из коммитов; ветки - указатели на конкретный коммит. git commit создаёт новый из staged-изменений."
+  },
+  {
+    "external_key": "pdf-gen-023",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое Git Flow?",
+    "options": [
+      "Это IDE.",
+      "Модель ветвления: long-lived ветки main и develop + feature/release/hotfix-ветки; чёткий процесс выпуска версий.",
+      "Это команда git.",
+      "Это репозиторий."
+    ],
+    "correct_index": 1,
+    "explanation": "Git Flow (Vincent Driessen) - дисциплина веток: main (релизы), develop (интеграция), feature/* (новые фичи), release/* (стабилизация перед релизом), hotfix/* (фиксы прода). Альтернативы: GitHub Flow (только main + feature), trunk-based."
+  },
+  {
+    "external_key": "pdf-gen-024",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое JWT?",
+    "options": [
+      "Это формат БД.",
+      "JSON Web Token - стандарт компактного токена с подписью, передаваемого в заголовке Authorization: Bearer; самодостаточен и stateless.",
+      "Это библиотека ORM.",
+      "Это шифр блочный."
+    ],
+    "correct_index": 1,
+    "explanation": "JWT (RFC 7519) - токен из 3 частей base64url(header).payload.signature. Подпись HMAC или RSA. Сервер выдаёт после аутентификации, клиент шлёт в Authorization. Stateless: сервер не обязан хранить сессию. Не шифрование - не клади секреты в payload."
+  },
+  {
+    "external_key": "pdf-gen-025",
+    "topic": "http",
+    "difficulty": 3,
+    "text": "Что происходит при отправке запроса с браузера?",
+    "options": [
+      "Только TCP-соединение.",
+      "DNS-резолв -> TCP/TLS handshake -> HTTP-запрос -> ответ -> парсинг HTML -> загрузка ресурсов (CSS/JS/img) -> рендер -> выполнение JS.",
+      "Браузер сразу рендерит без сетевых запросов.",
+      "Только взаимодействие с CDN."
+    ],
+    "correct_index": 1,
+    "explanation": "Шаги: 1) DNS-резолв домена в IP; 2) TCP-соединение, при HTTPS - TLS-рукопожатие; 3) отправка HTTP-запроса; 4) сервер возвращает ответ; 5) браузер парсит HTML, строит DOM/CSSOM, скачивает CSS/JS/img; 6) рендер; 7) JS выполняется и может делать дополнительные запросы."
+  },
+  {
+    "external_key": "pdf-gen-026",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое TDD?",
+    "options": [
+      "Это вид сервера.",
+      "Test-Driven Development: пиши сначала падающий тест (Red), затем минимальный код, чтобы прошёл (Green), затем рефактори (Refactor).",
+      "Это формат логов.",
+      "Это IDE."
+    ],
+    "correct_index": 1,
+    "explanation": "TDD - дисциплина: red (тест не проходит), green (минимальный код), refactor (улучшаем без поломки тестов). Помогает избежать over-engineering, документирует поведение тестами и даёт сетку безопасности при рефакторингах."
+  },
+  {
+    "external_key": "pdf-gen-027",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что делает код 'хорошим'?",
+    "options": [
+      "Только высокая производительность любой ценой.",
+      "Читаемость, тестируемость, простота, низкая связанность, высокая когезия, согласованность стиля, отсутствие дублирования, понятные имена.",
+      "Только короткость.",
+      "Только использование самых новых конструкций."
+    ],
+    "correct_index": 1,
+    "explanation": "Хороший код легко читать другому разработчику и менять без страха. Главные качества: читаемость, тестируемость, низкая связанность и высокая когезия, отсутствие дублирования (DRY), отсутствие преждевременной оптимизации (KISS, YAGNI), согласованный стиль (PEP 8)."
+  },
+  {
+    "external_key": "pdf-gen-028",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое idempotency-key и зачем он нужен?",
+    "options": [
+      "Это просто id заказа.",
+      "Идентификатор операции, который клиент посылает с запросом, чтобы сервер мог распознать дубликат и не выполнить операцию повторно.",
+      "Это вид кеша.",
+      "Это HTTP-метод."
+    ],
+    "correct_index": 1,
+    "explanation": "Idempotency-key (заголовок Idempotency-Key) - уникальный токен запроса. Сервер сохраняет результат первой обработки; при повторе с тем же ключом возвращает тот же ответ, не делая работу второй раз. Важно для платежей, where retry должен быть безопасен."
   }
 ]
