@@ -4072,5 +4072,2385 @@
     ],
     "correct_index": 1,
     "explanation": "Idempotency-key (заголовок Idempotency-Key) - уникальный токен запроса. Сервер сохраняет результат первой обработки; при повторе с тем же ключом возвращает тот же ответ, не делая работу второй раз. Важно для платежей, where retry должен быть безопасен."
+  },
+  {
+    "external_key": "test-001",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Чем unit-тест отличается от integration-теста?",
+    "options": [
+      "Это синонимы.",
+      "Unit изолирует один модуль (с моками внешних зависимостей), integration проверяет связку нескольких компонентов (БД, очередь, HTTP).",
+      "Unit использует БД, integration - нет.",
+      "Integration работает только в проде."
+    ],
+    "correct_index": 1,
+    "explanation": "Unit-тест проверяет один модуль/функцию изолированно: внешние зависимости (БД, сеть, время) подменяются моками. Integration-тест запускает реальные связки: код + БД, или сервис + очередь. End-to-end (e2e) - полный путь снаружи (HTTP-запрос -> ответ)."
+  },
+  {
+    "external_key": "test-002",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое pyramid тестирования?",
+    "options": [
+      "Идея, что тестов всех типов должно быть поровну.",
+      "Подход: много быстрых unit-тестов, среднее число integration, мало e2e - так дешевле и быстрее ловить регрессии.",
+      "Архитектура распределённой БД.",
+      "Это про производительность."
+    ],
+    "correct_index": 1,
+    "explanation": "Test Pyramid (Mike Cohn): unit (быстрые, изолированные) - основание; integration - середина; e2e UI - вершина. Чем выше, тем медленнее, дороже, ненадёжнее. Перевёрнутая пирамида (много e2e) даёт долгий CI и flaky-тесты."
+  },
+  {
+    "external_key": "test-003",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое фикстура в pytest?",
+    "options": [
+      "Хардкод-данные в тестовом файле.",
+      "Функция с @pytest.fixture, готовящая ресурсы для теста; внедряется через имя в аргументах теста.",
+      "Только декоратор для классов.",
+      "Это linter."
+    ],
+    "correct_index": 1,
+    "explanation": "@pytest.fixture превращает функцию в фикстуру. Pytest связывает её по имени параметра теста: def test_x(db_session): ... Это инверсия зависимостей - не тест ищет данные, а фреймворк их подаёт. Поддерживает scope (function/class/module/session), yield для teardown, autouse."
+  },
+  {
+    "external_key": "test-004",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что делает scope='session' у фикстуры pytest?",
+    "options": [
+      "Создаёт новую копию для каждого теста.",
+      "Создаёт фикстуру один раз на весь запуск pytest и переиспользует её во всех тестах сессии.",
+      "Делает фикстуру асинхронной.",
+      "Запускает только в CI."
+    ],
+    "correct_index": 1,
+    "explanation": "Scope: function (default, новая на каждый тест), class, module (один раз на файл), package, session (один раз на запуск). Session-scope удобен для дорогих ресурсов (БД, докер-контейнер). teardown через yield/addfinalizer."
+  },
+  {
+    "external_key": "test-005",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что делает @pytest.mark.parametrize?",
+    "options": [
+      "Импортирует параметры командной строки.",
+      "Генерирует несколько версий одного теста с разными значениями параметров.",
+      "Только для классов.",
+      "Делает тест асинхронным."
+    ],
+    "correct_index": 1,
+    "explanation": "@pytest.mark.parametrize('a,b,expected', [(1,2,3),(0,0,0)]) делает один def test_add(a,b,expected) запускающимся как N независимых тестов. Каждый получает свой ID в отчёте. Можно стэкать декораторы для декартова произведения."
+  },
+  {
+    "external_key": "test-006",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Какая разница между Mock и MagicMock в unittest.mock?",
+    "options": [
+      "MagicMock работает быстрее.",
+      "MagicMock - это Mock плюс предконфигурированные magic-методы (__len__, __iter__, __enter__/__exit__, __getitem__ и т.д.).",
+      "Mock не существует.",
+      "MagicMock только для async."
+    ],
+    "correct_index": 1,
+    "explanation": "Mock - универсальный мок, любые атрибуты возвращают Mock. MagicMock дополнительно реализует магические методы, чтобы объект работал в len(), iter(), with, [] и т.п. По умолчанию patch создаёт MagicMock - это удобнее для большинства случаев."
+  },
+  {
+    "external_key": "test-007",
+    "topic": "testing",
+    "difficulty": 3,
+    "text": "Где надо патчить функцию через unittest.mock.patch?",
+    "options": [
+      "Там, где она объявлена.",
+      "Там, где она используется (импортируется и вызывается) - 'patch where it is looked up'.",
+      "В __init__.py пакета.",
+      "В conftest.py всегда."
+    ],
+    "correct_index": 1,
+    "explanation": "Правило: patch('module_under_test.function'), а не patch('original_module.function'). Объект ищется в namespace модуля, который тестируется. Иначе мок будет повешен на оригинал, а тест дёрнет уже импортированный сюда символ - и мок не сработает."
+  },
+  {
+    "external_key": "test-008",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое coverage и о чём он не говорит?",
+    "options": [
+      "Это инструмент рефакторинга.",
+      "Метрика покрытия кода тестами; высокое coverage не гарантирует, что тесты ловят баги (нет проверки на корректность assert'ов и edge cases).",
+      "Это профайлер.",
+      "Это статический анализатор."
+    ],
+    "correct_index": 1,
+    "explanation": "Coverage показывает, какие строки/ветки выполнены тестами. Но 100% line coverage не означает, что поведение действительно проверено: тесты могут не делать assert или не покрывать граничные случаи. Mutation testing (mutmut, cosmic-ray) лучше отражает качество."
+  },
+  {
+    "external_key": "test-009",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое AAA-паттерн в тестах?",
+    "options": [
+      "Authentication-Authorization-Auditing.",
+      "Arrange (подготовить данные/моки), Act (вызвать тестируемое), Assert (проверить результат) - читабельная структура теста.",
+      "Async-Async-Async.",
+      "Это паттерн БД."
+    ],
+    "correct_index": 1,
+    "explanation": "AAA (Arrange-Act-Assert) или Given-When-Then делает тест читаемым: подготовка -> действие -> проверка. Каждый блок отделён пустой строкой/комментарием. Помогает удерживать тесты короткими и фокусированными."
+  },
+  {
+    "external_key": "test-010",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое monkeypatch в pytest?",
+    "options": [
+      "Это отдельный пакет.",
+      "Встроенная фикстура для подмены атрибутов/env-переменных/чего-то на время теста с автоматическим откатом после теста.",
+      "Это git hook.",
+      "Это альтернатива fixture."
+    ],
+    "correct_index": 1,
+    "explanation": "monkeypatch - удобная фикстура: monkeypatch.setattr, monkeypatch.setenv, monkeypatch.delenv, monkeypatch.chdir. После теста pytest откатывает все изменения. Удобно для быстрых подмен без unittest.mock.patch."
+  },
+  {
+    "external_key": "test-011",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Чем factory_boy полезен в тестах?",
+    "options": [
+      "Это IDE.",
+      "Создаёт фабрики тестовых объектов с дефолтами и зависимостями (включая ORM-модели), что убирает дублирование подготовки данных.",
+      "Это linter.",
+      "Это покрытие."
+    ],
+    "correct_index": 1,
+    "explanation": "factory_boy позволяет описать UserFactory(DjangoModelFactory) с дефолтными полями. UserFactory() создаёт объект; UserFactory.build() - не сохраняя в БД. SubFactory связывает модели. Faker внутри генерит правдоподобные данные. Уменьшает шум в тестах."
+  },
+  {
+    "external_key": "test-012",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Зачем нужен Faker?",
+    "options": [
+      "Для генерации фейковых, но правдоподобных данных в тестах: имена, адреса, email, lorem ipsum.",
+      "Для запуска тестов параллельно.",
+      "Для покрытия кода.",
+      "Для мутационного тестирования."
+    ],
+    "correct_index": 0,
+    "explanation": "Faker - библиотека для генерации правдоподобных тестовых данных: faker.name(), faker.email(), faker.address(). Поддерживает локали (русский). Часто комбинируется с factory_boy для уникальных и реалистичных значений в фабриках."
+  },
+  {
+    "external_key": "test-013",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Как тестировать async-код в pytest?",
+    "options": [
+      "Никак, нельзя.",
+      "Использовать pytest-asyncio: async def test_x() и @pytest.mark.asyncio (или mode='auto' в конфиге).",
+      "Запускать через unittest.",
+      "Только через subprocess."
+    ],
+    "correct_index": 1,
+    "explanation": "pytest-asyncio добавляет поддержку async def test_x. Помечают тест @pytest.mark.asyncio или включают mode='auto' в pyproject. Для async-фикстур: @pytest_asyncio.fixture. Альтернативы: anyio, trio."
+  },
+  {
+    "external_key": "test-014",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое flaky test?",
+    "options": [
+      "Тест, который никогда не падает.",
+      "Тест, который иногда проходит, иногда падает - часто из-за timing, гонок, внешних зависимостей; flaky подрывают доверие к CI.",
+      "Тест с неправильным assert.",
+      "Тест на async."
+    ],
+    "correct_index": 1,
+    "explanation": "Flaky-тест нестабилен. Причины: race conditions, time.sleep, опора на порядок неупорядоченных коллекций, внешние сервисы. Лечение: устранить timing, мокать сеть/время, использовать fixed seeds, помечать @pytest.mark.flaky с retry в крайних случаях."
+  },
+  {
+    "external_key": "test-015",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое snapshot-тест?",
+    "options": [
+      "Резервная копия БД.",
+      "Тест, сравнивающий вывод/структуру с заранее сохранённым 'эталоном'; обновляется командой при намеренных изменениях.",
+      "Тип unit-теста.",
+      "Это фикстура."
+    ],
+    "correct_index": 1,
+    "explanation": "Snapshot-тест сравнивает результат (JSON, HTML, текст) с сохранённым snapshot'ом. Удобно для UI/serializer'ов. Минус - легко 'обновлять' снапшоты без понимания изменений. Инструменты: syrupy, snapshottest."
+  },
+  {
+    "external_key": "test-016",
+    "topic": "testing",
+    "difficulty": 3,
+    "text": "Что такое mutation testing?",
+    "options": [
+      "Замена БД на in-memory.",
+      "Инструмент мутирует код (меняет операторы, возвраты) и проверяет, упал ли тест; если не упал - тесты неполны. Дополняет coverage.",
+      "Случайные тесты.",
+      "Тестирование async."
+    ],
+    "correct_index": 1,
+    "explanation": "Mutation testing вносит мутации (a + b -> a - b, return True -> return False) и запускает тесты. 'Убитая' мутация - тесты упали (хорошо). 'Выжившая' - тесты пропустили баг. Инструменты: mutmut, cosmic-ray. Дороже coverage, но точнее показывает качество."
+  },
+  {
+    "external_key": "test-017",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что делает tox?",
+    "options": [
+      "Сборщик пакетов.",
+      "Управляет матрицей окружений: запускает тесты в нескольких версиях Python и наборах зависимостей, изолируя их в venv.",
+      "Это CI-сервер.",
+      "Это профайлер."
+    ],
+    "correct_index": 1,
+    "explanation": "tox описывает в tox.ini окружения (py39, py310, py311), для каждого создаёт venv, ставит зависимости и запускает команды (pytest, ruff). Современная альтернатива - nox (на Python). Для CI часто заменяют GitHub Actions matrix."
+  },
+  {
+    "external_key": "test-018",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Какие 5 видов test doubles?",
+    "options": [
+      "Mock, MagicMock, Patch, Stub, Fake",
+      "Dummy, Stub, Spy, Mock, Fake (по Gerard Meszaros)",
+      "Replica, Shadow, Proxy",
+      "Только Mock и Stub."
+    ],
+    "correct_index": 1,
+    "explanation": "Классификация Meszaros: Dummy (просто заполнитель аргументов), Stub (возвращает заранее заданные данные), Spy (Stub, который записывает вызовы), Mock (с заранее заданными ожиданиями вызовов), Fake (рабочая, но упрощённая реализация - in-memory БД)."
+  },
+  {
+    "external_key": "test-019",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Как избежать 'подвисших' данных между тестами в Django?",
+    "options": [
+      "Не использовать БД.",
+      "@pytest.mark.django_db / TestCase оборачивают каждый тест в транзакцию и откатывают её - данные не утекают.",
+      "Удалять руками в teardown.",
+      "Никак."
+    ],
+    "correct_index": 1,
+    "explanation": "Django TestCase оборачивает тест в транзакцию и откатывает после. Pytest-django добавляет @pytest.mark.django_db. transaction=True даёт реальные коммиты (медленнее, но позволяет тестировать TransactionTestCase-сценарии: select_for_update, миграции)."
+  },
+  {
+    "external_key": "test-020",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое TDD vs BDD?",
+    "options": [
+      "Это синонимы.",
+      "TDD - сначала тест, потом код (Red-Green-Refactor). BDD добавляет уровень бизнес-описания (Given-When-Then) на естественном языке (Cucumber, behave).",
+      "TDD только для backend.",
+      "BDD - это про БД."
+    ],
+    "correct_index": 1,
+    "explanation": "TDD - дисциплина разработки через тесты на уровне кода. BDD сдвигает акцент на поведение и общается с продуктом/QA через сценарии Given-When-Then (Gherkin), которые читают и неразработчики. Инструменты: behave, pytest-bdd."
+  },
+  {
+    "external_key": "test-021",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое conftest.py в pytest?",
+    "options": [
+      "Это конфиг pip.",
+      "Локальный файл pytest, в котором определяются shared-фикстуры/хуки/плагины для тестов в директории и поддиректориях.",
+      "Это формат данных.",
+      "Это файл лицензии."
+    ],
+    "correct_index": 1,
+    "explanation": "conftest.py автоматически подгружается pytest и распространяется на текущий каталог и подкаталоги. В нём кладут общие fixtures, hooks (pytest_collection_modifyitems и т.д.), плагины. Несколько conftest.py могут быть на разных уровнях."
+  },
+  {
+    "external_key": "test-022",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое маркер @pytest.mark.skip?",
+    "options": [
+      "Удаляет тест.",
+      "Помечает тест как пропущенный (с причиной); собрат - skipif для условного пропуска и xfail для ожидаемого падения.",
+      "Делает тест async.",
+      "Это альтернатива fixture."
+    ],
+    "correct_index": 1,
+    "explanation": "@pytest.mark.skip(reason='wip'), @pytest.mark.skipif(condition, reason=...) и @pytest.mark.xfail (тест ожидаемо падает; если прошёл - XPASS). Помечают разовые/нестабильные/ожидаемые падения, чтобы CI оставался зелёным и при этом не терять тест."
+  },
+  {
+    "external_key": "test-023",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что делает httpx.MockTransport / responses в тестах HTTP?",
+    "options": [
+      "Подменяет реальные HTTP-запросы заранее заданными ответами; тесты не зависят от внешних сервисов.",
+      "Включает прокси.",
+      "Это часть Django.",
+      "Используется только в проде."
+    ],
+    "correct_index": 0,
+    "explanation": "responses (для requests), httpx.MockTransport / respx (для httpx), aioresponses (для aiohttp) перехватывают исходящие HTTP-запросы и отдают фиксированные ответы. Тесты становятся быстрыми, детерминированными и не зависят от сети."
+  },
+  {
+    "external_key": "test-024",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое golden/contract test?",
+    "options": [
+      "Тест с золотыми данными - не падает.",
+      "Contract test проверяет соответствие API контракту между сервисами (consumer-driven), часто через Pact; снижает риск ломки между микросервисами.",
+      "Это снапшот.",
+      "Это e2e."
+    ],
+    "correct_index": 1,
+    "explanation": "Contract testing (Pact, Spring Cloud Contract): consumer объявляет ожидания к API, provider запускает тест против этого 'контракта'. Ловит несовместимые изменения между микросервисами без дорогих e2e-тестов."
+  },
+  {
+    "external_key": "test-025",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое Hypothesis (property-based testing)?",
+    "options": [
+      "Это юнит-тесты.",
+      "Библиотека, которая генерирует множество разнообразных входов и ищет минимальный контр-пример при провале property'и: 'для всех x, f(x) удовлетворяет P'.",
+      "Это assertion library.",
+      "Это снапшот."
+    ],
+    "correct_index": 1,
+    "explanation": "Hypothesis (port QuickCheck) пишет тесты как 'на любых строках reverse(reverse(s)) == s'. Генерит разные входы, при падении сжимает (shrink) до минимального примера. Хорошо находит edge cases, недоступные ручным примерам."
+  },
+  {
+    "external_key": "test-026",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое assertion в pytest и чем она удобнее unittest?",
+    "options": [
+      "Просто синоним.",
+      "Стандартный assert: pytest перехватывает его и показывает развёрнутый diff/значение, в отличие от self.assertEqual в unittest.",
+      "В pytest нельзя использовать assert.",
+      "В unittest есть assert, в pytest нет."
+    ],
+    "correct_index": 1,
+    "explanation": "В pytest можно писать обычный assert x == 5: фреймворк инспектирует AST и красиво показывает значения операндов и diff. В unittest нужны методы self.assertEqual/assertTrue/... и сообщения менее наглядные."
+  },
+  {
+    "external_key": "test-027",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое Test Client / APIClient в Django/DRF?",
+    "options": [
+      "Это сторонняя библиотека.",
+      "Встроенный клиент для HTTP-запросов в Django (django.test.Client) и DRF (APIClient), не поднимающий реальный сервер; используется в integration-тестах.",
+      "Это middleware.",
+      "Это admin."
+    ],
+    "correct_index": 1,
+    "explanation": "django.test.Client отправляет запросы в WSGI-приложение Django без реальной сети. APIClient (DRF) добавляет работу с JSON, аутентификацией. Удобно для integration-тестов views/urls/templates без серверной обёртки."
+  },
+  {
+    "external_key": "test-028",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое freezegun?",
+    "options": [
+      "Замораживает экран.",
+      "Библиотека для подмены datetime.now/utcnow на фиксированное значение; помогает писать детерминированные тесты времени.",
+      "Это профайлер.",
+      "Это снапшот."
+    ],
+    "correct_index": 1,
+    "explanation": "with freeze_time('2024-01-01'): ... делает datetime.now/today фиксированным. Без этого тесты, проверяющие 'сегодня' или TTL, становятся flaky. Альтернативы: мокать datetime.now руками, time-machine, pytest-freezegun."
+  },
+  {
+    "external_key": "ms-001",
+    "topic": "microservices",
+    "difficulty": 1,
+    "text": "Что такое микросервисная архитектура?",
+    "options": [
+      "Один большой сервис на много функций.",
+      "Стиль, где приложение состоит из небольших независимых сервисов с собственной БД, общающихся по сети (HTTP/gRPC/очереди).",
+      "Только Docker-контейнеры.",
+      "База данных."
+    ],
+    "correct_index": 1,
+    "explanation": "Микросервисы - архитектурный стиль: маленькие сервисы со своей зоной ответственности и (обычно) собственной БД, деплоятся независимо. Преимущества: независимый scaling и релизы, разные стеки. Минусы: операционная сложность, distributed системы, eventual consistency."
+  },
+  {
+    "external_key": "ms-002",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Какие минусы микросервисов по сравнению с монолитом?",
+    "options": [
+      "Их нет.",
+      "Сетевые вызовы вместо вызовов в процессе, сложность развёртывания и наблюдаемости, distributed transactions, eventual consistency, версионирование API.",
+      "Меньше команд.",
+      "Невозможность масштабирования."
+    ],
+    "correct_index": 1,
+    "explanation": "Микросервисы добавляют сложность: сетевая латентность и flakiness, отсутствие ACID между сервисами (saga/outbox), необходимость распределённого трейсинга, версионирования API, service discovery, оркестрации деплоев. Монолит часто проще для small/medium-проектов."
+  },
+  {
+    "external_key": "ms-003",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Saga pattern?",
+    "options": [
+      "Это длинная транзакция в БД.",
+      "Способ согласованности через серию локальных транзакций со компенсирующими действиями при сбоях; реализуется хореографией (через события) или оркестрацией.",
+      "Это шифр.",
+      "Это GraphQL."
+    ],
+    "correct_index": 1,
+    "explanation": "Saga разбивает бизнес-процесс на серию локальных транзакций. Если шаг падает, выполняются compensating actions (отменить резерв, вернуть платёж). Хореография: каждый сервис слушает события и реагирует. Оркестрация: Saga-orchestrator координирует шаги."
+  },
+  {
+    "external_key": "ms-004",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Чем хореография отличается от оркестрации в Saga?",
+    "options": [
+      "Это синонимы.",
+      "Хореография - сервисы слушают события друг друга и сами решают; оркестрация - центральный координатор шагает по сценарию.",
+      "Хореография только в монолите.",
+      "Оркестрация запрещена."
+    ],
+    "correct_index": 1,
+    "explanation": "Хореография децентрализована, нет единой точки отказа, но сложнее проследить ход процесса. Оркестрация (Camunda, Temporal, Saga-orchestrator) даёт явный сценарий и удобный мониторинг, но добавляет SPOF и связность с координатором."
+  },
+  {
+    "external_key": "ms-005",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое CQRS?",
+    "options": [
+      "Модель безопасности.",
+      "Command Query Responsibility Segregation: разделение моделей записи (commands) и чтения (queries), часто с разными хранилищами/форматами.",
+      "Это шифр.",
+      "Это REST."
+    ],
+    "correct_index": 1,
+    "explanation": "CQRS разделяет write-модель (валидация, бизнес-правила, нормализация) и read-модель (денормализованные view, оптимизированные под запросы). Может комбинироваться с Event Sourcing. Помогает масштабировать чтение и запись независимо. Усложняет архитектуру."
+  },
+  {
+    "external_key": "ms-006",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Event Sourcing?",
+    "options": [
+      "Хранение текущего состояния в БД.",
+      "Хранение последовательности событий (а не текущего состояния); состояние воссоздаётся реплеем событий; даёт полный аудит и возможность восстановить любую точку во времени.",
+      "Это очередь сообщений.",
+      "Это форма JSON."
+    ],
+    "correct_index": 1,
+    "explanation": "Event Sourcing: source of truth - неизменяемый журнал событий (UserCreated, OrderPlaced, ItemAdded). Текущее состояние - проекция/aggregate, восстанавливаемая реплеем. Преимущества: аудит, time-travel, простой rebuild read-моделей. Сложности: миграции событий, eventual consistency."
+  },
+  {
+    "external_key": "ms-007",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое API Gateway?",
+    "options": [
+      "Только балансировщик.",
+      "Единая точка входа для клиентов: маршрутизация, аутентификация, rate-limit, агрегация ответов от микросервисов, при необходимости версионирование/композиция.",
+      "Это база данных.",
+      "Это VPN."
+    ],
+    "correct_index": 1,
+    "explanation": "API Gateway (Kong, AWS API Gateway, Traefik, nginx) принимает внешние запросы и направляет в микросервисы. Часто реализует cross-cutting: auth, throttling, логирование, кэш, transform, разные представления для разных клиентов (BFF)."
+  },
+  {
+    "external_key": "ms-008",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Зачем нужен Service Discovery?",
+    "options": [
+      "Никак не нужен.",
+      "В динамической среде (k8s, autoscaling) IP/порт сервиса меняется; SD позволяет находить здоровых инстансов по имени (DNS, Consul, Eureka, k8s Service).",
+      "Это GraphQL.",
+      "Это бэкап."
+    ],
+    "correct_index": 1,
+    "explanation": "Service Discovery позволяет клиенту найти текущие endpoints сервиса. Серверная: client спрашивает DNS/registry. Клиентская: client получает список и сам балансирует (Eureka). В Kubernetes - Service+kube-dns. Для health-проверок есть пробы."
+  },
+  {
+    "external_key": "ms-009",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Sidecar pattern?",
+    "options": [
+      "Это про езду на велосипеде.",
+      "Дополнительный контейнер/процесс рядом с сервисом, добавляющий cross-cutting функциональность (logging, proxy, mesh) без изменения самого сервиса.",
+      "Это очередь.",
+      "Это гейтвей."
+    ],
+    "correct_index": 1,
+    "explanation": "Sidecar - паттерн расширения сервиса соседним процессом. В k8s это второй контейнер в Pod. Service mesh (Envoy в Istio, Linkerd) - типичный пример: sidecar терминирует mTLS, балансирует, собирает трейсы. Сервис остаётся 'тонким клиентом'."
+  },
+  {
+    "external_key": "ms-010",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Circuit Breaker?",
+    "options": [
+      "Это про электричество.",
+      "Паттерн: после серии ошибок к downstream-сервису breaker 'размыкается' и не пускает запросы N секунд, чтобы не добивать сервис; половинчатое состояние для пробных запросов.",
+      "Это фильтр Bloom.",
+      "Это lock."
+    ],
+    "correct_index": 1,
+    "explanation": "Circuit Breaker (Hystrix, resilience4j, pybreaker) защищает от каскадных отказов. Состояния: closed (всё ок, запросы идут), open (отказывает быстро), half-open (несколько пробных запросов). Снижает время отклика при отказе и даёт downstream восстановиться."
+  },
+  {
+    "external_key": "ms-011",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Bulkhead pattern?",
+    "options": [
+      "Это вид кеша.",
+      "Изоляция ресурсов (потоков, соединений) между разными downstream/клиентами, чтобы перегрузка одного не утопила всю систему - 'переборки' на корабле.",
+      "Это лог-агрегатор.",
+      "Это балансировщик."
+    ],
+    "correct_index": 1,
+    "explanation": "Bulkhead разделяет пул соединений/потоков по 'клиентам': медленный downstream не съест все коннекты и другие операции продолжат работать. В Hystrix - thread-pool isolation. В asyncio - отдельные семафоры на разные сервисы."
+  },
+  {
+    "external_key": "ms-012",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Hexagonal/Ports and Adapters архитектура?",
+    "options": [
+      "Это про шестигранные таблицы.",
+      "Архитектурный стиль: ядро бизнес-логики (домен) изолировано от деталей (БД, веб, очередь) через порты-интерфейсы и адаптеры-реализации. Делает приложение тестируемым.",
+      "Это REST.",
+      "Это GraphQL."
+    ],
+    "correct_index": 1,
+    "explanation": "Hexagonal (Alistair Cockburn): домен в центре, порты - входящие/исходящие интерфейсы, адаптеры - конкретные реализации (PostgresUserRepo, KafkaPublisher). Меняем адаптер - бизнес-код не трогается. Похожие идеи: Clean Architecture, Onion."
+  },
+  {
+    "external_key": "ms-013",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое DDD bounded context?",
+    "options": [
+      "Это переменная.",
+      "Явная граница, внутри которой термины предметной области (модели, сущности) имеют конкретный смысл; разные bounded context могут одинаково называть, но иметь разные определения.",
+      "Это база данных.",
+      "Это middleware."
+    ],
+    "correct_index": 1,
+    "explanation": "Bounded Context (DDD) - явная граница смысла. 'User' в Billing и в Marketing - разные модели с разными атрибутами. Каждый микросервис обычно соответствует одному bounded context. Между ними - интеграция через events/anti-corruption layer."
+  },
+  {
+    "external_key": "ms-014",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Eventual Consistency?",
+    "options": [
+      "Полная консистентность всегда.",
+      "Гарантия, что в отсутствие новых обновлений все реплики/сервисы рано или поздно увидят одно и то же состояние; временный рассинхрон допустим.",
+      "Это ACID.",
+      "Это lock."
+    ],
+    "correct_index": 1,
+    "explanation": "Eventual Consistency - после паузы в записях все реплики сойдутся. Распространено в распределённых системах (Cassandra, DynamoDB). UI должен учитывать: 'я кликнул, но увижу через секунду'. Альтернатива - strong consistency с большей латентностью и стоимостью."
+  },
+  {
+    "external_key": "ms-015",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Outbox pattern?",
+    "options": [
+      "Это почтовый ящик.",
+      "Запись события в outbox-таблицу в той же транзакции, что и бизнес-данные; отдельный процесс читает outbox и публикует в очередь - решает 'дуальную запись' и потерю событий.",
+      "Это REST.",
+      "Это балансировщик."
+    ],
+    "correct_index": 1,
+    "explanation": "Outbox: вместо 'сохранил в БД и отправил в Kafka' (что не транзакционно), записываем событие в табличку outbox в той же ACID-транзакции. Relay-процесс читает её и публикует. Это и есть гарантия 'в БД есть -> в брокере будет' (at-least-once)."
+  },
+  {
+    "external_key": "ms-016",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Почему 2PC (Two-Phase Commit) обычно избегают в микросервисах?",
+    "options": [
+      "Он невозможен.",
+      "Блокирующий протокол: при отказе координатора участники могут зависнуть с локами; плохо масштабируется и связывает сервисы; вместо него - saga и outbox.",
+      "Это синоним Saga.",
+      "Это REST-метод."
+    ],
+    "correct_index": 1,
+    "explanation": "2PC даёт ACID между ресурсами, но координатор - SPOF, участники держат локи, нагрузка плохо масштабируется, не все ресурсы поддерживают XA. В распределённых архитектурах предпочитают saga + компенсации, идемпотентность и outbox."
+  },
+  {
+    "external_key": "ms-017",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Service Mesh?",
+    "options": [
+      "Это база данных.",
+      "Слой инфраструктуры, добавляющий sidecar-прокси к каждому сервису для шифрования mTLS, маршрутизации, retry, observability без изменения кода (Istio, Linkerd).",
+      "Это GraphQL.",
+      "Это API Gateway."
+    ],
+    "correct_index": 1,
+    "explanation": "Service Mesh переносит cross-cutting сетевые задачи в инфраструктуру. Data plane - proxy-sidecar (Envoy) на каждом Pod; control plane - конфиг (Istiod). Решает: mTLS, traffic shifting (canary), retry/timeout, метрики, трейсы. Минус - сложность и накладные расходы."
+  },
+  {
+    "external_key": "ms-018",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Зачем нужен retry с экспоненциальным backoff и jitter?",
+    "options": [
+      "Просто чтобы попробовать ещё раз.",
+      "Чтобы не добивать падающий сервис: задержки растут (1s, 2s, 4s, ...), jitter рассинхронизирует ретраи параллельных клиентов и предотвращает thundering herd.",
+      "Чтобы загружать сервер.",
+      "Это про логирование."
+    ],
+    "correct_index": 1,
+    "explanation": "Backoff: ждать всё дольше между попытками (часто экспоненциально). Jitter: добавить случайность, чтобы 1000 клиентов не пошли в одну секунду. Reties без backoff/jitter могут добить уже падающий сервис (retry storm). Сочетают с circuit breaker."
+  },
+  {
+    "external_key": "ms-019",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое backpressure?",
+    "options": [
+      "Это резервный канал.",
+      "Механизм, позволяющий получателю замедлить отправителя, чтобы не быть перегруженным; реализуется через ограниченные очереди, окна, 429/503 ответы.",
+      "Это API Gateway.",
+      "Это kafka."
+    ],
+    "correct_index": 1,
+    "explanation": "Backpressure - сигнал 'я не успеваю'. Без него очереди переполняются, latency растёт, падает оба конца. Реализации: reactive streams (RxPY, project Reactor), bounded queues, HTTP 429 Too Many Requests, throttling. asyncio.Queue с maxsize - простой вариант."
+  },
+  {
+    "external_key": "ms-020",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое feature flag (toggle)?",
+    "options": [
+      "Это GIT-флаг.",
+      "Конфигурируемый переключатель функциональности в проде: позволяет деплоить выключенный код, постепенно раскатывать, A/B-тестировать без релиза.",
+      "Это middleware.",
+      "Это лог."
+    ],
+    "correct_index": 1,
+    "explanation": "Feature flags (Unleash, LaunchDarkly, ConfigCat, кастомные) разделяют деплой и релиз. Можно выкатить код выключенным, включить процент пользователей, быстро откатить без ребилда. Минус - 'кладбище' старых флагов, нужно убирать."
+  },
+  {
+    "external_key": "ms-021",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Strangler Fig pattern?",
+    "options": [
+      "Это атака.",
+      "Постепенная замена легаси-системы: новые функции пишутся в новой системе, трафик роутится через прокси/гейтвей, постепенно legacy 'удушается' до нуля.",
+      "Это GraphQL.",
+      "Это retry."
+    ],
+    "correct_index": 1,
+    "explanation": "Strangler Fig (Martin Fowler): обернуть legacy фасадом и переписывать функции по одной в новой системе, перенаправляя трафик. В конце legacy выключается. Безопаснее big-bang переписывания: всегда есть рабочая система."
+  },
+  {
+    "external_key": "ms-022",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое Anti-Corruption Layer?",
+    "options": [
+      "Это antivirus.",
+      "Адаптер между bounded context'ами, переводящий чужую модель в собственную; защищает домен от 'утечки' терминов и моделей внешнего сервиса.",
+      "Это middleware Django.",
+      "Это lock."
+    ],
+    "correct_index": 1,
+    "explanation": "ACL (DDD) изолирует домен от чужих моделей. Например, новый сервис не использует DTO старой системы напрямую, а конвертирует в собственные value-objects. Обновление внешнего API трогает только ACL, домен не страдает."
+  },
+  {
+    "external_key": "ms-023",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Event-Driven Architecture?",
+    "options": [
+      "Это HTTP-only.",
+      "Сервисы общаются через события (Kafka, RabbitMQ): producer публикует, consumers подписаны и реагируют асинхронно; снижает связанность.",
+      "Это монолит.",
+      "Это REST."
+    ],
+    "correct_index": 1,
+    "explanation": "EDA: вместо синхронных REST-вызовов сервисы публикуют события ('OrderPlaced'), а заинтересованные подписываются. Снижает связанность, легко добавлять новых потребителей. Сложности: дебаггинг, eventual consistency, контракты на события, идемпотентность."
+  },
+  {
+    "external_key": "ms-024",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Как версионировать REST API?",
+    "options": [
+      "Не версионировать.",
+      "Через URL (/v1/users), Accept-заголовок (application/vnd.api+json;version=1), параметр (?v=1) - каждый со своими плюсами/минусами.",
+      "Только через query.",
+      "Только через subdomain."
+    ],
+    "correct_index": 1,
+    "explanation": "URL (/v1/) - просто, но загромождает URL. Header (Accept) - чисто по REST, но менее удобно. Query - простой, но менее идиоматичен. Главное - принцип: ломающие изменения = новая версия, фичи без поломок - в текущей; депрекация по таймауту."
+  },
+  {
+    "external_key": "ms-025",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое CAP-теорема?",
+    "options": [
+      "Не существует.",
+      "В распределённой системе нельзя одновременно гарантировать Consistency, Availability и Partition tolerance; при сетевом разделении выбираешь между CP и AP.",
+      "Это про ACID.",
+      "Это про CDN."
+    ],
+    "correct_index": 1,
+    "explanation": "CAP (Brewer): при network partition приходится выбирать между Consistency (все клиенты видят последнее значение) и Availability (отвечаем всем, может с устаревшим). PostgreSQL обычно CP, Cassandra/Dynamo - AP. Без partition теорема ничего не говорит."
+  },
+  {
+    "external_key": "ms-026",
+    "topic": "microservices",
+    "difficulty": 3,
+    "text": "Что такое PACELC-теорема?",
+    "options": [
+      "То же самое, что CAP.",
+      "Расширение CAP: при partition выбираем A или C; иначе (Else) - между Latency и Consistency. Покрывает поведение системы и в нормальном режиме.",
+      "Это REST.",
+      "Это очередь."
+    ],
+    "correct_index": 1,
+    "explanation": "PACELC (Daniel Abadi) дополняет CAP: P -> A or C; иначе E -> L (latency) or C. Например, DynamoDB: PA/EL (доступность и низкая латентность). Spanner: PC/EC (строгая консистентность даже без partition, но выше latency). Делает реальный trade-off виднее."
+  },
+  {
+    "external_key": "ms-027",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое idempotent consumer?",
+    "options": [
+      "Потребитель, всегда обрабатывающий первое сообщение.",
+      "Потребитель, который безопасно обрабатывает повторные сообщения с тем же idempotency-key (хранит processed-id или делает 'natural idempotency').",
+      "Это REST.",
+      "Это producer."
+    ],
+    "correct_index": 1,
+    "explanation": "В шинах с at-least-once delivery (Kafka, Rabbit) сообщения могут дублироваться. Idempotent consumer хранит processed_message_ids в БД (с ON CONFLICT DO NOTHING) или кеше, и второй раз пропускает. Альтернатива - 'идемпотентные операции' по природе (UPSERT)."
+  },
+  {
+    "external_key": "ms-028",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Зачем нужна distributed tracing?",
+    "options": [
+      "Чтобы не использовать логи.",
+      "Чтобы по trace_id восстановить путь запроса через все микросервисы и увидеть, где задержка/ошибка; стандарты OpenTelemetry, Jaeger, Tempo.",
+      "Это профайлер.",
+      "Это лог."
+    ],
+    "correct_index": 1,
+    "explanation": "Distributed tracing: каждый запрос получает trace_id, на каждом сервисе создаётся span (часть с timing'ом), пробрасывается через заголовки (W3C Trace-Context). Систему UI (Jaeger, Tempo) показывают waterfall - где провисло. Незаменимо в микросервисах."
+  },
+  {
+    "external_key": "dba-001",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое MVCC в PostgreSQL?",
+    "options": [
+      "Это метод сжатия.",
+      "Multi-Version Concurrency Control: для каждого UPDATE/DELETE создаётся новая версия строки; читатели видят snapshot и не блокируют писателей и наоборот.",
+      "Это формат логов.",
+      "Это CDC."
+    ],
+    "correct_index": 1,
+    "explanation": "MVCC: каждая строка имеет xmin/xmax (версия транзакций), которые её создали/удалили. Read'ы не блокируются write'ами и наоборот. Старые версии чистит VACUUM. Цена - bloat и нужен периодический VACUUM/AUTOVACUUM."
+  },
+  {
+    "external_key": "dba-002",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что делает VACUUM в PostgreSQL?",
+    "options": [
+      "Удаляет все данные.",
+      "Помечает мёртвые версии строк (после UPDATE/DELETE, MVCC) как переиспользуемые; VACUUM FULL переписывает таблицу и возвращает место ОС, ANALYZE обновляет статистику.",
+      "Это RESET sequence.",
+      "Это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "VACUUM освобождает место от мёртвых версий MVCC внутри файлов. AUTOVACUUM делает это автоматически. VACUUM FULL переписывает таблицу (lock!), возвращая место ОС. ANALYZE обновляет статистику для планировщика. VACUUM (VERBOSE) показывает деталь."
+  },
+  {
+    "external_key": "dba-003",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что показывает EXPLAIN ANALYZE?",
+    "options": [
+      "Только время.",
+      "План выполнения запроса, выбранный планировщиком, плюс реальные тайминги и количество обработанных строк после фактического выполнения.",
+      "Это ALTER TABLE.",
+      "Это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "EXPLAIN показывает план без выполнения; EXPLAIN ANALYZE выполняет и показывает реальные actual time/rows. BUFFERS добавляет статистику по buffer cache. Помогает находить seq scan там, где должен быть index, и неудачные оценки планировщика (rows estimate vs actual)."
+  },
+  {
+    "external_key": "dba-004",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Когда планировщик выберет seq scan вместо index scan?",
+    "options": [
+      "Никогда.",
+      "Когда выборка большая (более ~5-10% таблицы), статистика устарела (нужен ANALYZE), индекса нет, или функция оборачивает индексированную колонку (LOWER(name) = ...).",
+      "Только в SQLite.",
+      "Это синонимы."
+    ],
+    "correct_index": 1,
+    "explanation": "Seq scan дешевле для больших долей таблицы - последовательное чтение быстрее множества случайных. Index scan хорош на малой выборке. Причины 'странных' seq scan: устаревшая статистика, функции на колонке (нужен функциональный индекс), implicit cast, NULL в условии."
+  },
+  {
+    "external_key": "dba-005",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое партиционирование таблицы?",
+    "options": [
+      "Создание индекса.",
+      "Разбиение большой таблицы на физические части по ключу (RANGE/LIST/HASH); запросы с условием на ключе сканируют только нужные партиции.",
+      "Это репликация.",
+      "Это шардинг."
+    ],
+    "correct_index": 1,
+    "explanation": "Partitioning разделяет таблицу по ключу: RANGE (по дате), LIST (по коду страны), HASH (равномерно по hash). PostgreSQL 10+ поддерживает declarative partitioning. Преимущества: pruning по партициям, дешевле дроп старых данных. Шардинг - распределение по разным серверам."
+  },
+  {
+    "external_key": "dba-006",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Чем шардинг отличается от партиционирования?",
+    "options": [
+      "Это синонимы.",
+      "Партиционирование - разбиение в одной БД (по ключу); шардинг - распределение по нескольким серверам/инстансам, чтобы масштабировать запись.",
+      "Партиционирование возможно только в Mongo.",
+      "Шардинг - это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "Partitioning - разделение внутри одной БД; данные доступны через одну точку. Sharding - данные размазаны по разным серверам/кластерам; запросы маршрутизируются по shard key. Sharding масштабирует запись, но усложняет cross-shard JOIN и транзакции."
+  },
+  {
+    "external_key": "dba-007",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Чем синхронная репликация отличается от асинхронной?",
+    "options": [
+      "Синхронная медленнее, но даёт гарантию, что коммит на primary означает запись хотя бы на одной replica; async быстрее, но возможна потеря последних транзакций при отказе.",
+      "Это синонимы.",
+      "Async только в MySQL.",
+      "Sync только для read."
+    ],
+    "correct_index": 0,
+    "explanation": "Sync replication: COMMIT возвращает успех после записи на N реплик - сильнее гарантии durability/HA, но выше latency. Async: реплика догоняет с задержкой; быстрее, но при потере primary можно потерять последние транзакции. Часто комбинация: 1 sync + N async."
+  },
+  {
+    "external_key": "dba-008",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое CDC (Change Data Capture)?",
+    "options": [
+      "Это формат логов.",
+      "Технология чтения журнала транзакций (WAL/binlog) и публикации изменений как событий; позволяет строить eventual-consistent проекции в Kafka/ES без двойной записи.",
+      "Это очередь.",
+      "Это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "CDC (Debezium, AWS DMS) читает физический журнал БД и эмитит INSERT/UPDATE/DELETE как события. Позволяет строить read-модели, синхронизировать с Kafka, наполнять ELK. Решает проблему dual-write без outbox."
+  },
+  {
+    "external_key": "dba-009",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Зачем нужен connection pooling (pgbouncer)?",
+    "options": [
+      "Чтобы запросы выполнялись быстрее.",
+      "Каждое соединение в Postgres - отдельный процесс с памятью; pgbouncer держит пул и переиспользует соединения, снижая нагрузку и поддерживая много клиентов.",
+      "Это репликация.",
+      "Это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "PostgreSQL создаёт процесс на коннект - дорого. pgbouncer/pgcat - между приложением и БД, держит N реальных коннектов и мультиплексирует тысячи клиентских. Режимы: session, transaction (most popular), statement. Снижает CPU/RAM на стороне БД."
+  },
+  {
+    "external_key": "dba-010",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое проблема N+1 в ORM?",
+    "options": [
+      "Это про индексы.",
+      "Получили N родительских записей, потом для каждого делаем отдельный запрос к связанной таблице - всего N+1 запрос. Решается eager-loading (JOIN или prefetch).",
+      "Это deadlock.",
+      "Это про backup."
+    ],
+    "correct_index": 1,
+    "explanation": "N+1: 1 запрос за N постов, потом по 1 за author -> N+1. Решения: select_related (JOIN, для FK), prefetch_related (отдельный запрос и dict-merge, для M2M/back-FK). В SQLAlchemy joinedload/selectinload. Всегда смотрите EXPLAIN."
+  },
+  {
+    "external_key": "dba-011",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое deadlock и как его избежать?",
+    "options": [
+      "Это просто медленный запрос.",
+      "Две транзакции взаимно ждут блокировок друг друга и не могут продолжить; БД выбирает жертву и откатывает. Профилактика: одинаковый порядок локов, короткие транзакции, retry-логика.",
+      "Это синоним lock-free.",
+      "Это про репликацию."
+    ],
+    "correct_index": 1,
+    "explanation": "Deadlock - круговое ожидание локов: T1 захватил A и ждёт B, T2 - B и ждёт A. Postgres detect'ит и убивает одну транзакцию (Deadlock detected). Лечение: всегда брать локи в одном порядке, мелкие транзакции, retry в приложении (40P01 SQLSTATE)."
+  },
+  {
+    "external_key": "dba-012",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что делает SELECT ... FOR UPDATE?",
+    "options": [
+      "Удаляет строки.",
+      "Блокирует выбранные строки на запись до конца транзакции; другие транзакции, пытающиеся UPDATE/DELETE/SELECT FOR UPDATE их же, ждут.",
+      "Это просто SELECT.",
+      "Это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "FOR UPDATE берёт row-level write lock на время транзакции. Используется для 'read-modify-write' без race conditions. SKIP LOCKED помогает строить очередь (worker'ы берут разные строки). NOWAIT - не ждать, а сразу падать с ошибкой."
+  },
+  {
+    "external_key": "dba-013",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что делает SKIP LOCKED?",
+    "options": [
+      "Игнорирует существующие индексы.",
+      "В SELECT FOR UPDATE SKIP LOCKED - пропускает уже залоченные строки, не блокируясь; идеально для очередей задач в БД.",
+      "Это бэкап.",
+      "Это replication."
+    ],
+    "correct_index": 1,
+    "explanation": "SKIP LOCKED (Postgres 9.5+, MySQL 8) - возвращает только строки, которые сейчас никем не залочены. Worker берёт N свободных задач: SELECT * FROM jobs WHERE status='new' ORDER BY id LIMIT N FOR UPDATE SKIP LOCKED. Простая надёжная очередь без брокера."
+  },
+  {
+    "external_key": "dba-014",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое covering index (INCLUDE)?",
+    "options": [
+      "Индекс на JSON.",
+      "Индекс, в который добавлены не только ключи, но и дополнительные колонки в payload (INCLUDE), что позволяет планировщику делать index-only scan.",
+      "Это unique index.",
+      "Это primary key."
+    ],
+    "correct_index": 1,
+    "explanation": "CREATE INDEX idx ON t(a) INCLUDE (b) - индекс по a с приложенным значением b. Запрос SELECT a, b WHERE a = ... может выполняться index-only scan'ом, не обращаясь к таблице. Уменьшает I/O на горячих запросах."
+  },
+  {
+    "external_key": "dba-015",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое partial index?",
+    "options": [
+      "Это сломанный индекс.",
+      "Индекс, построенный только на подмножестве строк (по WHERE-условию); занимает меньше места и быстрее обновляется.",
+      "Это primary key.",
+      "Это индекс на JSONB."
+    ],
+    "correct_index": 1,
+    "explanation": "CREATE INDEX active_users ON users(email) WHERE deleted_at IS NULL. Индекс не покрывает удалённых, занимает меньше места, обновляется только при изменении 'живых' строк. Полезен, когда запросы всегда фильтруют по этому условию."
+  },
+  {
+    "external_key": "dba-016",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое composite index и leftmost prefix rule?",
+    "options": [
+      "Это про hash-индексы.",
+      "Индекс по нескольким колонкам (a, b, c); используется для запросов с условиями на префикс полей слева: (a), (a, b), (a, b, c). Условие только на (b) индексом не подхватится.",
+      "Это уникальный индекс.",
+      "Это full-text."
+    ],
+    "correct_index": 1,
+    "explanation": "Композитный индекс (a, b, c) сортирует данные по a, потом по b, потом по c. Эффективен для WHERE a=? / a=? AND b=? / a=? AND b=? AND c=?. Запрос только по b - не использует этот индекс. Порядок колонок имеет значение."
+  },
+  {
+    "external_key": "dba-017",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое CTE и как он отличается от subquery?",
+    "options": [
+      "Это синонимы всегда.",
+      "CTE (WITH ... AS) - именованный подзапрос; читается сверху вниз, может быть recursive. В Postgres до 12 был optimizer fence; теперь обычно inlined как subquery.",
+      "CTE медленнее всегда.",
+      "CTE только для одной колонки."
+    ],
+    "correct_index": 1,
+    "explanation": "WITH cte AS (SELECT ...) SELECT * FROM cte JOIN ... - читаемее цепочки subquery. Поддерживает рекурсивные обходы (WITH RECURSIVE). В PG до 12 материализовался (fence); с 12 чаще inlined. CTE и subquery - инструменты для одной задачи, выбирают по читаемости."
+  },
+  {
+    "external_key": "dba-018",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что делает оконная функция ROW_NUMBER() OVER (PARTITION BY ...)?",
+    "options": [
+      "Считает количество строк в таблице.",
+      "Присваивает номер строке внутри группы (PARTITION BY) с заданным порядком (ORDER BY); возвращает результат для каждой строки, не агрегирует таблицу.",
+      "Это ROWID.",
+      "Это уникальный ключ."
+    ],
+    "correct_index": 1,
+    "explanation": "ROW_NUMBER OVER (PARTITION BY user_id ORDER BY created DESC) AS rn нумерует записи каждого user_id по дате; rn=1 - последняя. Не группирует. RANK/DENSE_RANK дают одинаковый ранг при ties. LAG/LEAD - значение из предыдущей/следующей строки."
+  },
+  {
+    "external_key": "dba-019",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое materialized view?",
+    "options": [
+      "Виртуальная view.",
+      "View, результат которой материализован в реальной таблице на диске; обновляется по REFRESH; ускоряет агрегаты, но данные могут устаревать.",
+      "Это temp table.",
+      "Это index."
+    ],
+    "correct_index": 1,
+    "explanation": "Обычный VIEW - запрос-алиас, выполняется при каждом обращении. MATERIALIZED VIEW - физическая таблица с результатом запроса. Быстрая, но данные устаревают. REFRESH MATERIALIZED VIEW обновляет; CONCURRENTLY - без блокировки чтений."
+  },
+  {
+    "external_key": "dba-020",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "В чём разница JSONB и JSON в PostgreSQL?",
+    "options": [
+      "Это синонимы.",
+      "JSON хранит текст как есть; JSONB - бинарный, нормализованный, поддерживает индексы (GIN), быстрее при поиске, но чуть медленнее при INSERT.",
+      "JSON быстрее.",
+      "JSONB только в MySQL."
+    ],
+    "correct_index": 1,
+    "explanation": "JSON: сохраняется текст, валидируется только синтаксис; быстрее на запись. JSONB: парсится в бинарное представление, исключает дубли ключей, поддерживает индексы (GIN, btree на путях), быстрее на чтение/поиск. Для большинства практических задач выбирают JSONB."
+  },
+  {
+    "external_key": "dba-021",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что выбрать в качестве PK: serial или UUID?",
+    "options": [
+      "Всегда serial.",
+      "Зависит: serial короче и быстрее в индексах; UUID удобен для distributed-генерации без БД и не утекает количество. UUIDv7/v6 решают проблему случайности и B-tree fragmentation.",
+      "Только UUID.",
+      "Это синонимы."
+    ],
+    "correct_index": 1,
+    "explanation": "serial/bigserial: компактно, монотонно (хорошо для B-tree). UUID: можно генерить на клиенте/в нескольких сервисах без согласования; не палит размер таблицы; больше места в индексе. UUIDv4 случайный (плохо для btree); UUIDv7 - timestamp+random, дружит с индексами."
+  },
+  {
+    "external_key": "dba-022",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое soft delete?",
+    "options": [
+      "Полное удаление.",
+      "Логическое удаление: вместо DELETE ставится метка (deleted_at, is_deleted=true); запросы фильтруют, реальные данные сохраняются.",
+      "Это backup.",
+      "Это truncate."
+    ],
+    "correct_index": 1,
+    "explanation": "Soft delete сохраняет историю и upholds референсную целостность. Минусы: нужно везде фильтровать; индексы должны учитывать (partial index WHERE deleted_at IS NULL); сложнее уникальность; больший размер таблицы. Не всегда подходит, иногда лучше event-log/aрхив."
+  },
+  {
+    "external_key": "dba-023",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Зачем нужен advisory lock в PostgreSQL?",
+    "options": [
+      "Это уникальный индекс.",
+      "Application-level lock в БД (pg_advisory_lock(key)): не связан со строками, удобен для распределённых критических секций, миграций, leader election.",
+      "Это deadlock.",
+      "Это сжатие."
+    ],
+    "correct_index": 1,
+    "explanation": "pg_try_advisory_lock(key) / pg_advisory_lock(key) дают приложению глобальный mutex без отдельного coordinator (Redis/Zookeeper). Работает, пока есть Postgres. Транзакционный (на время транзакции) или session-level. Подходит для коротких lock'ов."
+  },
+  {
+    "external_key": "dba-024",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое WAL в PostgreSQL?",
+    "options": [
+      "Это бэкап.",
+      "Write-Ahead Log: все изменения сначала пишутся в журнал на диск (fsync), потом - в data-files. Обеспечивает durability и crash-recovery, основа репликации.",
+      "Это snapshot.",
+      "Это VACUUM."
+    ],
+    "correct_index": 1,
+    "explanation": "WAL = Write-Ahead Logging. Сначала на диск пишется журнал, потом изменения применяются в основные файлы. При краше - replay WAL восстановит состояние. WAL - источник для репликации (streaming, logical decoding) и PITR backup."
+  },
+  {
+    "external_key": "dba-025",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Какие изоляции 'странностей' есть и какие они аномалии устраняют?",
+    "options": [
+      "Любые изоляции одинаковы.",
+      "READ COMMITTED убирает dirty reads; REPEATABLE READ - non-repeatable reads; SERIALIZABLE - phantom reads и lost updates через serialization conflict.",
+      "Только READ UNCOMMITTED.",
+      "Изоляций не существует."
+    ],
+    "correct_index": 1,
+    "explanation": "Аномалии: dirty read (видеть незакоммиченное), non-repeatable read (повтор чтения - другой результат), phantom read (новый ряд появился), lost update. Postgres SERIALIZABLE использует SSI (serializable snapshot isolation) и иногда отказывает с serialization_failure - это надо ловить и retry."
+  },
+  {
+    "external_key": "dba-026",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что делает LISTEN/NOTIFY в PostgreSQL?",
+    "options": [
+      "Это сетевые команды.",
+      "Pub/sub внутри Postgres: NOTIFY channel, 'msg' рассылает подписчикам LISTEN channel; легковесный механизм для уведомлений приложения о событиях БД.",
+      "Это репликация.",
+      "Это backup."
+    ],
+    "correct_index": 1,
+    "explanation": "LISTEN/NOTIFY - встроенный pub/sub. Удобен для маленьких уведомлений (refresh cache, push to user). Не заменяет Kafka: нет персистентности, ограничения payload (~8KB), один процесс получает каждое сообщение раз. Часто комбинируется с trigger'ом."
+  },
+  {
+    "external_key": "dba-027",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Зачем нужно расширение pg_stat_statements?",
+    "options": [
+      "Для бэкапов.",
+      "Собирает агрегированную статистику по выполненным запросам (количество, общее время, planning time) - незаменим для поиска slow query.",
+      "Это linter.",
+      "Это репликация."
+    ],
+    "correct_index": 1,
+    "explanation": "pg_stat_statements нормализует запросы (заменяет литералы на $1) и накапливает статистику: calls, total_time, mean_time, rows. Топ медленных/частых запросов виден сразу. Включается в shared_preload_libraries и расширением."
+  },
+  {
+    "external_key": "dba-028",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что выбрать для read-heavy workload: read-replica или index?",
+    "options": [
+      "Только индекс.",
+      "Сначала индексы и переписывание запросов; replica - если single primary не тянет CPU/IO. Часто комбинируют.",
+      "Только replica.",
+      "Это синонимы."
+    ],
+    "correct_index": 1,
+    "explanation": "Перед добавлением реплик стоит исчерпать дешёвые меры: индексы, EXPLAIN, кеширование, переписывание запроса. Read replica добавляет операционную сложность (replication lag, read-your-write проблемы). Для масштаба чтения - оба слоя."
+  },
+  {
+    "external_key": "os-001",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Чем процесс отличается от потока на уровне ОС?",
+    "options": [
+      "Это синонимы.",
+      "Процесс имеет собственную виртуальную память и таблицу fd; поток разделяет адресное пространство процесса, имеет свой стек и регистры.",
+      "Поток дороже процесса.",
+      "Поток есть только в Windows."
+    ],
+    "correct_index": 1,
+    "explanation": "Процесс - изолированная единица с своим виртуальным адресным пространством, fd-table, signals. Поток - lightweight unit внутри процесса, разделяет память (быстрая коммуникация, но нужны мьютексы). На Linux thread фактически - process с CLONE_VM (clone(2))."
+  },
+  {
+    "external_key": "os-002",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает fork() в Linux?",
+    "options": [
+      "Запускает новый бинарник.",
+      "Создаёт копию текущего процесса (copy-on-write памяти); возвращает 0 в child и pid child'а в parent.",
+      "Закрывает процесс.",
+      "Создаёт поток."
+    ],
+    "correct_index": 1,
+    "explanation": "fork() дублирует процесс: одинаковая память (COW), fd-table, окружение. После fork обычно вызывается exec() для замены образа на нужный. PID child нужно ждать через wait/waitpid, иначе zombie. Альтернатива - vfork/posix_spawn для оптимизаций."
+  },
+  {
+    "external_key": "os-003",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает exec() (execve)?",
+    "options": [
+      "Создаёт новый процесс.",
+      "Заменяет образ текущего процесса новым бинарником: PID остаётся, память пересоздаётся под загруженный exe.",
+      "Это альтернатива fork.",
+      "Это про сигналы."
+    ],
+    "correct_index": 1,
+    "explanation": "execve(path, argv, envp) - сменяет 'тело' процесса (не создаёт новый). Стек/heap/text заменяются. Открытые fd по умолчанию остаются (или закрываются при O_CLOEXEC). Стандартная схема Unix: fork() для child, execve() в child."
+  },
+  {
+    "external_key": "os-004",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Чем SIGTERM отличается от SIGKILL?",
+    "options": [
+      "Это синонимы.",
+      "SIGTERM (15) можно перехватить и сделать graceful shutdown; SIGKILL (9) убивает процесс без шанса перехватить или очистить ресурсы.",
+      "SIGTERM нельзя.",
+      "SIGKILL посылается ОС автоматически."
+    ],
+    "correct_index": 1,
+    "explanation": "SIGTERM - вежливая просьба завершиться: процесс может ловить, закрыть соединения, сохранить состояние. SIGKILL - принудительное завершение ядром, нельзя перехватить, не игнорируется. SIGINT (Ctrl+C) - перехватываемый. SIGSTOP/SIGCONT - пауза/продолжение."
+  },
+  {
+    "external_key": "os-005",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое file descriptor?",
+    "options": [
+      "Имя файла.",
+      "Целое число, индекс в таблице открытых файлов процесса; 0=stdin, 1=stdout, 2=stderr; ulimit -n ограничивает максимум.",
+      "Это inode.",
+      "Это путь."
+    ],
+    "correct_index": 1,
+    "explanation": "fd - небольшое целое, ссылка на запись в per-process file table, которая указывает на open file description в ядре. read/write/close работают с fd. Лимит - ulimit -n (обычно 1024-65536). 'Too many open files' - часто результат утечки fd."
+  },
+  {
+    "external_key": "os-006",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "В чём разница между select, poll и epoll?",
+    "options": [
+      "Это синонимы.",
+      "select/poll - O(N) на каждое событие, ограничения; epoll - O(1) добавление и getready через kernel-event queue, масштабируется до 100k+ соединений.",
+      "epoll медленнее.",
+      "select только в Windows."
+    ],
+    "correct_index": 1,
+    "explanation": "select - bitmap, лимит FD_SETSIZE, O(N) проверка. poll - произвольный массив, но всё ещё O(N). epoll (Linux) - регистрируешь fd в epoll_ctl, ждёшь готовых через epoll_wait. Edge-triggered/level-triggered. Основа высокопроизводительных серверов (nginx, asyncio)."
+  },
+  {
+    "external_key": "os-007",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое systemd unit?",
+    "options": [
+      "Это утилита.",
+      "Декларативное описание сервиса в systemd (.service файл): команда запуска, перезапуск, dependencies, environment, ресурсы (cgroups).",
+      "Это inode.",
+      "Это сигнал."
+    ],
+    "correct_index": 1,
+    "explanation": "systemd unit (.service, .timer, .socket) - конфиг в /etc/systemd/system. Управляется systemctl start/stop/status/enable. Логи - journalctl -u name. Поддерживает Restart=on-failure, ресурсные лимиты, dependencies (After=, Wants=)."
+  },
+  {
+    "external_key": "os-008",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /proc?",
+    "options": [
+      "Папка с программами.",
+      "Виртуальная файловая система, отображающая состояние ядра и процессов в виде файлов: /proc/PID, /proc/cpuinfo, /proc/meminfo, /proc/net.",
+      "Каталог логов.",
+      "Папка cron."
+    ],
+    "correct_index": 1,
+    "explanation": "/proc даёт текстовый доступ к ядру. /proc/PID/status - инфо о процессе, fd/, maps, stat. /proc/sys/ - sysctl-параметры. Утилиты top/ps/lsof/free читают именно его. /sys - аналогичный интерфейс к устройствам/драйверам."
+  },
+  {
+    "external_key": "os-009",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "Что такое cgroups?",
+    "options": [
+      "Это группы пользователей.",
+      "Control Groups - механизм ядра Linux для ограничения и учёта ресурсов (CPU, memory, IO, pids) на группу процессов; основа контейнеров и systemd.",
+      "Это alias.",
+      "Это формат логов."
+    ],
+    "correct_index": 1,
+    "explanation": "cgroups (v1/v2) ограничивают ресурсы для группы процессов: cpu.shares, memory.max, io.weight, pids.max. Используются Docker/containerd для контейнеров и systemd для сервисов. cgroups + namespaces = базовый стек контейнеров."
+  },
+  {
+    "external_key": "os-010",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "Что такое Linux namespaces?",
+    "options": [
+      "Это про XML.",
+      "Изолируют видимость системных ресурсов: PID, network, mount, IPC, UTS, user, cgroup; основа изоляции контейнеров.",
+      "Это сетевой протокол.",
+      "Это CRON."
+    ],
+    "correct_index": 1,
+    "explanation": "Namespaces изолируют разные подсистемы для группы процессов: pid (свои PID 1), network (свои интерфейсы и таблицы), mount (своя ФС), uts (hostname), ipc, user (UID/GID mapping), cgroup. Контейнер - группа процессов в наборе ns + ограничениях cgroup."
+  },
+  {
+    "external_key": "os-011",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое pipe в Unix?",
+    "options": [
+      "Сетевой пакет.",
+      "Однонаправленный IPC: данные пишутся в один конец, читаются из другого; в shell - оператор '|' между командами.",
+      "Это виртуальная память.",
+      "Это сокет."
+    ],
+    "correct_index": 1,
+    "explanation": "Анонимный pipe(2) создаёт пару fd (read/write) для родственных процессов. Named pipe (FIFO, mkfifo) виден в ФС, можно открыть из независимых процессов. В shell 'a | b' - stdout 'a' соединён с stdin 'b' через pipe."
+  },
+  {
+    "external_key": "os-012",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает kill -9 vs kill -15?",
+    "options": [
+      "Это про скорость.",
+      "kill -15 (SIGTERM) даёт процессу возможность graceful shutdown; kill -9 (SIGKILL) убивает безусловно ядром, без шанса cleanup.",
+      "Это синонимы.",
+      "Только kill -9 работает."
+    ],
+    "correct_index": 1,
+    "explanation": "kill <pid> по умолчанию шлёт SIGTERM (15). Дайте процессу время завершиться - закрыть БД, отдать запросы. Только если не реагирует - SIGKILL (9). Обратите внимание: процессы в состоянии D (uninterruptible sleep) ни на что не реагируют, надо разбираться с причиной."
+  },
+  {
+    "external_key": "os-013",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Чем top и htop отличаются?",
+    "options": [
+      "htop - старая версия.",
+      "Оба показывают процессы и нагрузку, но htop - интерактивный с цветами, поиском, kill, поддержкой колонок и tree-view.",
+      "top работает только в Mac.",
+      "Это разные сервисы."
+    ],
+    "correct_index": 1,
+    "explanation": "top - стандартный, везде; колонки %CPU, %MEM, RES, S(state). htop - удобный TUI: цветные графики, F-команды, поиск, killing процессов, фильтрация по пользователю. Ставится отдельно. Альтернативы: btop, glances."
+  },
+  {
+    "external_key": "os-014",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает lsof?",
+    "options": [
+      "Список ОС.",
+      "Открытые файлы и сокеты процессов: какой процесс держит файл, какой fd, какая программа слушает порт (lsof -i :PORT).",
+      "Это профайлер.",
+      "Это alias."
+    ],
+    "correct_index": 1,
+    "explanation": "lsof - 'list open files'. Самые частые задачи: lsof -i :8000 (кто слушает порт), lsof -p PID (что открыл процесс), lsof file (кто держит файл). Хорошо помогает с 'too many open files' - показывает утечки fd."
+  },
+  {
+    "external_key": "os-015",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "Что делает strace?",
+    "options": [
+      "Это сборщик логов.",
+      "Трассирует системные вызовы и сигналы процесса; помогает понять, почему процесс висит, не находит файл, в каком read/write он сидит.",
+      "Это профайлер CPU.",
+      "Это git tool."
+    ],
+    "correct_index": 1,
+    "explanation": "strace -p PID показывает syscalls в реальном времени. Опции: -f (включая дочерние), -T (время), -e trace=network/file (фильтры). Незаменим для дебага: 'почему висит', 'какой файл не находит'. На macOS аналог - dtruss, на Solaris - dtrace."
+  },
+  {
+    "external_key": "os-016",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает tcpdump?",
+    "options": [
+      "Захватывает HTTP-ответы.",
+      "Записывает сетевой трафик через BPF: tcpdump -i eth0 port 5432 покажет пакеты PostgreSQL; результат - .pcap, читается tcpdump или Wireshark.",
+      "Это BFS.",
+      "Это альтернатива kill."
+    ],
+    "correct_index": 1,
+    "explanation": "tcpdump -i any port 80 -A покажет HTTP-запросы. -w file.pcap пишет в файл. Wireshark - GUI поверх pcap. Часто помогает понять, ходит ли запрос вообще, что в заголовках/SSL handshake, какие задержки."
+  },
+  {
+    "external_key": "os-017",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "В чём разница между netstat и ss?",
+    "options": [
+      "Это синонимы.",
+      "ss - современный аналог netstat (более быстрый, читает /proc/net напрямую); netstat считается устаревшим, ss рекомендуется в новых дистрибутивах.",
+      "netstat быстрее.",
+      "ss только для UDP."
+    ],
+    "correct_index": 1,
+    "explanation": "ss -tulpn (TCP/UDP, listen, processes, numeric) - стандартная команда 'кто слушает что'. netstat -tulpn - тот же эффект, но устарел. ss быстрее, потому что читает netlink/proc-fs напрямую."
+  },
+  {
+    "external_key": "os-018",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что делает chmod 755 file?",
+    "options": [
+      "Удаляет файл.",
+      "Устанавливает права: владелец rwx (7), группа r-x (5), остальные r-x (5). Для скриптов делает их исполняемыми.",
+      "Это владелец.",
+      "Это alias."
+    ],
+    "correct_index": 1,
+    "explanation": "Octal mask: 4=read, 2=write, 1=execute. 755 - rwxr-xr-x: скрипты, директории. 644 - rw-r--r-- (для файлов конфига). 600 - только владелец (private keys). chmod +x file - быстрый способ сделать исполняемым."
+  },
+  {
+    "external_key": "os-019",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "Что такое SUID, SGID и sticky bit?",
+    "options": [
+      "Это синонимы.",
+      "SUID (4xxx) - исполняемый файл выполняется с правами владельца; SGID на файле - аналогично с группой, на каталоге - новые файлы наследуют группу; sticky (1xxx) на /tmp - удалять можно только владелец.",
+      "Это про сеть.",
+      "Это про cron."
+    ],
+    "correct_index": 1,
+    "explanation": "SUID - например /usr/bin/passwd работает как root, чтобы читать /etc/shadow. SGID на каталоге заставляет новые файлы наследовать группу каталога. Sticky bit на /tmp защищает чужие файлы от удаления. Рискованно с точки зрения безопасности."
+  },
+  {
+    "external_key": "os-020",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое ulimit -n и почему его повышают?",
+    "options": [
+      "Это user pip.",
+      "Лимит максимального количества открытых fd на процесс; высоконагруженным сервисам (БД, веб-серверы) часто повышают, иначе будут 'Too many open files'.",
+      "Это alias.",
+      "Это RAM."
+    ],
+    "correct_index": 1,
+    "explanation": "ulimit -n показывает мягкий лимит fd (обычно 1024). Hard limit - выше. Для веб-серверов/БД ставят десятки-сотни тысяч. В systemd - LimitNOFILE=. Для контейнеров - docker --ulimit nofile=65536:65536."
+  },
+  {
+    "external_key": "os-021",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Чем отличаются hard link и symlink?",
+    "options": [
+      "Это одно и то же.",
+      "Hardlink - вторая директория-запись на тот же inode; symlink (ln -s) - отдельный файл с путём-ссылкой. Удаление файла не ломает hardlink; symlink становится 'битой ссылкой'.",
+      "Symlink быстрее.",
+      "Hardlink работает между ФС."
+    ],
+    "correct_index": 1,
+    "explanation": "Hardlink: два имени для одного inode. Только в пределах ФС, не для каталогов. После удаления одного имени inode остаётся, пока есть ссылки. Symlink - текстовый файл с путём; работает между ФС и для каталогов; ссылка на путь, не на inode."
+  },
+  {
+    "external_key": "os-022",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "Что такое page cache и dirty pages?",
+    "options": [
+      "Только в БД.",
+      "Ядро кеширует прочитанные блоки файлов в page cache; изменённые ('dirty') страницы периодически сбрасываются на диск (writeback) или принудительно через fsync().",
+      "Это про процессор.",
+      "Это про сеть."
+    ],
+    "correct_index": 1,
+    "explanation": "Linux агрессивно использует свободную память под page cache - повторное чтение файла дешёвое. Запись сначала идёт в кеш (быстро), потом writeback. fsync(fd) гарантирует, что dirty pages для файла записаны на диск. БД полагаются на fsync для durability (WAL)."
+  },
+  {
+    "external_key": "os-023",
+    "topic": "os_linux",
+    "difficulty": 3,
+    "text": "Что такое OOM Killer?",
+    "options": [
+      "Это сборщик мусора.",
+      "Out-Of-Memory killer ядра: при исчерпании памяти выбирает процесс с высоким oom_score и убивает SIGKILL, чтобы освободить RAM.",
+      "Это утилита.",
+      "Это alias."
+    ],
+    "correct_index": 1,
+    "explanation": "OOM-killer срабатывает, когда системе не хватает RAM (с учётом swap и cgroup). Выбирает 'самого жирного' с поправкой на oom_score_adj. Лог в dmesg/journal. Для критичных сервисов - oom_score_adj=-1000 или cgroup-лимиты, чтобы убивали правильного."
+  },
+  {
+    "external_key": "os-024",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое load average (1, 5, 15)?",
+    "options": [
+      "Среднее использование CPU.",
+      "Среднее число процессов в running+uninterruptible-sleep за 1, 5, 15 минут; на Linux включает D-state. Если значение > nproc - есть очередь.",
+      "Это сетевая метрика.",
+      "Это про IO."
+    ],
+    "correct_index": 1,
+    "explanation": "Load average - не процент CPU, а длина очереди готовых/ждущих процессов. На системе с 4 CPU нагрузка 4 - полная утилизация без очереди; 8 - вдвое больше задач, чем CPU. Включает D-state (диск), поэтому high LA при IO-tortue даже при низком %CPU."
+  },
+  {
+    "external_key": "os-025",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cron и systemd timer?",
+    "options": [
+      "Это синонимы.",
+      "cron - классический шедулер задач по crontab; systemd timer - современная альтернатива с unit-файлами, точностью до секунд, привязкой к state, рандомизацией.",
+      "cron только Windows.",
+      "timer - это Python."
+    ],
+    "correct_index": 1,
+    "explanation": "cron: crontab -e, синтаксис * * * * * cmd. systemd timer: pair .service+.timer, OnCalendar=*-*-* 00:00:00, более гибкий, надёжнее логируется, поддерживает Persistent=true. Для контейнеров часто используют внешние шедулеры (k8s CronJob, Airflow)."
+  },
+  {
+    "external_key": "os-026",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "В чём разница между /dev/random и /dev/urandom?",
+    "options": [
+      "Это синонимы.",
+      "Оба источники криптостойкой случайности; современный совет - использовать /dev/urandom (никогда не блокирует, безопасен после init).",
+      "/dev/random быстрее.",
+      "/dev/urandom только для не-крипто."
+    ],
+    "correct_index": 1,
+    "explanation": "Раньше /dev/random блокировал при недостатке энтропии, /dev/urandom не блокировал. Сейчас в современных ядрах оба после init одинаково криптостойкие. Используйте /dev/urandom (или getrandom() syscall) - не блокирует и достаточно безопасен."
+  },
+  {
+    "external_key": "os-027",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что делает df -h vs du -sh?",
+    "options": [
+      "Это синонимы.",
+      "df показывает свободное место по точкам монтирования (на уровне ФС); du считает использование сверху по дереву (du -sh dir).",
+      "df только для root.",
+      "du работает только в Mac."
+    ],
+    "correct_index": 1,
+    "explanation": "df смотрит метаданные ФС: 'осталось 12G на /'. du проходит дерево и суммирует размеры файлов: du -sh /var/log -> 4.5G. Поэтому df и du могут расходиться (открытые удалённые файлы, snapshot'ы, sparse-файлы). Для inode'ов - df -i."
+  },
+  {
+    "external_key": "os-028",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое environment variable и как её установить?",
+    "options": [
+      "Это глобальная переменная программы.",
+      "Пара key=value, унаследованная процессом от родителя; export VAR=val в shell, ENV VAR=val в Dockerfile, Environment= в systemd.",
+      "Это alias.",
+      "Это файл."
+    ],
+    "correct_index": 1,
+    "explanation": "Env-переменные - часть окружения процесса. В bash: export VAR=val (видно дочерним процессам); просто VAR=val cmd - только cmd. printenv/env - смотреть. .env-файлы и dotenv-библиотеки используются в разработке. В проде - systemd EnvironmentFile= или k8s Secrets/ConfigMap."
+  },
+  {
+    "external_key": "fapi-001",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое FastAPI?",
+    "options": [
+      "Это фронтенд-фреймворк.",
+      "Современный async-фреймворк на Python для построения API: ASGI, Pydantic-валидация, авто-OpenAPI, dependency injection.",
+      "Это менеджер пакетов.",
+      "Это база данных."
+    ],
+    "correct_index": 1,
+    "explanation": "FastAPI (Sebastián Ramírez) - ASGI-фреймворк поверх Starlette; pydantic для валидации/сериализации; автоматическая Swagger/Redoc документация; dependency injection. Ориентирован на скорость разработки и асинхронные API. Производительность близка к Go и Node."
+  },
+  {
+    "external_key": "fapi-002",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "В чём разница между WSGI и ASGI?",
+    "options": [
+      "Это синонимы.",
+      "WSGI - синхронный интерфейс между сервером и приложением; ASGI - асинхронный, поддерживает HTTP, WebSocket, lifespan.",
+      "ASGI медленнее.",
+      "WSGI только для async."
+    ],
+    "correct_index": 1,
+    "explanation": "WSGI (PEP 3333): callable(environ, start_response) - sync, request/response. ASGI: async-callable со скоупом (http/websocket/lifespan), receive/send колбеки. ASGI поддерживает long-lived соединения (WebSocket, SSE) и async-IO. uvicorn/hypercorn - ASGI-серверы."
+  },
+  {
+    "external_key": "fapi-003",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Depends в FastAPI?",
+    "options": [
+      "Это middleware.",
+      "Механизм dependency injection: значение параметра вычисляется через указанную функцию (Depends(func)) и кешируется в рамках запроса.",
+      "Это путь.",
+      "Это HTTP-метод."
+    ],
+    "correct_index": 1,
+    "explanation": "def endpoint(user = Depends(get_current_user)): ... FastAPI вызовет get_current_user, возможно с собственными Depends внутри. Поддерживает yield-зависимости (для cleanup), кеширование в одном запросе (use_cache=True), override в тестах. Аналог DI в других фреймворках."
+  },
+  {
+    "external_key": "fapi-004",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое pydantic в контексте FastAPI?",
+    "options": [
+      "Это ORM.",
+      "Библиотека для валидации/сериализации данных через классы BaseModel с типами; FastAPI использует её для тел запросов и ответов.",
+      "Это middleware.",
+      "Это шаблонизатор."
+    ],
+    "correct_index": 1,
+    "explanation": "pydantic.BaseModel описывает данные через type hints, делает runtime-валидацию (str, int, EmailStr, Field(max_length=)), сериализует в JSON и обратно. FastAPI берёт его для request bodies, query/path-параметров (через Annotated), response_model."
+  },
+  {
+    "external_key": "fapi-005",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Где взять path/query/body параметры в FastAPI?",
+    "options": [
+      "Только из request.json().",
+      "Они выводятся из сигнатуры: int/str со значением по умолчанию = query; в URL {item_id} = path; pydantic-модель = body.",
+      "Через kwargs.",
+      "Через middleware."
+    ],
+    "correct_index": 1,
+    "explanation": "@app.get('/items/{id}')\ndef read(id: int, q: str = '', body: Item = Body(...)): ... Path - {id}; query - примитивы с default; body - pydantic-модель или явный Body(). Можно явно: Path(...), Query(...), Header(), Cookie(). Все валидируются и документируются автоматически."
+  },
+  {
+    "external_key": "fapi-006",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "В чём разница между async def и обычным def-эндпоинтом в FastAPI?",
+    "options": [
+      "Они одинаковы.",
+      "async def исполняется в event loop; обычный def FastAPI запускает в threadpool, чтобы не блокировать loop. Не используйте sync IO в async-эндпоинте.",
+      "Sync быстрее.",
+      "async def только для http."
+    ],
+    "correct_index": 1,
+    "explanation": "FastAPI определяет тип эндпоинта по сигнатуре. async def - кооперативный, должен использовать async-библиотеки (httpx, asyncpg, aioredis). def - синхронный, FastAPI запускает в threadpool (anyio), чтобы не вешать loop. Смешивание sync IO в async-эндпоинте сводит асинхронность на нет."
+  },
+  {
+    "external_key": "fapi-007",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое BackgroundTasks в FastAPI?",
+    "options": [
+      "Очередь сообщений.",
+      "Механизм запуска фоновой работы после возврата ответа (в том же процессе): logging, отправка email; не подходит для долгих задач - используйте Celery/RQ/arq.",
+      "Это middleware.",
+      "Это sync."
+    ],
+    "correct_index": 1,
+    "explanation": "def endpoint(bg: BackgroundTasks): bg.add_task(send_email, to=...) После того как ответ ушёл клиенту, FastAPI выполнит add_task в том же процессе. Для долгих/устойчивых задач - внешние брокеры (Celery, arq, RQ)."
+  },
+  {
+    "external_key": "fapi-008",
+    "topic": "fastapi",
+    "difficulty": 3,
+    "text": "Что такое lifespan в FastAPI?",
+    "options": [
+      "Это middleware.",
+      "Контекст-менеджер @asynccontextmanager в lifespan параметре, выполняемый при старте/останове приложения; место для инициализации DB pool, кеша, фоновых задач.",
+      "Это секунд жизни сессии.",
+      "Это middleware logging."
+    ],
+    "correct_index": 1,
+    "explanation": "@asynccontextmanager async def lifespan(app): startup; yield; shutdown. Передаётся в FastAPI(lifespan=...). Заменяет устаревшие @app.on_event('startup'/'shutdown'). Удобно: можно открыть pool, потом yield, потом закрыть. Также пробрасывает state через app.state."
+  },
+  {
+    "external_key": "fapi-009",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое response_model в @app.get?",
+    "options": [
+      "Это middleware.",
+      "Pydantic-модель, по которой FastAPI валидирует и сериализует ответ; обрезает лишние поля, документирует схему в OpenAPI.",
+      "Это запрос.",
+      "Это шаблон."
+    ],
+    "correct_index": 1,
+    "explanation": "@app.get('/items/{id}', response_model=ItemPublic) гарантирует, что ответ соответствует ItemPublic (без internal-полей). Удобно: вернёшь объект с лишними атрибутами - они отфильтруются. Также показывает в Swagger контракт ответа."
+  },
+  {
+    "external_key": "fapi-010",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Как настроить CORS в FastAPI?",
+    "options": [
+      "Никак.",
+      "Через CORSMiddleware: app.add_middleware(CORSMiddleware, allow_origins=[...], allow_methods=[...]); работает на уровне ASGI.",
+      "Через декоратор route.",
+      "Только в settings.py."
+    ],
+    "correct_index": 1,
+    "explanation": "from fastapi.middleware.cors import CORSMiddleware; app.add_middleware(CORSMiddleware, allow_origins=['https://app.example.com'], allow_credentials=True, allow_methods=['*'], allow_headers=['*']). Не используйте allow_origins=['*'] вместе с credentials."
+  },
+  {
+    "external_key": "fapi-011",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Какой паттерн аутентификации советует FastAPI?",
+    "options": [
+      "Только Basic auth.",
+      "Использовать OAuth2PasswordBearer/HTTPBearer из fastapi.security как зависимости; токены - JWT/OAuth2; всё видно в Swagger UI.",
+      "Только sessions.",
+      "Auth не поддерживается."
+    ],
+    "correct_index": 1,
+    "explanation": "fastapi.security даёт OAuth2PasswordBearer (Bearer-токен в Authorization), HTTPBasic, APIKeyHeader. Зависимость возвращает токен/credentials, дальше декодируете JWT. Swagger автоматически добавляет 'Authorize' button. Сторонние пакеты: fastapi-users, authx."
+  },
+  {
+    "external_key": "fapi-012",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое APIRouter?",
+    "options": [
+      "Это middleware.",
+      "Локальный router для группировки эндпоинтов: префиксы, теги, dependencies; подключается к app через app.include_router(...).",
+      "Это URL.",
+      "Это сериализатор."
+    ],
+    "correct_index": 1,
+    "explanation": "APIRouter позволяет разносить код по модулям: users.py: router = APIRouter(prefix='/users', tags=['users']); потом app.include_router(users.router). Можно навешивать общие dependencies, prefix-теги, responses."
+  },
+  {
+    "external_key": "fapi-013",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Как обрабатывать исключения и возвращать кастомные ошибки в FastAPI?",
+    "options": [
+      "Только raise.",
+      "raise HTTPException(status_code=404, detail='...') для стандартных; @app.exception_handler(MyError) - кастомные обработчики, возвращающие JSONResponse.",
+      "Только через middleware.",
+      "Через assert."
+    ],
+    "correct_index": 1,
+    "explanation": "raise HTTPException(404, 'not found') - идиоматично; FastAPI вернёт {'detail': '...'}. Кастомные: @app.exception_handler(MyError) async def h(request, exc): return JSONResponse(status_code=400, content=...). Для ValidationError у pydantic свой default-handler."
+  },
+  {
+    "external_key": "fapi-014",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Какой ASGI-сервер рекомендуется для FastAPI?",
+    "options": [
+      "Только Apache.",
+      "uvicorn (быстрый, на uvloop+httptools); для прода часто за gunicorn (gunicorn -k uvicorn.workers.UvicornWorker).",
+      "Это сам FastAPI.",
+      "Только Werkzeug."
+    ],
+    "correct_index": 1,
+    "explanation": "uvicorn - reference ASGI-сервер. uvicorn --host 0.0.0.0 --port 8000 main:app. В проде часто запускают через gunicorn -k uvicorn.workers.UvicornWorker для процесс-менеджмента, или systemd-юнит. hypercorn - альтернатива с поддержкой HTTP/2."
+  },
+  {
+    "external_key": "fapi-015",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Чем uvicorn отличается от hypercorn?",
+    "options": [
+      "Это синонимы.",
+      "Оба ASGI-сервера; uvicorn проще, на uvloop+httptools; hypercorn поддерживает HTTP/2 и HTTP/3 (QUIC) из коробки.",
+      "uvicorn только для Django.",
+      "hypercorn syncовый."
+    ],
+    "correct_index": 1,
+    "explanation": "uvicorn - быстрый, минималистичный, прокачан под HTTP/1.1+WebSocket. hypercorn (Pgjones) - HTTP/1, HTTP/2, HTTP/3 (QUIC), WebSocket; гибкий, но сложнее. Для большинства проектов uvicorn более чем достаточен."
+  },
+  {
+    "external_key": "fapi-016",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "На чём основан FastAPI?",
+    "options": [
+      "Это самостоятельный фреймворк с нуля.",
+      "На Starlette (ASGI-роутинг и базовые middleware) и Pydantic (валидация/сериализация).",
+      "На Flask.",
+      "На Django."
+    ],
+    "correct_index": 1,
+    "explanation": "FastAPI = Starlette (low-level ASGI router, middleware, request/response, websocket) + Pydantic (валидация/сериализация). Поверх - DI, OpenAPI-схема, авто-документация. Можно опускаться в Starlette при необходимости."
+  },
+  {
+    "external_key": "fapi-017",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Как делать WebSocket в FastAPI?",
+    "options": [
+      "Никак.",
+      "Через @app.websocket('/ws') async def ws(websocket: WebSocket): await websocket.accept(); await websocket.receive_text/send_text.",
+      "Только через Channels.",
+      "Только sync."
+    ],
+    "correct_index": 1,
+    "explanation": "FastAPI поддерживает WebSocket через Starlette. Принимаешь соединение accept(), общаешься receive_text/send_text/json. Для broadcast - менеджер подключений (свой или starlette-broadcast). Не путать с long-poll/SSE."
+  },
+  {
+    "external_key": "fapi-018",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Server-Sent Events (SSE) и как сделать в FastAPI?",
+    "options": [
+      "Это WebSocket.",
+      "Однонаправленный текстовый поток от сервера клиенту через HTTP; в FastAPI - StreamingResponse с генератором, отдающим event: и data:.",
+      "Это про email.",
+      "Это про CDN."
+    ],
+    "correct_index": 1,
+    "explanation": "SSE - простой стрим server -> client (text/event-stream), браузер парсит EventSource. В FastAPI: return StreamingResponse(generator(), media_type='text/event-stream'), где generator yieldит 'data: ...\\n\\n'. Для двунаправленного - WebSocket."
+  },
+  {
+    "external_key": "fapi-019",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое Flask?",
+    "options": [
+      "Это ORM.",
+      "Микрофреймворк для веба на Python: маршрутизация, шаблоны, расширения - минимум из коробки, добавляешь нужное.",
+      "Это менеджер пакетов.",
+      "Это БД."
+    ],
+    "correct_index": 1,
+    "explanation": "Flask (Armin Ronacher) - WSGI-микрофреймворк. Маршрутизация через @app.route, шаблоны Jinja2, поддержка плагинов (Flask-SQLAlchemy, Flask-Login). Гибкий, прост. С 2.0 поддерживает async-роуты, но всё ещё WSGI (через wrapping)."
+  },
+  {
+    "external_key": "fapi-020",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "В чём разница Flask vs FastAPI?",
+    "options": [
+      "Это синонимы.",
+      "Flask - WSGI-микро без валидации; FastAPI - ASGI с pydantic, авто-OpenAPI, async, DI.",
+      "Flask поддерживает HTTP/2.",
+      "FastAPI старее."
+    ],
+    "correct_index": 1,
+    "explanation": "Flask - проверенный WSGI-фреймворк, минимализм, огромная экосистема. FastAPI моложе, основан на ASGI, async-первый, валидация и докуменация типы автоматически. Для нового API часто FastAPI; для классических server-rendered приложений - Flask/Django."
+  },
+  {
+    "external_key": "fapi-021",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое aiohttp?",
+    "options": [
+      "Это синоним FastAPI.",
+      "Async HTTP-клиент и сервер на asyncio; работает напрямую без ASGI-абстракции.",
+      "Это middleware.",
+      "Это БД."
+    ],
+    "correct_index": 1,
+    "explanation": "aiohttp - один из старейших async-стэков для Python: и клиент (ClientSession), и сервер (web.Application, web.Router). Не следует ASGI-стандарту, имеет свою middleware-модель. Для серверов часто заменён ASGI-фреймворками; клиент остаётся популярным."
+  },
+  {
+    "external_key": "fapi-022",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Settings и как его делают в FastAPI?",
+    "options": [
+      "Только settings.py.",
+      "pydantic-settings (BaseSettings): значения берутся из env, .env, secret-файлов; валидируются типами; в FastAPI через Depends(get_settings) + lru_cache.",
+      "Только через os.environ.",
+      "Через middleware."
+    ],
+    "correct_index": 1,
+    "explanation": "from pydantic_settings import BaseSettings: class Settings(BaseSettings): db_url: str; model_config = SettingsConfigDict(env_file='.env'). @lru_cache def get_settings(): return Settings(). В эндпоинте def x(s: Settings = Depends(get_settings)): ..."
+  },
+  {
+    "external_key": "fapi-023",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Как тестировать FastAPI?",
+    "options": [
+      "Только e2e на реальном сервере.",
+      "Через TestClient (sync) или httpx.AsyncClient + ASGITransport (async); pytest + dependency_overrides для подмены зависимостей.",
+      "Никак.",
+      "Только через requests."
+    ],
+    "correct_index": 1,
+    "explanation": "from fastapi.testclient import TestClient; client = TestClient(app); resp = client.get('/'). Async-вариант: AsyncClient(transport=ASGITransport(app=app)). Подменяй зависимости: app.dependency_overrides[get_db] = fake_db. БД и httpx-моки работают как обычно."
+  },
+  {
+    "external_key": "fapi-024",
+    "topic": "fastapi",
+    "difficulty": 3,
+    "text": "Как добавить middleware в FastAPI?",
+    "options": [
+      "Только через декоратор.",
+      "@app.middleware('http') async def m(request, call_next): ... ; или app.add_middleware(BaseHTTPMiddleware, dispatch=...) ; ASGI-middleware напрямую через app.add_middleware(...).",
+      "Это невозможно.",
+      "Только в Starlette."
+    ],
+    "correct_index": 1,
+    "explanation": "Простой способ: @app.middleware('http') async def add_header(request, call_next): resp = await call_next(request); resp.headers['X-Time'] = ...; return resp. Стандартные ASGI: GZipMiddleware, TrustedHostMiddleware, CORSMiddleware, HTTPSRedirectMiddleware - app.add_middleware(GZipMiddleware)."
+  },
+  {
+    "external_key": "fapi-025",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое pydantic ValidationError?",
+    "options": [
+      "Это HTTPException.",
+      "Исключение, бросаемое pydantic при невалидных данных; FastAPI ловит и возвращает 422 Unprocessable Entity со списком ошибок.",
+      "Это про БД.",
+      "Это про ORM."
+    ],
+    "correct_index": 1,
+    "explanation": "Pydantic при ошибке валидации поднимает ValidationError со списком ошибок (loc, msg, type). FastAPI оборачивает в RequestValidationError и возвращает 422 со структурированным JSON. Хук - @app.exception_handler(RequestValidationError) для кастома."
+  },
+  {
+    "external_key": "fapi-026",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Где взять auto-generated API docs в FastAPI?",
+    "options": [
+      "Никаких docs нет.",
+      "GET /docs - Swagger UI, GET /redoc - ReDoc, GET /openapi.json - схема OpenAPI 3; всё бесплатно.",
+      "Только если включить middleware.",
+      "Через Django admin."
+    ],
+    "correct_index": 1,
+    "explanation": "FastAPI генерирует OpenAPI-схему из pydantic-моделей и сигнатур. /docs - интерактивный Swagger UI с авторизацией; /redoc - ReDoc; /openapi.json - сама схема (можно отдавать клиентам/генерировать SDK через openapi-generator)."
+  },
+  {
+    "external_key": "fapi-027",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Чем Starlette отличается от FastAPI?",
+    "options": [
+      "Это одно и то же.",
+      "Starlette - low-level ASGI-toolkit (router, middleware, response); FastAPI - надстройка с DI, pydantic-валидацией, OpenAPI и удобной декларацией параметров.",
+      "Starlette только для async.",
+      "FastAPI медленнее."
+    ],
+    "correct_index": 1,
+    "explanation": "Starlette даёт всё нужное для построения ASGI-приложений, но без opinion на validation/DI/docs. FastAPI берёт Starlette и добавляет 'opinionated' слой: типизированные параметры, pydantic, dependencies, swagger. Для чисто-минимального ASGI - Starlette."
+  },
+  {
+    "external_key": "fapi-028",
+    "topic": "fastapi",
+    "difficulty": 3,
+    "text": "Что такое dependency_overrides и зачем оно?",
+    "options": [
+      "Способ ломать DI.",
+      "Механизм подмены зависимостей в тестах: app.dependency_overrides[get_db] = lambda: TestSession(). После теста удаляем override.",
+      "Это middleware.",
+      "Это шаблон."
+    ],
+    "correct_index": 1,
+    "explanation": "Для тестов: app.dependency_overrides[get_settings] = lambda: TestSettings(...) - вместо реальных настроек используется тестовая. После теста: app.dependency_overrides.clear(). Это идиоматичный способ изолировать тесты от внешних систем (БД, кеш, S3)."
+  },
+  {
+    "external_key": "alga-001",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Какова сложность BFS на графе с V вершинами и E рёбрами?",
+    "options": [
+      "O(V)",
+      "O(V + E)",
+      "O(V * E)",
+      "O(V * log V)"
+    ],
+    "correct_index": 1,
+    "explanation": "BFS обходит каждую вершину один раз и проходит каждое ребро по разу - O(V + E) и O(V) дополнительной памяти под очередь и visited. Используется для кратчайшего пути в невзвешенном графе и для уровней."
+  },
+  {
+    "external_key": "alga-002",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Какая сложность DFS на графе?",
+    "options": [
+      "O(V)",
+      "O(V + E)",
+      "O(V * E)",
+      "O(V^2)"
+    ],
+    "correct_index": 1,
+    "explanation": "DFS - O(V + E) и O(V) памяти на стек/recursion. Используется для топологической сортировки, поиска компонент связности, сильно связных компонент (Tarjan, Kosaraju), детекции циклов, обхода backtracking."
+  },
+  {
+    "external_key": "alga-003",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что делает алгоритм Dijkstra?",
+    "options": [
+      "Топологическую сортировку.",
+      "Находит кратчайшие пути из одной вершины во все остальные во взвешенном графе с НЕ отрицательными рёбрами; с heap - O((V+E) log V).",
+      "Минимальное остовное дерево.",
+      "Поиск цикла."
+    ],
+    "correct_index": 1,
+    "explanation": "Dijkstra: greedy с min-heap. Отрицательные веса не поддерживаются (для них - Bellman-Ford). С Fibonacci-heap - O(E + V log V); с binary-heap - O((V+E) log V); без heap - O(V^2). А* - расширение с эвристикой."
+  },
+  {
+    "external_key": "alga-004",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Чем A* отличается от Dijkstra?",
+    "options": [
+      "A* медленнее.",
+      "A* добавляет эвристику h(n) (например, манхэттенское расстояние); приоритет = g(n) + h(n). При admissible-эвристике находит оптимальный путь, но быстрее за счёт фокусировки.",
+      "A* для деревьев.",
+      "Это синонимы."
+    ],
+    "correct_index": 1,
+    "explanation": "A* = Dijkstra с эвристикой h(n) - оценкой расстояния до цели. Приоритет f = g (пройдено) + h (оценка). Если h admissible (не переоценивает), A* оптимален. Если consistent - дополнительно оптимален в смысле количества expanded nodes."
+  },
+  {
+    "external_key": "alga-005",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что делает Bellman-Ford?",
+    "options": [
+      "То же, что Dijkstra.",
+      "Находит кратчайшие пути из одной вершины при наличии отрицательных рёбер; обнаруживает отрицательные циклы. Сложность O(V * E).",
+      "Сортирует.",
+      "Это BFS."
+    ],
+    "correct_index": 1,
+    "explanation": "Bellman-Ford: V-1 раз релаксирует все рёбра. Поддерживает отрицательные веса. На V-й итерации, если что-то ещё улучшается, есть отрицательный цикл. O(V*E) - медленнее Dijkstra, зато для негативных весов. SPFA - оптимизация."
+  },
+  {
+    "external_key": "alga-006",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что делает Floyd-Warshall?",
+    "options": [
+      "Кратчайшие пути из одной вершины.",
+      "Находит кратчайшие расстояния между ВСЕМИ парами вершин за O(V^3); работает с отрицательными рёбрами (без негативных циклов).",
+      "Это сортировка.",
+      "Это MST."
+    ],
+    "correct_index": 1,
+    "explanation": "Floyd-Warshall - DP по 'через какие вершины разрешено пройти': dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j]). O(V^3), O(V^2) памяти. Удобно для маленьких графов и all-pairs. Для разреженных - V раз Dijkstra (если веса >=0)."
+  },
+  {
+    "external_key": "alga-007",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Что такое топологическая сортировка?",
+    "options": [
+      "Сортировка массива.",
+      "Линейный порядок вершин DAG, такой что каждая дуга (u, v) идёт от u к более позднему v; алгоритмы - Kahn (BFS) и DFS-based.",
+      "Это про BFS дерева.",
+      "Это про MST."
+    ],
+    "correct_index": 1,
+    "explanation": "Topological sort применим к DAG (ориентированному ациклическому графу). Используется в build-системах, расписаниях задач, компиляции. Kahn: повторяй 'возьми вершину с in-degree 0 и удали'. DFS: добавляй в результат при выходе из вершины."
+  },
+  {
+    "external_key": "alga-008",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Что делает алгоритм Kahn?",
+    "options": [
+      "Сортирует массив.",
+      "Топологическая сортировка через очередь: ставим в очередь вершины с in-degree 0, удаляем из графа, обновляем степени.",
+      "Это про DFS.",
+      "MST."
+    ],
+    "correct_index": 1,
+    "explanation": "Kahn: 1) посчитать in-degree всех вершин; 2) положить вершины с in_deg=0 в очередь; 3) пока очередь не пуста: pop, добавить в результат, для каждого соседа уменьшить in_deg, если 0 - в очередь. Если результат не покрывает все вершины - есть цикл."
+  },
+  {
+    "external_key": "alga-009",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое сильно связные компоненты (SCC)?",
+    "options": [
+      "Это про BFS.",
+      "Максимальное подмножество вершин, в котором из любой вершины можно дойти до любой другой; находятся алгоритмами Tarjan/Kosaraju за O(V+E).",
+      "Это MST.",
+      "Это сортировка."
+    ],
+    "correct_index": 1,
+    "explanation": "В ориентированном графе SCC - группа вершин, взаимно достижимых. Tarjan один проход DFS со стэком и lowlink. Kosaraju - 2 DFS (на исходном и транспонированном). Граф SCC - condensation, всегда DAG."
+  },
+  {
+    "external_key": "alga-010",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что делает алгоритм Прима?",
+    "options": [
+      "Сортирует.",
+      "Строит минимальное остовное дерево: жадно растёт из стартовой вершины, добавляя минимальное ребро к ещё не включённой вершине; с min-heap - O((V+E) log V).",
+      "Это BFS.",
+      "Кратчайший путь."
+    ],
+    "correct_index": 1,
+    "explanation": "Prim'a alg.: начинаем с произвольной вершины, поддерживаем set 'in-tree', выбираем минимальное ребро, ведущее наружу, добавляем новую вершину. Похож на Dijkstra. С min-heap - O(E log V). Хорош для плотных графов."
+  },
+  {
+    "external_key": "alga-011",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что делает алгоритм Крускала?",
+    "options": [
+      "Это сортировка.",
+      "Строит MST: сортирует все рёбра по весу, добавляет ребро, если оно не образует цикл (проверяется DSU/Union-Find); O(E log V).",
+      "Это BFS.",
+      "Кратчайший путь."
+    ],
+    "correct_index": 1,
+    "explanation": "Kruskal: сортируем рёбра по возрастанию веса. По очереди берём ребро, если оно соединяет разные компоненты (Union-Find: find(u) != find(v)) - добавляем, делаем union. O(E log E) на сортировку + почти-константа на DSU. Хорош для разреженных графов."
+  },
+  {
+    "external_key": "alga-012",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Что такое Union-Find (DSU)?",
+    "options": [
+      "Это про сортировку.",
+      "Структура для непересекающихся множеств: операции find(x) и union(a,b); с path compression и union-by-rank амортизированно почти O(1) на операцию.",
+      "Это hash table.",
+      "Это стек."
+    ],
+    "correct_index": 1,
+    "explanation": "DSU хранит лес деревьев. find возвращает корень множества; union объединяет деревья. Path compression делает find ленивым: уплощаем путь к корню. Union-by-rank/size цепляет меньшее под большее. Амортизированно O(alpha(n)) - инверсная Аккермана, практически 4."
+  },
+  {
+    "external_key": "alga-013",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Что такое Trie (префиксное дерево)?",
+    "options": [
+      "Это hash map.",
+      "Дерево, где путь от корня к узлу образует префикс/строку; используется для autocomplete, поиска слов, prefix-операций.",
+      "Это BST.",
+      "Это heap."
+    ],
+    "correct_index": 1,
+    "explanation": "Trie: каждый узел - один символ; путь = строка. Вставка/поиск/префиксный поиск за O(L) - длина строки, не зависит от количества слов. Используется в автокомплите, T9, longest common prefix, словарях. Compressed trie (radix tree) экономит память."
+  },
+  {
+    "external_key": "alga-014",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Segment Tree?",
+    "options": [
+      "Это BST.",
+      "Дерево, где каждый узел отвечает за интервал; поддерживает запросы (sum/min/max/...) и обновления на отрезках за O(log n); память O(n).",
+      "Это hash table.",
+      "Это heap."
+    ],
+    "correct_index": 1,
+    "explanation": "Segment tree: ассоциативная агрегация на отрезках за O(log n) на запрос/update. Lazy propagation поддерживает range-update. Применения: суммы/минимумы на отрезках, kth-order statistic, RMQ. Альтернатива - Fenwick tree (BIT, проще, но ограничен ассоциативной операцией с инверсией)."
+  },
+  {
+    "external_key": "alga-015",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Fenwick tree (BIT)?",
+    "options": [
+      "Это BST.",
+      "Структура для prefix-sum с update и query за O(log n); проще segment tree, но для операций обратимых (sum, xor); память O(n).",
+      "Это heap.",
+      "Это hash."
+    ],
+    "correct_index": 1,
+    "explanation": "Fenwick tree (Binary Indexed Tree) использует бинарное представление индекса для быстрых prefix-sum. update(i, v) и prefix_sum(i) за O(log n). Очень компактен и быстр. Не подходит для min/max - там segment tree."
+  },
+  {
+    "external_key": "alga-016",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какова сложность KMP-алгоритма?",
+    "options": [
+      "O(nm)",
+      "O(n + m)",
+      "O(m log n)",
+      "O(n^2)"
+    ],
+    "correct_index": 1,
+    "explanation": "KMP (Knuth-Morris-Pratt) - поиск подстроки за O(n + m), где n - длина текста, m - паттерна. Препроцессинг паттерна (массив failure / pi-функция) - O(m), поиск - O(n). Никогда не возвращается назад в тексте."
+  },
+  {
+    "external_key": "alga-017",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что делает Rabin-Karp?",
+    "options": [
+      "Это про MST.",
+      "Поиск подстроки через rolling hash: O(n+m) в среднем, O(n*m) в худшем при коллизиях; удобен для multi-pattern search.",
+      "Это сортировка.",
+      "Это BFS."
+    ],
+    "correct_index": 1,
+    "explanation": "Rabin-Karp скользит окном паттерна и сравнивает hash; rolling-hash считается за O(1) при сдвиге. Для одного паттерна KMP/Z обычно лучше; Rabin-Karp выигрывает на множестве паттернов одинаковой длины."
+  },
+  {
+    "external_key": "alga-018",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Z-функция строки?",
+    "options": [
+      "Это про BST.",
+      "Z[i] = длина наибольшего общего префикса строки и её суффикса, начинающегося в i; считается за O(n); применяется в поиске подстрок.",
+      "Это про DFS.",
+      "Это про сортировку."
+    ],
+    "correct_index": 1,
+    "explanation": "Z-функция - аналог prefix-функции. Z[i] = LCP(s, s[i:]). Вычисляется за O(n) методом 'самой далёкой совпадающей зоны'. Поиск pattern в text: считаем Z для pat + '#' + text и ищем Z[i] = len(pat)."
+  },
+  {
+    "external_key": "alga-019",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое AVL и Red-Black дерево?",
+    "options": [
+      "Это просто BST.",
+      "Самобалансирующиеся BST: AVL строго балансное по высоте (~1.44 log n); RB допускает чуть бОльший дисбаланс, но дешевле перебалансировка; обе O(log n) на операцию.",
+      "Это hash table.",
+      "Это про DFS."
+    ],
+    "correct_index": 1,
+    "explanation": "AVL: разница высот поддеревьев <= 1, чаще ротации, очень быстрые поиски. RB-tree: чуть менее строгое условие, меньше ротаций при insert/delete; стандарт реализации std::map в C++. Оба O(log n) гарантированно."
+  },
+  {
+    "external_key": "alga-020",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое B-tree?",
+    "options": [
+      "Это бинарное дерево.",
+      "Дерево с многими ключами в узле и большим ветвлением; используется в файловых системах и БД (b-tree индексы) для оптимизации I/O.",
+      "Это hash.",
+      "Это AVL."
+    ],
+    "correct_index": 1,
+    "explanation": "B-tree (и B+ tree) хранит k ключей в узле, ветвится в k+1 потомков. Высота низкая (logK n), что важно при дорогом доступе к диску - меньше чтений страниц. Используется в PostgreSQL, MySQL, файловых системах ext4/btrfs."
+  },
+  {
+    "external_key": "alga-021",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Bloom filter?",
+    "options": [
+      "Это про backups.",
+      "Вероятностная структура для проверки 'есть ли элемент в множестве': false-positive возможны, false-negative - нет; компактна.",
+      "Это hash map.",
+      "Это segment tree."
+    ],
+    "correct_index": 1,
+    "explanation": "Bloom filter: bit-массив + k hash-функций. add(x) ставит k бит. contains(x) - все k бит должны быть 1. Если все 1 - 'возможно есть' (FP), если хоть один 0 - 'точно нет'. Используется в Cassandra, RocksDB, веб-кэшах для дешёвой фильтрации обращений."
+  },
+  {
+    "external_key": "alga-022",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое HyperLogLog?",
+    "options": [
+      "Это профайлер.",
+      "Вероятностная структура для приблизительного подсчёта количества уникальных элементов (cardinality) с ~1.6% ошибкой и log-памятью.",
+      "Это segment tree.",
+      "Это BFS."
+    ],
+    "correct_index": 1,
+    "explanation": "HyperLogLog оценивает |distinct| через анализ количества leading zeros в hash'ах. Память KB, точность ~1-2%. Используется в Redis (PFADD/PFCOUNT/PFMERGE) для UV-счётчиков, аналитики. Объединимы (merge), что упрощает шардинг."
+  },
+  {
+    "external_key": "alga-023",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Count-Min Sketch?",
+    "options": [
+      "Это hash table.",
+      "Вероятностная структура для приблизительного подсчёта частоты элементов; использует d hash-функций и d массивов; даёт оценку 'не больше реальной частоты + ошибка'.",
+      "Это segment tree.",
+      "Это про backup."
+    ],
+    "correct_index": 1,
+    "explanation": "Count-Min Sketch - матрица d x w. add(x): для каждой из d hash-функций инкрементим cell. count(x): минимум по d cells. Для top-K частых ключей в потоке (heavy hitters) при ограниченной памяти."
+  },
+  {
+    "external_key": "alga-024",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое skip list?",
+    "options": [
+      "Это связный список.",
+      "Вероятностная структура с многоуровневыми ссылками; даёт O(log n) поиск/insert/delete без перебалансировки; используется в Redis sorted sets.",
+      "Это segment tree.",
+      "Это hash."
+    ],
+    "correct_index": 1,
+    "explanation": "Skip list - связный список с дополнительными уровнями 'через k': каждый узел подбрасывает уровни случайно. Среднее O(log n) на операции, проще RB-tree. Redis sorted set - skip list + hash для O(log N) sorted-операций."
+  },
+  {
+    "external_key": "alga-025",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Какова сложность quickselect (поиск k-го)?",
+    "options": [
+      "O(n log n)",
+      "O(n) в среднем, O(n^2) в худшем; гарантированный O(n) - алгоритм 'медиана медиан'.",
+      "O(log n)",
+      "O(n^2) всегда."
+    ],
+    "correct_index": 1,
+    "explanation": "Quickselect - вариант quicksort: после партиции спускаемся только в одну половину. Среднее O(n) (через линейную сумму геометрической прогрессии). В худшем O(n^2) при плохом pivot. С 'median of medians' - гарантированно O(n), но с большой константой."
+  },
+  {
+    "external_key": "alga-026",
+    "topic": "algorithms_advanced",
+    "difficulty": 2,
+    "text": "Что такое reservoir sampling?",
+    "options": [
+      "Это про backup.",
+      "Алгоритм случайной выборки k элементов из неизвестно-длинного потока за один проход и O(k) памяти.",
+      "Это hash.",
+      "Это про BFS."
+    ],
+    "correct_index": 1,
+    "explanation": "Reservoir sampling: первые k элементов кладём в reservoir; для i-го (i>k) с вероятностью k/i заменяем случайный из reservoir. Гарантирует, что каждый элемент потока попал в выборку с одинаковой вероятностью k/n. Полезно для больших файлов и стримов."
+  },
+  {
+    "external_key": "alga-027",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая классическая DP-задача 'рюкзак 0/1' и её сложность?",
+    "options": [
+      "Сортировка за O(n log n).",
+      "Knapsack 0/1: при вместимости W и n предметов с весом/ценностью - DP O(n * W); псевдополиномиальная.",
+      "BFS за O(V+E).",
+      "Это hash."
+    ],
+    "correct_index": 1,
+    "explanation": "Задача knapsack 0/1: dp[i][w] = max ценность, используя первые i предметов и не превысив w. Переход: dp[i][w] = max(dp[i-1][w], dp[i-1][w - wt[i]] + val[i]). O(n*W). Псевдополиномиальный - W не часть n. По памяти - O(W) при катушке."
+  },
+  {
+    "external_key": "alga-028",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какова сложность LIS (longest increasing subsequence)?",
+    "options": [
+      "Только O(n^2).",
+      "DP - O(n^2); с binary search и patience sorting - O(n log n).",
+      "O(n)",
+      "O(n!)"
+    ],
+    "correct_index": 1,
+    "explanation": "Простой DP: dp[i] = max(dp[j]+1) для j<i, a[j]<a[i] - O(n^2). Оптимизация через массив 'хвостов длины L' с binary search или patience sorting - O(n log n). Восстановление самой подпоследовательности - parent-указатели."
+  },
+  {
+    "external_key": "alga-029",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какова сложность LCS (longest common subsequence)?",
+    "options": [
+      "O(n+m).",
+      "Стандартный DP - O(n*m); по памяти оптимизируется до O(min(n,m)).",
+      "O(n^3)",
+      "O(2^n)"
+    ],
+    "correct_index": 1,
+    "explanation": "LCS - dp[i][j] = LCS префиксов длины i и j: совпадают - dp[i-1][j-1]+1, нет - max(dp[i-1][j], dp[i][j-1]). O(n*m), памяти O(min). Используется в diff/git, биоинформатике. Расстояние Левенштейна - похожий DP с операциями вставка/удаление/замена."
+  },
+  {
+    "external_key": "alga-030",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Тарьяна нахождения мостов в графе?",
+    "options": [
+      "Это сортировка.",
+      "DFS, поддерживающий tin (время входа) и low (минимально достижимое); ребро (u,v) - мост, если low[v] > tin[u]. O(V + E).",
+      "BFS.",
+      "Это про MST."
+    ],
+    "correct_index": 1,
+    "explanation": "Алгоритм Тарьяна для мостов: один DFS, на спуске считаем tin, на возврате обновляем low = min(low[child], tin[ancestors_via_back_edge]). Ребро в DFS-дереве - мост, если low потомка строго больше tin родителя. Аналогично - точки сочленения (articulation points)."
   }
 ]
