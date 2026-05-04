@@ -1,0 +1,90 @@
+from datetime import date, timedelta
+
+from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from pylevelup.db.models import User
+
+
+class UserRepository:
+    def __init__(self, session: AsyncSession) -> None:
+        self.session = session
+
+    async def get_by_telegram_id(self, telegram_id: int) -> User | None:
+        stmt = select(User).where(User.telegram_id == telegram_id)
+        return (await self.session.execute(stmt)).scalar_one_or_none()
+
+    async def get_by_id(self, user_id: int) -> User | None:
+        return await self.session.get(User, user_id)
+
+    async def list_active_for_reminders(self) -> list[User]:
+        stmt = select(User).where(User.is_active.is_(True), User.reminders_enabled.is_(True))
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def list_all_active(self) -> list[User]:
+        stmt = select(User).where(User.is_active.is_(True))
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def upsert_from_telegram(
+        self,
+        telegram_id: int,
+        username: str | None,
+        first_name: str | None,
+        language_code: str | None,
+    ) -> User:
+        existing = await self.get_by_telegram_id(telegram_id)
+        if existing is not None:
+            existing.username = username
+            existing.first_name = first_name
+            existing.language_code = language_code
+            existing.is_active = True
+            await self.session.flush()
+            return existing
+
+        user = User(
+            telegram_id=telegram_id,
+            username=username,
+            first_name=first_name,
+            language_code=language_code,
+        )
+        self.session.add(user)
+        await self.session.flush()
+        return user
+
+    async def update_streak_after_session(self, user_id: int, session_date: date) -> None:
+        user = await self.get_by_id(user_id)
+        if user is None:
+            return
+        if user.last_active_date == session_date:
+            return
+        if user.last_active_date == session_date - timedelta(days=1):
+            user.current_streak += 1
+        else:
+            user.current_streak = 1
+        if user.current_streak > user.max_streak:
+            user.max_streak = user.current_streak
+        user.last_active_date = session_date
+        await self.session.flush()
+
+    async def increment_totals(self, user_id: int, correct_delta: int, answered_delta: int) -> None:
+        stmt = (
+            update(User)
+            .where(User.id == user_id)
+            .values(
+                total_correct=User.total_correct + correct_delta,
+                total_answered=User.total_answered + answered_delta,
+            )
+        )
+        await self.session.execute(stmt)
+
+    async def set_ranking(self, user_id: int, score: float, position: int) -> None:
+        stmt = (
+            update(User)
+            .where(User.id == user_id)
+            .values(ranking_score=score, last_ranking_position=position)
+        )
+        await self.session.execute(stmt)
+
+    async def set_reminders_enabled(self, user_id: int, enabled: bool) -> None:
+        stmt = update(User).where(User.id == user_id).values(reminders_enabled=enabled)
+        await self.session.execute(stmt)

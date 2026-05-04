@@ -1,0 +1,7 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "alembic upgrade head && python -m scripts.seed_questions && python -m pylevelup"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

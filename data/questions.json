@@ -1,0 +1,647 @@
+[
+  {
+    "external_key": "py-basics-001",
+    "topic": "basics",
+    "difficulty": 1,
+    "text": "Что вернёт выражение `bool([])` в Python?",
+    "options": ["True", "False", "None", "Ошибку TypeError"],
+    "correct_index": 1,
+    "explanation": "Пустой список в булевом контексте всегда False."
+  },
+  {
+    "external_key": "py-basics-002",
+    "topic": "basics",
+    "difficulty": 1,
+    "text": "Какой тип данных в Python является неизменяемым?",
+    "options": ["list", "dict", "set", "tuple"],
+    "correct_index": 3,
+    "explanation": "tuple неизменяемый, остальные коллекции изменяемые."
+  },
+  {
+    "external_key": "py-basics-003",
+    "topic": "basics",
+    "difficulty": 1,
+    "text": "Что выведет `print(2 ** 3 ** 2)`?",
+    "options": ["64", "512", "12", "Ошибку синтаксиса"],
+    "correct_index": 1,
+    "explanation": "Возведение в степень правоассоциативно: 2 ** (3 ** 2) = 2 ** 9 = 512."
+  },
+  {
+    "external_key": "py-basics-004",
+    "topic": "basics",
+    "difficulty": 1,
+    "text": "Какой результат у выражения `'5' * 3`?",
+    "options": ["15", "555", "'555'", "Ошибку TypeError"],
+    "correct_index": 2,
+    "explanation": "Умножение строки на int повторяет её, результат строка '555'."
+  },
+  {
+    "external_key": "py-basics-005",
+    "topic": "basics",
+    "difficulty": 2,
+    "text": "Чем отличается `is` от `==` в Python?",
+    "options": [
+      "is проверяет идентичность объектов, == сравнивает значения",
+      "Это синонимы, разницы нет",
+      "is работает только со строками, == с числами",
+      "is используется только для None"
+    ],
+    "correct_index": 0,
+    "explanation": "is проверяет идентичность по id(), == вызывает __eq__ и сравнивает значения."
+  },
+  {
+    "external_key": "py-collections-001",
+    "topic": "collections",
+    "difficulty": 2,
+    "text": "Какая сложность у операции поиска элемента в `dict` по ключу в среднем случае?",
+    "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
+    "correct_index": 2,
+    "explanation": "dict реализован через хеш-таблицу, среднее время доступа O(1)."
+  },
+  {
+    "external_key": "py-collections-002",
+    "topic": "collections",
+    "difficulty": 2,
+    "text": "Что произойдёт при попытке использовать список как ключ словаря?",
+    "options": [
+      "Список будет автоматически приведён к tuple",
+      "Будет выброшено TypeError из-за нехешируемого типа",
+      "Словарь сохранит ссылку на список",
+      "Возникнет ValueError"
+    ],
+    "correct_index": 1,
+    "explanation": "Ключи dict должны быть хешируемыми, list нехешируем, поэтому TypeError."
+  },
+  {
+    "external_key": "py-collections-003",
+    "topic": "collections",
+    "difficulty": 2,
+    "text": "Какой контейнер из collections даёт O(1) добавление и удаление с обоих концов?",
+    "options": ["list", "deque", "OrderedDict", "ChainMap"],
+    "correct_index": 1,
+    "explanation": "collections.deque оптимизирован для двусторонних очередей."
+  },
+  {
+    "external_key": "py-collections-004",
+    "topic": "collections",
+    "difficulty": 3,
+    "text": "Что вернёт `set([1, 2, 2, 3]) - {2}`?",
+    "options": ["{1, 2, 3}", "{1, 3}", "{2}", "Ошибку"],
+    "correct_index": 1,
+    "explanation": "Из множества {1, 2, 3} вычитается {2}, получается {1, 3}."
+  },
+  {
+    "external_key": "py-collections-005",
+    "topic": "collections",
+    "difficulty": 3,
+    "text": "Что делает метод `dict.setdefault(key, default)`?",
+    "options": [
+      "Возвращает значение по ключу, всегда заменяя его на default",
+      "Возвращает значение, а если ключа нет - вставляет default и возвращает его",
+      "Удаляет ключ, если его значение равно default",
+      "Полностью очищает словарь"
+    ],
+    "correct_index": 1,
+    "explanation": "setdefault возвращает текущее значение, либо вставляет default и возвращает его."
+  },
+  {
+    "external_key": "py-functions-001",
+    "topic": "functions",
+    "difficulty": 2,
+    "text": "Что произойдёт, если значением аргумента по умолчанию указать пустой список `def f(x=[])`?",
+    "options": [
+      "Список создаётся при каждом вызове",
+      "Список общий для всех вызовов и может накапливать состояние",
+      "Python выбросит SyntaxError",
+      "Список преобразуется в tuple"
+    ],
+    "correct_index": 1,
+    "explanation": "Аргументы по умолчанию вычисляются один раз при определении функции."
+  },
+  {
+    "external_key": "py-functions-002",
+    "topic": "functions",
+    "difficulty": 2,
+    "text": "Что такое замыкание (closure) в Python?",
+    "options": [
+      "Функция, которая запоминает значения переменных из объемлющей области",
+      "Функция, объявленная внутри класса",
+      "Декоратор, превращающий функцию в синглтон",
+      "Аналог lambda без аргументов"
+    ],
+    "correct_index": 0,
+    "explanation": "Closure захватывает переменные из enclosing scope и держит их живыми."
+  },
+  {
+    "external_key": "py-functions-003",
+    "topic": "functions",
+    "difficulty": 2,
+    "text": "Зачем используется декоратор `functools.wraps`?",
+    "options": [
+      "Чтобы декоратор был быстрее",
+      "Чтобы сохранить метаданные оборачиваемой функции (имя, docstring)",
+      "Чтобы декоратор работал без аргументов",
+      "Чтобы декоратор автоматически кэшировал результаты"
+    ],
+    "correct_index": 1,
+    "explanation": "functools.wraps копирует __name__, __doc__ и другие атрибуты."
+  },
+  {
+    "external_key": "py-functions-004",
+    "topic": "functions",
+    "difficulty": 3,
+    "text": "Что вернёт вызов `list(map(lambda x: x*2, range(3)))`?",
+    "options": ["[0, 2, 4]", "[2, 4, 6]", "[0, 1, 2]", "Объект map"],
+    "correct_index": 0,
+    "explanation": "range(3) даёт 0, 1, 2; умноженные на 2 = 0, 2, 4."
+  },
+  {
+    "external_key": "py-oop-001",
+    "topic": "oop",
+    "difficulty": 2,
+    "text": "Что делает `@classmethod`?",
+    "options": [
+      "Привязывает метод к экземпляру",
+      "Привязывает метод к классу, передавая cls первым аргументом",
+      "Делает метод приватным",
+      "Превращает метод в свойство"
+    ],
+    "correct_index": 1,
+    "explanation": "classmethod получает cls как первый аргумент и доступен через класс и экземпляр."
+  },
+  {
+    "external_key": "py-oop-002",
+    "topic": "oop",
+    "difficulty": 2,
+    "text": "Чем `__str__` отличается от `__repr__`?",
+    "options": [
+      "Это синонимы",
+      "__str__ для пользователя, __repr__ для разработчика и отладки",
+      "__repr__ вызывается print(), __str__ при отладке",
+      "__repr__ используется только в Jupyter"
+    ],
+    "correct_index": 1,
+    "explanation": "Соглашение: __str__ удобочитаем, __repr__ однозначен и подходит для отладки."
+  },
+  {
+    "external_key": "py-oop-003",
+    "topic": "oop",
+    "difficulty": 3,
+    "text": "Что такое MRO (Method Resolution Order)?",
+    "options": [
+      "Порядок вызова конструкторов в одиночном наследовании",
+      "Алгоритм C3-линеаризации, по которому ищутся методы при множественном наследовании",
+      "Способ ускорить доступ к методам класса",
+      "Системный кэш атрибутов"
+    ],
+    "correct_index": 1,
+    "explanation": "Python использует C3-линеаризацию, посмотреть можно через ClassName.__mro__."
+  },
+  {
+    "external_key": "py-oop-004",
+    "topic": "oop",
+    "difficulty": 3,
+    "text": "Что делает `__slots__` в классе?",
+    "options": [
+      "Ограничивает набор атрибутов и экономит память",
+      "Делает все атрибуты приватными",
+      "Запрещает наследование",
+      "Превращает класс в singleton"
+    ],
+    "correct_index": 0,
+    "explanation": "__slots__ заменяет __dict__ на фиксированный набор атрибутов и сокращает память."
+  },
+  {
+    "external_key": "py-async-001",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Что делает `await` в корутине?",
+    "options": [
+      "Блокирует поток до завершения операции",
+      "Передаёт управление обратно event loop до готовности awaitable",
+      "Запускает функцию в новом потоке",
+      "Создаёт новый event loop"
+    ],
+    "correct_index": 1,
+    "explanation": "await кооперативно передаёт управление, позволяя event loop обслуживать другие корутины."
+  },
+  {
+    "external_key": "py-async-002",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Чем `asyncio.gather` отличается от `asyncio.wait`?",
+    "options": [
+      "Это полные синонимы",
+      "gather возвращает результаты в порядке аргументов и поддерживает return_exceptions, wait возвращает (done, pending) и не сортирует",
+      "wait не поддерживает таймаут",
+      "gather можно вызывать только из синхронного кода"
+    ],
+    "correct_index": 1,
+    "explanation": "gather удобнее для сбора результатов, wait для гранулярного контроля над задачами."
+  },
+  {
+    "external_key": "py-async-003",
+    "topic": "async",
+    "difficulty": 4,
+    "text": "Что произойдёт, если внутри корутины вызвать блокирующий `time.sleep(5)`?",
+    "options": [
+      "Заблокируется только текущая корутина",
+      "Заблокируется весь event loop на 5 секунд",
+      "Python автоматически заменит вызов на asyncio.sleep",
+      "Будет выброшено RuntimeError"
+    ],
+    "correct_index": 1,
+    "explanation": "time.sleep синхронный, он блокирует поток, в котором крутится event loop."
+  },
+  {
+    "external_key": "py-async-004",
+    "topic": "async",
+    "difficulty": 4,
+    "text": "Какая разница между `async for` и обычным `for`?",
+    "options": [
+      "async for быстрее",
+      "async for работает с асинхронными итераторами и допускает await на каждой итерации",
+      "async for не поддерживает break",
+      "Это синонимы"
+    ],
+    "correct_index": 1,
+    "explanation": "async for использует __aiter__ и __anext__, которые могут возвращать awaitable."
+  },
+  {
+    "external_key": "py-typing-001",
+    "topic": "typing",
+    "difficulty": 2,
+    "text": "Что означает аннотация `Optional[int]`?",
+    "options": ["int | str", "int | None", "Только None", "list[int]"],
+    "correct_index": 1,
+    "explanation": "Optional[X] эквивалентно X | None."
+  },
+  {
+    "external_key": "py-typing-002",
+    "topic": "typing",
+    "difficulty": 3,
+    "text": "Зачем нужен `TypeVar`?",
+    "options": [
+      "Чтобы создавать алиасы простых типов",
+      "Чтобы определять generics: функции и классы, работающие с разными типами с сохранением связи",
+      "Чтобы автоматически валидировать данные",
+      "Чтобы делать runtime проверки"
+    ],
+    "correct_index": 1,
+    "explanation": "TypeVar используется для параметрического полиморфизма в аннотациях."
+  },
+  {
+    "external_key": "py-typing-003",
+    "topic": "typing",
+    "difficulty": 2,
+    "text": "Что делает `@dataclass`?",
+    "options": [
+      "Автоматически генерирует __init__, __repr__, __eq__ и др. на основе аннотаций полей",
+      "Делает класс immutable",
+      "Превращает класс в Pydantic модель",
+      "Включает строгую типизацию runtime"
+    ],
+    "correct_index": 0,
+    "explanation": "dataclasses.dataclass избавляет от boilerplate в data-классах."
+  },
+  {
+    "external_key": "py-itertools-001",
+    "topic": "itertools",
+    "difficulty": 3,
+    "text": "Что вернёт `list(itertools.chain([1,2], [3,4]))`?",
+    "options": ["[[1,2],[3,4]]", "[1,2,3,4]", "[1,3,2,4]", "Ошибку"],
+    "correct_index": 1,
+    "explanation": "chain последовательно объединяет переданные итерируемые."
+  },
+  {
+    "external_key": "py-itertools-002",
+    "topic": "itertools",
+    "difficulty": 3,
+    "text": "Что делает `itertools.groupby`?",
+    "options": [
+      "Сортирует итерируемое",
+      "Группирует подряд идущие одинаковые элементы по ключу",
+      "Возвращает уникальные элементы",
+      "Делит итерируемое на N равных частей"
+    ],
+    "correct_index": 1,
+    "explanation": "groupby группирует только последовательные элементы; обычно вход предварительно сортируют."
+  },
+  {
+    "external_key": "py-gil-001",
+    "topic": "concurrency",
+    "difficulty": 4,
+    "text": "Что такое GIL в CPython?",
+    "options": [
+      "Сборщик мусора",
+      "Глобальная блокировка интерпретатора, которая разрешает выполнять байткод одному потоку одновременно",
+      "Переменная окружения для оптимизаций",
+      "Специальный режим работы JIT"
+    ],
+    "correct_index": 1,
+    "explanation": "GIL обеспечивает потокобезопасность управления памятью CPython, ограничивая параллельность CPU-bound потоков."
+  },
+  {
+    "external_key": "py-gil-002",
+    "topic": "concurrency",
+    "difficulty": 4,
+    "text": "Какой подход лучше для CPU-bound задач в Python?",
+    "options": [
+      "threading",
+      "multiprocessing или нативные расширения",
+      "asyncio",
+      "queue.Queue"
+    ],
+    "correct_index": 1,
+    "explanation": "Из-за GIL чистый Python threading не масштабируется по CPU; multiprocessing обходит ограничение."
+  },
+  {
+    "external_key": "py-memory-001",
+    "topic": "memory",
+    "difficulty": 4,
+    "text": "Как работает подсчёт ссылок в CPython?",
+    "options": [
+      "Только при запуске GC",
+      "Каждому объекту сопоставлен счётчик; когда он становится 0, объект освобождается",
+      "Через mark-and-sweep без счётчиков",
+      "Через generational GC без счётчиков"
+    ],
+    "correct_index": 1,
+    "explanation": "CPython использует reference counting + дополнительный generational GC для циклов."
+  },
+  {
+    "external_key": "py-iter-001",
+    "topic": "iterators",
+    "difficulty": 2,
+    "text": "Чем генератор отличается от обычной функции?",
+    "options": [
+      "Генератор хранит состояние и возвращает значения через yield",
+      "Генератор всегда быстрее",
+      "Генератор может вернуть только список",
+      "Это синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "yield превращает функцию в генератор, состояние сохраняется между вызовами __next__."
+  },
+  {
+    "external_key": "py-iter-002",
+    "topic": "iterators",
+    "difficulty": 3,
+    "text": "Что делает выражение `yield from iterable`?",
+    "options": [
+      "Создаёт глубокую копию",
+      "Делегирует генерацию вложенному итератору, прокидывая send/throw",
+      "Запускает iterable в отдельном потоке",
+      "Это синтаксис аннотации типов"
+    ],
+    "correct_index": 1,
+    "explanation": "yield from делегирует управление вложенному итератору и поддерживает протокол PEP 380."
+  },
+  {
+    "external_key": "py-context-001",
+    "topic": "context",
+    "difficulty": 3,
+    "text": "Какие методы должен реализовать контекстный менеджер на классе?",
+    "options": [
+      "__enter__ и __exit__",
+      "__init__ и __del__",
+      "open и close",
+      "__aenter__ и __aclose__"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандартный синхронный CM реализует __enter__ и __exit__."
+  },
+  {
+    "external_key": "py-context-002",
+    "topic": "context",
+    "difficulty": 3,
+    "text": "Зачем нужен `contextlib.contextmanager`?",
+    "options": [
+      "Превращает функцию-генератор с одним yield в контекстный менеджер",
+      "Создаёт пул подключений",
+      "Запускает функцию в фоне",
+      "Это синоним asynccontextmanager"
+    ],
+    "correct_index": 0,
+    "explanation": "contextmanager избавляет от написания класса с __enter__/__exit__."
+  },
+  {
+    "external_key": "py-exc-001",
+    "topic": "exceptions",
+    "difficulty": 2,
+    "text": "Что происходит в блоке `finally`?",
+    "options": [
+      "Выполняется только если исключение поймано",
+      "Выполняется всегда, независимо от исключения",
+      "Выполняется только при отсутствии исключения",
+      "Не выполняется при return"
+    ],
+    "correct_index": 1,
+    "explanation": "finally исполняется и при успехе, и при исключении, и даже при return."
+  },
+  {
+    "external_key": "py-exc-002",
+    "topic": "exceptions",
+    "difficulty": 3,
+    "text": "Что делает `raise ... from ...`?",
+    "options": [
+      "Скрывает исходное исключение",
+      "Связывает новое исключение с исходным через __cause__",
+      "Запускает finally заново",
+      "Останавливает интерпретатор"
+    ],
+    "correct_index": 1,
+    "explanation": "raise X from Y явно указывает причину, отображаясь в трейсбеке как 'The above exception was the direct cause...'."
+  },
+  {
+    "external_key": "py-tests-001",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Какой популярный фреймворк для тестов в современном Python?",
+    "options": ["unittest", "pytest", "nose", "doctest"],
+    "correct_index": 1,
+    "explanation": "pytest стал стандартом де-факто для современных Python проектов."
+  },
+  {
+    "external_key": "py-tests-002",
+    "topic": "testing",
+    "difficulty": 3,
+    "text": "Что такое фикстура в pytest?",
+    "options": [
+      "Глобальная константа",
+      "Функция, помеченная @pytest.fixture, подготавливающая ресурсы для теста",
+      "Тип ассертов",
+      "Маркер для пропуска теста"
+    ],
+    "correct_index": 1,
+    "explanation": "Фикстуры обеспечивают setup/teardown и могут параметризоваться."
+  },
+  {
+    "external_key": "py-db-001",
+    "topic": "databases",
+    "difficulty": 3,
+    "text": "Что такое ACID?",
+    "options": [
+      "Свойства HTTP запросов",
+      "Атомарность, Согласованность, Изолированность, Долговечность транзакций",
+      "Архитектурный паттерн микросервисов",
+      "Стандарт логирования"
+    ],
+    "correct_index": 1,
+    "explanation": "ACID - набор гарантий транзакций реляционных СУБД."
+  },
+  {
+    "external_key": "py-db-002",
+    "topic": "databases",
+    "difficulty": 3,
+    "text": "Зачем нужен индекс в реляционной БД?",
+    "options": [
+      "Ускоряет поиск по столбцу за счёт дополнительной структуры (B-Tree, Hash и др.)",
+      "Сжимает данные на диске",
+      "Гарантирует уникальность строк",
+      "Хранит копию таблицы для отказоустойчивости"
+    ],
+    "correct_index": 0,
+    "explanation": "Индекс ускоряет SELECT/JOIN на индексированных колонках; INSERT/UPDATE становятся чуть медленнее."
+  },
+  {
+    "external_key": "py-db-003",
+    "topic": "databases",
+    "difficulty": 4,
+    "text": "Что такое JSONB в PostgreSQL?",
+    "options": [
+      "Текстовый JSON без валидации",
+      "Бинарный формат хранения JSON с поддержкой индексов и быстрых запросов",
+      "Только аналог BLOB",
+      "Внешнее расширение, недоступное по умолчанию"
+    ],
+    "correct_index": 1,
+    "explanation": "JSONB хранит распарсенный JSON в бинарном формате, поддерживает GIN-индексы и операторы ->>, @>, ?."
+  },
+  {
+    "external_key": "py-cache-001",
+    "topic": "caching",
+    "difficulty": 3,
+    "text": "Зачем в высоконагруженных приложениях ставят кэш перед БД?",
+    "options": [
+      "Чтобы повысить точность запросов",
+      "Чтобы снизить латентность и нагрузку на БД для частых запросов",
+      "Чтобы избавиться от транзакций",
+      "Чтобы хранить пароли"
+    ],
+    "correct_index": 1,
+    "explanation": "Кэш отдаёт горячие данные за O(1) из памяти, разгружая БД."
+  },
+  {
+    "external_key": "py-cache-002",
+    "topic": "caching",
+    "difficulty": 4,
+    "text": "Что такое cache stampede?",
+    "options": [
+      "Ситуация, когда после инвалидации все клиенты одновременно бьют в БД",
+      "Утечка памяти в Redis",
+      "Атака на TTL",
+      "Шифрование ключей"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается через locks, single-flight, probabilistic early expiration или stale-while-revalidate."
+  },
+  {
+    "external_key": "py-celery-001",
+    "topic": "celery",
+    "difficulty": 3,
+    "text": "Зачем использовать Celery в бэкенде?",
+    "options": [
+      "Для синхронных HTTP запросов",
+      "Для запуска фоновых и периодических задач (рассылки, обработка, расчёты)",
+      "Только для миграций БД",
+      "Только для логирования"
+    ],
+    "correct_index": 1,
+    "explanation": "Celery - распределённая очередь задач для асинхронной и периодической работы."
+  },
+  {
+    "external_key": "py-celery-002",
+    "topic": "celery",
+    "difficulty": 3,
+    "text": "Что такое Celery Beat?",
+    "options": [
+      "Балансировщик воркеров",
+      "Планировщик задач по расписанию (cron-like)",
+      "Хранилище результатов",
+      "Транспорт сообщений"
+    ],
+    "correct_index": 1,
+    "explanation": "Beat периодически кладёт задачи в брокер, воркеры их разбирают."
+  },
+  {
+    "external_key": "py-broker-001",
+    "topic": "broker",
+    "difficulty": 3,
+    "text": "Какие популярные брокеры используются в Celery?",
+    "options": [
+      "PostgreSQL и MySQL",
+      "RabbitMQ и Redis",
+      "S3 и DynamoDB",
+      "Kafka и MongoDB только"
+    ],
+    "correct_index": 1,
+    "explanation": "Celery лучше всего работает с RabbitMQ и Redis; Kafka доступен через сторонние транспорты."
+  },
+  {
+    "external_key": "py-aiogram-001",
+    "topic": "telegram",
+    "difficulty": 3,
+    "text": "Что такое Inline-кнопки в Telegram?",
+    "options": [
+      "Реплай-клавиатура внизу чата",
+      "Кнопки, прикреплённые к сообщению, отправляющие callback_query при нажатии",
+      "Кнопки только для админов",
+      "Гиперссылки в тексте"
+    ],
+    "correct_index": 1,
+    "explanation": "Inline кнопки прикрепляются к конкретному сообщению через InlineKeyboardMarkup."
+  },
+  {
+    "external_key": "py-aiogram-002",
+    "topic": "telegram",
+    "difficulty": 3,
+    "text": "Зачем нужен FSM (StatesGroup) в aiogram?",
+    "options": [
+      "Чтобы хранить пароли",
+      "Чтобы отслеживать состояние пользователя в многошаговом диалоге",
+      "Чтобы кэшировать фотографии",
+      "Чтобы шардировать БД"
+    ],
+    "correct_index": 1,
+    "explanation": "FSM хранит состояние per-user/per-chat, например в Redis, и позволяет вести диалог по шагам."
+  },
+  {
+    "external_key": "py-system-001",
+    "topic": "system_design",
+    "difficulty": 4,
+    "text": "Как уменьшить количество транзакций к БД при частых пользовательских действиях (например, нажатиях inline-кнопок)?",
+    "options": [
+      "Делать SELECT FOR UPDATE на каждый клик",
+      "Накапливать промежуточное состояние в Redis и сбрасывать пачкой (batch update) по таймауту или завершению",
+      "Открывать подключение на каждый клик",
+      "Использовать только триггеры"
+    ],
+    "correct_index": 1,
+    "explanation": "In-memory буфер + batch flush уменьшают write-amplification и нагрузку на БД."
+  },
+  {
+    "external_key": "py-system-002",
+    "topic": "system_design",
+    "difficulty": 4,
+    "text": "Что такое идемпотентность операции?",
+    "options": [
+      "Свойство, при котором повторное выполнение операции не меняет результат",
+      "Операция всегда выполняется в одной транзакции",
+      "Операция работает только в кэше",
+      "Свойство, означающее использование UUID"
+    ],
+    "correct_index": 0,
+    "explanation": "Идемпотентность важна для retry-механики: повторный вызов даёт тот же результат."
+  }
+]
