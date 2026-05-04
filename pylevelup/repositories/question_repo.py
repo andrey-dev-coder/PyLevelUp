@@ -59,7 +59,12 @@ class QuestionRepository:
         await self.session.flush()
         return question
 
-    async def select_due_for_user(self, user_id: int, limit: int) -> list[Question]:
+    async def select_due_for_user(
+        self,
+        user_id: int,
+        limit: int,
+        topics: list[str] | None = None,
+    ) -> list[Question]:
         now = datetime.now(UTC)
         due = (
             select(Question)
@@ -72,6 +77,8 @@ class QuestionRepository:
             .order_by(UserProgress.next_review_at.asc())
             .limit(limit)
         )
+        if topics:
+            due = due.where(Question.topic.in_(topics))
         due_questions = list((await self.session.execute(due)).scalars().all())
         if len(due_questions) >= limit:
             return due_questions
@@ -83,5 +90,30 @@ class QuestionRepository:
             .order_by(Question.difficulty.asc(), func.random())
             .limit(limit - len(due_questions))
         )
+        if topics:
+            new_stmt = new_stmt.where(Question.topic.in_(topics))
         new_questions = list((await self.session.execute(new_stmt)).scalars().all())
-        return due_questions + new_questions
+        combined = due_questions + new_questions
+        if len(combined) >= limit:
+            return combined
+
+        existing_ids = [q.id for q in combined]
+        fallback = await self.random_active(
+            limit=limit - len(combined),
+            topics=topics,
+            exclude_ids=existing_ids,
+        )
+        return combined + fallback
+
+    async def random_active(
+        self,
+        limit: int,
+        topics: list[str] | None,
+        exclude_ids: list[int] | None = None,
+    ) -> list[Question]:
+        stmt = select(Question).where(Question.is_active.is_(True)).order_by(func.random()).limit(limit)
+        if topics:
+            stmt = stmt.where(Question.topic.in_(topics))
+        if exclude_ids:
+            stmt = stmt.where(Question.id.notin_(exclude_ids))
+        return list((await self.session.execute(stmt)).scalars().all())

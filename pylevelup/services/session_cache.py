@@ -24,11 +24,22 @@ class SessionCacheState:
     current_index: int
     answered: int
     correct: int
+    topic_filter: list[str] | None = None
+    is_unlimited: bool = False
+    target_total: int | None = None
+    counts_toward_daily: bool = True
     pending: list[PendingAnswer] = field(default_factory=list)
     last_question_sent_at: datetime | None = None
 
     def remaining(self) -> int:
-        return max(0, len(self.queue) - self.current_index)
+        if self.is_unlimited:
+            return max(0, len(self.queue) - self.current_index)
+        if self.target_total is None:
+            return max(0, len(self.queue) - self.current_index)
+        return max(0, self.target_total - self.answered)
+
+    def needs_refill(self, threshold: int = 1) -> bool:
+        return self.is_unlimited and (len(self.queue) - self.current_index) <= threshold
 
     def current_question_id(self) -> int | None:
         if self.current_index >= len(self.queue):
@@ -45,6 +56,10 @@ class SessionCacheState:
                     "current_index": self.current_index,
                     "answered": self.answered,
                     "correct": self.correct,
+                    "topic_filter": self.topic_filter,
+                    "is_unlimited": self.is_unlimited,
+                    "target_total": self.target_total,
+                    "counts_toward_daily": self.counts_toward_daily,
                     "last_question_sent_at": (
                         self.last_question_sent_at.isoformat()
                         if self.last_question_sent_at
@@ -88,6 +103,10 @@ class SessionCacheState:
             current_index=state["current_index"],
             answered=state["answered"],
             correct=state["correct"],
+            topic_filter=state.get("topic_filter"),
+            is_unlimited=bool(state.get("is_unlimited", False)),
+            target_total=state.get("target_total"),
+            counts_toward_daily=bool(state.get("counts_toward_daily", True)),
             pending=pending,
             last_question_sent_at=datetime.fromisoformat(last_sent) if last_sent else None,
         )

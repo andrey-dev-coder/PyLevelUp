@@ -36,7 +36,16 @@ class TestSessionService:
         self.engine = engine
         self.settings = settings
 
-    async def start_session(self, telegram_user) -> StartSessionResult | None:
+    REFILL_BATCH = 10
+
+    async def start_session(
+        self,
+        telegram_user,
+        topics: list[str] | None = None,
+        target_total: int | None = None,
+        is_unlimited: bool = False,
+        counts_toward_daily: bool = True,
+    ) -> StartSessionResult | None:
         async with self.session_factory() as db:
             users = UserRepository(db)
             user = await users.upsert_from_telegram(
@@ -47,15 +56,26 @@ class TestSessionService:
             )
             user_id = user.id
             questions_repo = QuestionRepository(db)
-            already_today = await DailySessionRepository(db).get(user_id, date.today())
-            remaining_today = self.settings.daily_question_limit - (
-                already_today.questions_answered if already_today else 0
-            )
-            if remaining_today <= 0:
-                await db.commit()
-                return None
 
-            questions = await questions_repo.select_due_for_user(user_id, remaining_today)
+            if counts_toward_daily and not is_unlimited:
+                already_today = await DailySessionRepository(db).get(user_id, date.today())
+                used_today = already_today.questions_answered if already_today else 0
+                remaining_today = self.settings.daily_question_limit - used_today
+                if remaining_today <= 0:
+                    await db.commit()
+                    return None
+                effective_target = (
+                    min(target_total, remaining_today) if target_total else remaining_today
+                )
+            else:
+                effective_target = target_total
+
+            initial_limit = (
+                effective_target if effective_target is not None else self.REFILL_BATCH
+            )
+            questions = await questions_repo.select_due_for_user(
+                user_id, initial_limit, topics=topics
+            )
             payloads = {q.id: (q.text, list(q.options), q.correct_index) for q in questions}
             queue = [q.id for q in questions]
             await db.commit()
@@ -70,10 +90,36 @@ class TestSessionService:
             current_index=0,
             answered=0,
             correct=0,
+            topic_filter=topics,
+            is_unlimited=is_unlimited,
+            target_total=effective_target if not is_unlimited else None,
+            counts_toward_daily=counts_toward_daily,
             last_question_sent_at=datetime.now(UTC),
         )
         await self.cache.save(cache_state)
         return StartSessionResult(state=cache_state, questions=payloads)
+
+    async def refill_queue_if_needed(
+        self, state: SessionCacheState
+    ) -> tuple[SessionCacheState, dict[int, tuple[str, list[str], int]]]:
+        if not state.needs_refill():
+            return state, {}
+        async with self.session_factory() as db:
+            questions_repo = QuestionRepository(db)
+            extra = await questions_repo.random_active(
+                limit=self.REFILL_BATCH,
+                topics=state.topic_filter,
+                exclude_ids=state.queue,
+            )
+            if not extra:
+                extra = await questions_repo.random_active(
+                    limit=self.REFILL_BATCH,
+                    topics=state.topic_filter,
+                )
+        payloads = {q.id: (q.text, list(q.options), q.correct_index) for q in extra}
+        state.queue.extend(q.id for q in extra)
+        await self.cache.save(state)
+        return state, payloads
 
     async def get_question_payload(self, question_id: int) -> tuple[str, list[str], int] | None:
         async with self.session_factory() as db:
@@ -107,22 +153,25 @@ class TestSessionService:
         if not state.pending and not mark_finished:
             return
 
+        is_done = mark_finished or (not state.is_unlimited and state.remaining() == 0)
+
         async with self.session_factory() as db:
             await self._flush_pending(db, state)
-            sessions_repo = DailySessionRepository(db)
-            await sessions_repo.upsert(
-                user_id=state.user_id,
-                session_date=state.session_date,
-                questions_answered=state.answered,
-                correct_count=state.correct,
-                finished=mark_finished or state.remaining() == 0,
-            )
-            if mark_finished or state.remaining() == 0:
-                users = UserRepository(db)
-                await users.update_streak_after_session(state.user_id, state.session_date)
+            if state.counts_toward_daily:
+                sessions_repo = DailySessionRepository(db)
+                await sessions_repo.upsert(
+                    user_id=state.user_id,
+                    session_date=state.session_date,
+                    questions_answered=state.answered,
+                    correct_count=state.correct,
+                    finished=is_done,
+                )
+                if is_done:
+                    users = UserRepository(db)
+                    await users.update_streak_after_session(state.user_id, state.session_date)
             await db.commit()
 
-        if mark_finished or state.remaining() == 0:
+        if is_done:
             await self.cache.clear(user_id)
         else:
             state.pending = []

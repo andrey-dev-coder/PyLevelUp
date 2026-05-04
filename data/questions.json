@@ -1,647 +1,2063 @@
 [
   {
-    "external_key": "py-basics-001",
-    "topic": "basics",
+    "external_key": "py-001",
+    "topic": "python",
     "difficulty": 1,
-    "text": "Что вернёт выражение `bool([])` в Python?",
-    "options": ["True", "False", "None", "Ошибку TypeError"],
+    "text": "Какие из перечисленных типов в Python являются неизменяемыми (immutable)?",
+    "options": ["list, dict, set", "int, float, str, tuple, frozenset", "bytes, bytearray", "list, tuple, set"],
     "correct_index": 1,
-    "explanation": "Пустой список в булевом контексте всегда False."
+    "explanation": "К immutable относятся числа (int, float, complex), bool, tuple, str, bytes и frozenset. list, dict, set и bytearray - mutable."
   },
   {
-    "external_key": "py-basics-002",
-    "topic": "basics",
+    "external_key": "py-002",
+    "topic": "python",
     "difficulty": 1,
-    "text": "Какой тип данных в Python является неизменяемым?",
-    "options": ["list", "dict", "set", "tuple"],
-    "correct_index": 3,
-    "explanation": "tuple неизменяемый, остальные коллекции изменяемые."
-  },
-  {
-    "external_key": "py-basics-003",
-    "topic": "basics",
-    "difficulty": 1,
-    "text": "Что выведет `print(2 ** 3 ** 2)`?",
-    "options": ["64", "512", "12", "Ошибку синтаксиса"],
+    "text": "Что выведет 'a' is 'a' для коротких строк в CPython?",
+    "options": ["False всегда", "True из-за интернирования коротких строк", "TypeError", "Не определено"],
     "correct_index": 1,
-    "explanation": "Возведение в степень правоассоциативно: 2 ** (3 ** 2) = 2 ** 9 = 512."
+    "explanation": "CPython интернирует короткие неизменяемые строки, поэтому литералы 'a' и 'a' указывают на один и тот же объект, и is возвращает True. Полагаться на это в проде нельзя."
   },
   {
-    "external_key": "py-basics-004",
-    "topic": "basics",
-    "difficulty": 1,
-    "text": "Какой результат у выражения `'5' * 3`?",
-    "options": ["15", "555", "'555'", "Ошибку TypeError"],
-    "correct_index": 2,
-    "explanation": "Умножение строки на int повторяет её, результат строка '555'."
-  },
-  {
-    "external_key": "py-basics-005",
-    "topic": "basics",
-    "difficulty": 2,
-    "text": "Чем отличается `is` от `==` в Python?",
-    "options": [
-      "is проверяет идентичность объектов, == сравнивает значения",
-      "Это синонимы, разницы нет",
-      "is работает только со строками, == с числами",
-      "is используется только для None"
-    ],
-    "correct_index": 0,
-    "explanation": "is проверяет идентичность по id(), == вызывает __eq__ и сравнивает значения."
-  },
-  {
-    "external_key": "py-collections-001",
-    "topic": "collections",
-    "difficulty": 2,
-    "text": "Какая сложность у операции поиска элемента в `dict` по ключу в среднем случае?",
-    "options": ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
-    "correct_index": 2,
-    "explanation": "dict реализован через хеш-таблицу, среднее время доступа O(1)."
-  },
-  {
-    "external_key": "py-collections-002",
-    "topic": "collections",
-    "difficulty": 2,
-    "text": "Что произойдёт при попытке использовать список как ключ словаря?",
-    "options": [
-      "Список будет автоматически приведён к tuple",
-      "Будет выброшено TypeError из-за нехешируемого типа",
-      "Словарь сохранит ссылку на список",
-      "Возникнет ValueError"
-    ],
-    "correct_index": 1,
-    "explanation": "Ключи dict должны быть хешируемыми, list нехешируем, поэтому TypeError."
-  },
-  {
-    "external_key": "py-collections-003",
-    "topic": "collections",
-    "difficulty": 2,
-    "text": "Какой контейнер из collections даёт O(1) добавление и удаление с обоих концов?",
-    "options": ["list", "deque", "OrderedDict", "ChainMap"],
-    "correct_index": 1,
-    "explanation": "collections.deque оптимизирован для двусторонних очередей."
-  },
-  {
-    "external_key": "py-collections-004",
-    "topic": "collections",
-    "difficulty": 3,
-    "text": "Что вернёт `set([1, 2, 2, 3]) - {2}`?",
-    "options": ["{1, 2, 3}", "{1, 3}", "{2}", "Ошибку"],
-    "correct_index": 1,
-    "explanation": "Из множества {1, 2, 3} вычитается {2}, получается {1, 3}."
-  },
-  {
-    "external_key": "py-collections-005",
-    "topic": "collections",
-    "difficulty": 3,
-    "text": "Что делает метод `dict.setdefault(key, default)`?",
-    "options": [
-      "Возвращает значение по ключу, всегда заменяя его на default",
-      "Возвращает значение, а если ключа нет - вставляет default и возвращает его",
-      "Удаляет ключ, если его значение равно default",
-      "Полностью очищает словарь"
-    ],
-    "correct_index": 1,
-    "explanation": "setdefault возвращает текущее значение, либо вставляет default и возвращает его."
-  },
-  {
-    "external_key": "py-functions-001",
-    "topic": "functions",
-    "difficulty": 2,
-    "text": "Что произойдёт, если значением аргумента по умолчанию указать пустой список `def f(x=[])`?",
-    "options": [
-      "Список создаётся при каждом вызове",
-      "Список общий для всех вызовов и может накапливать состояние",
-      "Python выбросит SyntaxError",
-      "Список преобразуется в tuple"
-    ],
-    "correct_index": 1,
-    "explanation": "Аргументы по умолчанию вычисляются один раз при определении функции."
-  },
-  {
-    "external_key": "py-functions-002",
-    "topic": "functions",
-    "difficulty": 2,
-    "text": "Что такое замыкание (closure) в Python?",
-    "options": [
-      "Функция, которая запоминает значения переменных из объемлющей области",
-      "Функция, объявленная внутри класса",
-      "Декоратор, превращающий функцию в синглтон",
-      "Аналог lambda без аргументов"
-    ],
-    "correct_index": 0,
-    "explanation": "Closure захватывает переменные из enclosing scope и держит их живыми."
-  },
-  {
-    "external_key": "py-functions-003",
-    "topic": "functions",
-    "difficulty": 2,
-    "text": "Зачем используется декоратор `functools.wraps`?",
-    "options": [
-      "Чтобы декоратор был быстрее",
-      "Чтобы сохранить метаданные оборачиваемой функции (имя, docstring)",
-      "Чтобы декоратор работал без аргументов",
-      "Чтобы декоратор автоматически кэшировал результаты"
-    ],
-    "correct_index": 1,
-    "explanation": "functools.wraps копирует __name__, __doc__ и другие атрибуты."
-  },
-  {
-    "external_key": "py-functions-004",
-    "topic": "functions",
-    "difficulty": 3,
-    "text": "Что вернёт вызов `list(map(lambda x: x*2, range(3)))`?",
-    "options": ["[0, 2, 4]", "[2, 4, 6]", "[0, 1, 2]", "Объект map"],
-    "correct_index": 0,
-    "explanation": "range(3) даёт 0, 1, 2; умноженные на 2 = 0, 2, 4."
-  },
-  {
-    "external_key": "py-oop-001",
-    "topic": "oop",
-    "difficulty": 2,
-    "text": "Что делает `@classmethod`?",
-    "options": [
-      "Привязывает метод к экземпляру",
-      "Привязывает метод к классу, передавая cls первым аргументом",
-      "Делает метод приватным",
-      "Превращает метод в свойство"
-    ],
-    "correct_index": 1,
-    "explanation": "classmethod получает cls как первый аргумент и доступен через класс и экземпляр."
-  },
-  {
-    "external_key": "py-oop-002",
-    "topic": "oop",
-    "difficulty": 2,
-    "text": "Чем `__str__` отличается от `__repr__`?",
-    "options": [
-      "Это синонимы",
-      "__str__ для пользователя, __repr__ для разработчика и отладки",
-      "__repr__ вызывается print(), __str__ при отладке",
-      "__repr__ используется только в Jupyter"
-    ],
-    "correct_index": 1,
-    "explanation": "Соглашение: __str__ удобочитаем, __repr__ однозначен и подходит для отладки."
-  },
-  {
-    "external_key": "py-oop-003",
-    "topic": "oop",
-    "difficulty": 3,
-    "text": "Что такое MRO (Method Resolution Order)?",
-    "options": [
-      "Порядок вызова конструкторов в одиночном наследовании",
-      "Алгоритм C3-линеаризации, по которому ищутся методы при множественном наследовании",
-      "Способ ускорить доступ к методам класса",
-      "Системный кэш атрибутов"
-    ],
-    "correct_index": 1,
-    "explanation": "Python использует C3-линеаризацию, посмотреть можно через ClassName.__mro__."
-  },
-  {
-    "external_key": "py-oop-004",
-    "topic": "oop",
-    "difficulty": 3,
-    "text": "Что делает `__slots__` в классе?",
-    "options": [
-      "Ограничивает набор атрибутов и экономит память",
-      "Делает все атрибуты приватными",
-      "Запрещает наследование",
-      "Превращает класс в singleton"
-    ],
-    "correct_index": 0,
-    "explanation": "__slots__ заменяет __dict__ на фиксированный набор атрибутов и сокращает память."
-  },
-  {
-    "external_key": "py-async-001",
-    "topic": "async",
-    "difficulty": 3,
-    "text": "Что делает `await` в корутине?",
-    "options": [
-      "Блокирует поток до завершения операции",
-      "Передаёт управление обратно event loop до готовности awaitable",
-      "Запускает функцию в новом потоке",
-      "Создаёт новый event loop"
-    ],
-    "correct_index": 1,
-    "explanation": "await кооперативно передаёт управление, позволяя event loop обслуживать другие корутины."
-  },
-  {
-    "external_key": "py-async-002",
-    "topic": "async",
-    "difficulty": 3,
-    "text": "Чем `asyncio.gather` отличается от `asyncio.wait`?",
-    "options": [
-      "Это полные синонимы",
-      "gather возвращает результаты в порядке аргументов и поддерживает return_exceptions, wait возвращает (done, pending) и не сортирует",
-      "wait не поддерживает таймаут",
-      "gather можно вызывать только из синхронного кода"
-    ],
-    "correct_index": 1,
-    "explanation": "gather удобнее для сбора результатов, wait для гранулярного контроля над задачами."
-  },
-  {
-    "external_key": "py-async-003",
-    "topic": "async",
-    "difficulty": 4,
-    "text": "Что произойдёт, если внутри корутины вызвать блокирующий `time.sleep(5)`?",
-    "options": [
-      "Заблокируется только текущая корутина",
-      "Заблокируется весь event loop на 5 секунд",
-      "Python автоматически заменит вызов на asyncio.sleep",
-      "Будет выброшено RuntimeError"
-    ],
-    "correct_index": 1,
-    "explanation": "time.sleep синхронный, он блокирует поток, в котором крутится event loop."
-  },
-  {
-    "external_key": "py-async-004",
-    "topic": "async",
-    "difficulty": 4,
-    "text": "Какая разница между `async for` и обычным `for`?",
-    "options": [
-      "async for быстрее",
-      "async for работает с асинхронными итераторами и допускает await на каждой итерации",
-      "async for не поддерживает break",
-      "Это синонимы"
-    ],
-    "correct_index": 1,
-    "explanation": "async for использует __aiter__ и __anext__, которые могут возвращать awaitable."
-  },
-  {
-    "external_key": "py-typing-001",
-    "topic": "typing",
-    "difficulty": 2,
-    "text": "Что означает аннотация `Optional[int]`?",
-    "options": ["int | str", "int | None", "Только None", "list[int]"],
-    "correct_index": 1,
-    "explanation": "Optional[X] эквивалентно X | None."
-  },
-  {
-    "external_key": "py-typing-002",
-    "topic": "typing",
-    "difficulty": 3,
-    "text": "Зачем нужен `TypeVar`?",
-    "options": [
-      "Чтобы создавать алиасы простых типов",
-      "Чтобы определять generics: функции и классы, работающие с разными типами с сохранением связи",
-      "Чтобы автоматически валидировать данные",
-      "Чтобы делать runtime проверки"
-    ],
-    "correct_index": 1,
-    "explanation": "TypeVar используется для параметрического полиморфизма в аннотациях."
-  },
-  {
-    "external_key": "py-typing-003",
-    "topic": "typing",
-    "difficulty": 2,
-    "text": "Что делает `@dataclass`?",
-    "options": [
-      "Автоматически генерирует __init__, __repr__, __eq__ и др. на основе аннотаций полей",
-      "Делает класс immutable",
-      "Превращает класс в Pydantic модель",
-      "Включает строгую типизацию runtime"
-    ],
-    "correct_index": 0,
-    "explanation": "dataclasses.dataclass избавляет от boilerplate в data-классах."
-  },
-  {
-    "external_key": "py-itertools-001",
-    "topic": "itertools",
-    "difficulty": 3,
-    "text": "Что вернёт `list(itertools.chain([1,2], [3,4]))`?",
-    "options": ["[[1,2],[3,4]]", "[1,2,3,4]", "[1,3,2,4]", "Ошибку"],
-    "correct_index": 1,
-    "explanation": "chain последовательно объединяет переданные итерируемые."
-  },
-  {
-    "external_key": "py-itertools-002",
-    "topic": "itertools",
-    "difficulty": 3,
-    "text": "Что делает `itertools.groupby`?",
-    "options": [
-      "Сортирует итерируемое",
-      "Группирует подряд идущие одинаковые элементы по ключу",
-      "Возвращает уникальные элементы",
-      "Делит итерируемое на N равных частей"
-    ],
-    "correct_index": 1,
-    "explanation": "groupby группирует только последовательные элементы; обычно вход предварительно сортируют."
-  },
-  {
-    "external_key": "py-gil-001",
-    "topic": "concurrency",
-    "difficulty": 4,
-    "text": "Что такое GIL в CPython?",
-    "options": [
-      "Сборщик мусора",
-      "Глобальная блокировка интерпретатора, которая разрешает выполнять байткод одному потоку одновременно",
-      "Переменная окружения для оптимизаций",
-      "Специальный режим работы JIT"
-    ],
-    "correct_index": 1,
-    "explanation": "GIL обеспечивает потокобезопасность управления памятью CPython, ограничивая параллельность CPU-bound потоков."
-  },
-  {
-    "external_key": "py-gil-002",
-    "topic": "concurrency",
-    "difficulty": 4,
-    "text": "Какой подход лучше для CPU-bound задач в Python?",
-    "options": [
-      "threading",
-      "multiprocessing или нативные расширения",
-      "asyncio",
-      "queue.Queue"
-    ],
-    "correct_index": 1,
-    "explanation": "Из-за GIL чистый Python threading не масштабируется по CPU; multiprocessing обходит ограничение."
-  },
-  {
-    "external_key": "py-memory-001",
-    "topic": "memory",
-    "difficulty": 4,
-    "text": "Как работает подсчёт ссылок в CPython?",
-    "options": [
-      "Только при запуске GC",
-      "Каждому объекту сопоставлен счётчик; когда он становится 0, объект освобождается",
-      "Через mark-and-sweep без счётчиков",
-      "Через generational GC без счётчиков"
-    ],
-    "correct_index": 1,
-    "explanation": "CPython использует reference counting + дополнительный generational GC для циклов."
-  },
-  {
-    "external_key": "py-iter-001",
-    "topic": "iterators",
+    "external_key": "py-003",
+    "topic": "python",
     "difficulty": 2,
     "text": "Чем генератор отличается от обычной функции?",
     "options": [
-      "Генератор хранит состояние и возвращает значения через yield",
-      "Генератор всегда быстрее",
-      "Генератор может вернуть только список",
-      "Это синонимы"
-    ],
-    "correct_index": 0,
-    "explanation": "yield превращает функцию в генератор, состояние сохраняется между вызовами __next__."
-  },
-  {
-    "external_key": "py-iter-002",
-    "topic": "iterators",
-    "difficulty": 3,
-    "text": "Что делает выражение `yield from iterable`?",
-    "options": [
-      "Создаёт глубокую копию",
-      "Делегирует генерацию вложенному итератору, прокидывая send/throw",
-      "Запускает iterable в отдельном потоке",
-      "Это синтаксис аннотации типов"
+      "Генератор быстрее обычной функции в любом случае",
+      "Генератор использует yield вместо return и возвращает итератор, не выполняя тело сразу",
+      "Генератор обязан реализовать __iter__ как класс",
+      "Генератор не может принимать аргументы"
     ],
     "correct_index": 1,
-    "explanation": "yield from делегирует управление вложенному итератору и поддерживает протокол PEP 380."
+    "explanation": "Функция с yield возвращает объект-генератор. Тело выполняется лениво по next(), сохраняя состояние между вызовами. Это итератор, который реализует __iter__ и __next__ автоматически."
   },
   {
-    "external_key": "py-context-001",
-    "topic": "context",
-    "difficulty": 3,
-    "text": "Какие методы должен реализовать контекстный менеджер на классе?",
-    "options": [
-      "__enter__ и __exit__",
-      "__init__ и __del__",
-      "open и close",
-      "__aenter__ и __aclose__"
-    ],
-    "correct_index": 0,
-    "explanation": "Стандартный синхронный CM реализует __enter__ и __exit__."
-  },
-  {
-    "external_key": "py-context-002",
-    "topic": "context",
-    "difficulty": 3,
-    "text": "Зачем нужен `contextlib.contextmanager`?",
-    "options": [
-      "Превращает функцию-генератор с одним yield в контекстный менеджер",
-      "Создаёт пул подключений",
-      "Запускает функцию в фоне",
-      "Это синоним asynccontextmanager"
-    ],
-    "correct_index": 0,
-    "explanation": "contextmanager избавляет от написания класса с __enter__/__exit__."
-  },
-  {
-    "external_key": "py-exc-001",
-    "topic": "exceptions",
+    "external_key": "py-004",
+    "topic": "python",
     "difficulty": 2,
-    "text": "Что происходит в блоке `finally`?",
-    "options": [
-      "Выполняется только если исключение поймано",
-      "Выполняется всегда, независимо от исключения",
-      "Выполняется только при отсутствии исключения",
-      "Не выполняется при return"
-    ],
-    "correct_index": 1,
-    "explanation": "finally исполняется и при успехе, и при исключении, и даже при return."
+    "text": "Какая средняя сложность поиска ключа в dict в CPython?",
+    "options": ["O(log n)", "O(n)", "O(1) амортизированно", "O(n log n)"],
+    "correct_index": 2,
+    "explanation": "dict реализован через хеш-таблицу. Средняя сложность поиска по ключу O(1). В худшем случае при коллизиях O(n), но при нормальных хешах это редко."
   },
   {
-    "external_key": "py-exc-002",
-    "topic": "exceptions",
-    "difficulty": 3,
-    "text": "Что делает `raise ... from ...`?",
-    "options": [
-      "Скрывает исходное исключение",
-      "Связывает новое исключение с исходным через __cause__",
-      "Запускает finally заново",
-      "Останавливает интерпретатор"
-    ],
-    "correct_index": 1,
-    "explanation": "raise X from Y явно указывает причину, отображаясь в трейсбеке как 'The above exception was the direct cause...'."
-  },
-  {
-    "external_key": "py-tests-001",
-    "topic": "testing",
+    "external_key": "py-005",
+    "topic": "python",
     "difficulty": 2,
-    "text": "Какой популярный фреймворк для тестов в современном Python?",
-    "options": ["unittest", "pytest", "nose", "doctest"],
-    "correct_index": 1,
-    "explanation": "pytest стал стандартом де-факто для современных Python проектов."
-  },
-  {
-    "external_key": "py-tests-002",
-    "topic": "testing",
-    "difficulty": 3,
-    "text": "Что такое фикстура в pytest?",
+    "text": "Что такое декоратор в Python?",
     "options": [
-      "Глобальная константа",
-      "Функция, помеченная @pytest.fixture, подготавливающая ресурсы для теста",
-      "Тип ассертов",
-      "Маркер для пропуска теста"
+      "Класс, наследующийся от Decorator",
+      "Функция или класс, оборачивающий другой объект и возвращающий новый callable",
+      "Магический метод __decorate__",
+      "Функция, которая обязательно меняет сигнатуру обёрнутой функции"
     ],
     "correct_index": 1,
-    "explanation": "Фикстуры обеспечивают setup/teardown и могут параметризоваться."
+    "explanation": "Декоратор - это callable, принимающий функцию и возвращающий новую функцию (обычно с дополнительной логикой)."
   },
   {
-    "external_key": "py-db-001",
-    "topic": "databases",
-    "difficulty": 3,
-    "text": "Что такое ACID?",
+    "external_key": "py-006",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что делает functools.wraps?",
     "options": [
-      "Свойства HTTP запросов",
-      "Атомарность, Согласованность, Изолированность, Долговечность транзакций",
-      "Архитектурный паттерн микросервисов",
-      "Стандарт логирования"
+      "Превращает функцию в корутину",
+      "Копирует метаинформацию (__name__, __doc__) с исходной функции на обёртку",
+      "Запоминает результат функции",
+      "Делает функцию потокобезопасной"
     ],
     "correct_index": 1,
-    "explanation": "ACID - набор гарантий транзакций реляционных СУБД."
+    "explanation": "@functools.wraps(func) на внутренней обёртке копирует __name__, __doc__, __module__ и __wrapped__, чтобы декорированная функция вела себя как оригинал в интроспекции."
   },
   {
-    "external_key": "py-db-002",
-    "topic": "databases",
-    "difficulty": 3,
-    "text": "Зачем нужен индекс в реляционной БД?",
+    "external_key": "py-007",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое list comprehension?",
     "options": [
-      "Ускоряет поиск по столбцу за счёт дополнительной структуры (B-Tree, Hash и др.)",
-      "Сжимает данные на диске",
-      "Гарантирует уникальность строк",
-      "Хранит копию таблицы для отказоустойчивости"
+      "Список ссылок на функции",
+      "Компактный синтаксис создания списка через выражение и for/if",
+      "Только синтаксический сахар над map()",
+      "Способ сжатия списка в байты"
+    ],
+    "correct_index": 1,
+    "explanation": "[expr for x in iterable if cond] - компактная форма создания списка. Часто читаемее и быстрее цикла, но при сложной логике лучше обычный for."
+  },
+  {
+    "external_key": "py-008",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "В чем разница между __init__ и __new__ в классе?",
+    "options": [
+      "Это синонимы",
+      "__new__ создаёт экземпляр и возвращает его, __init__ инициализирует уже созданный экземпляр",
+      "__init__ создаёт класс, __new__ объект",
+      "__new__ доступен только в metaclass"
+    ],
+    "correct_index": 1,
+    "explanation": "__new__ - статический метод, отвечает за создание объекта (например, для immutable типов), __init__ принимает уже готовый self и инициализирует поля."
+  },
+  {
+    "external_key": "py-009",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое MRO в Python?",
+    "options": [
+      "Memory Reduction Optimization",
+      "Method Resolution Order - порядок поиска методов в иерархии классов",
+      "Module Reload Operation",
+      "Mass Reference Object"
+    ],
+    "correct_index": 1,
+    "explanation": "MRO (через C3-линеаризацию) - это порядок, в котором интерпретатор ищет атрибут в иерархии классов при множественном наследовании. Доступен через ClassName.__mro__."
+  },
+  {
+    "external_key": "py-010",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое контекстный менеджер?",
+    "options": [
+      "Класс, у которого реализованы __enter__ и __exit__ (или функция через @contextmanager)",
+      "Любой класс с методом close()",
+      "Только with open() и ничего больше",
+      "Только async-функция"
     ],
     "correct_index": 0,
-    "explanation": "Индекс ускоряет SELECT/JOIN на индексированных колонках; INSERT/UPDATE становятся чуть медленнее."
+    "explanation": "Объект становится контекстным менеджером, реализуя протокол __enter__/__exit__. with гарантирует вызов __exit__ при выходе из блока, в т.ч. при исключениях."
   },
   {
-    "external_key": "py-db-003",
-    "topic": "databases",
-    "difficulty": 4,
+    "external_key": "py-011",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет код: a = [1,2,3]; b = a; b.append(4); print(a)?",
+    "options": ["[1,2,3]", "[1,2,3,4]", "Ошибка", "[4,1,2,3]"],
+    "correct_index": 1,
+    "explanation": "b = a не копирует список, а создаёт ещё одну ссылку на тот же объект. append меняет объект, который виден через обе переменные."
+  },
+  {
+    "external_key": "py-012",
+    "topic": "python",
+    "difficulty": 3,
+    "text": "Что такое GIL в CPython?",
+    "options": [
+      "Generic Interpreter Layer",
+      "Global Interpreter Lock - мьютекс, разрешающий выполнение байт-кода только одному потоку за раз",
+      "Garbage Insertion List",
+      "Глобальный пул потоков"
+    ],
+    "correct_index": 1,
+    "explanation": "GIL - блокировка, гарантирующая что в данный момент байт-код CPython исполняет только один поток. Из-за этого CPU-bound нагрузка плохо параллелится потоками; для неё используют процессы или C-расширения, освобождающие GIL."
+  },
+  {
+    "external_key": "py-013",
+    "topic": "python",
+    "difficulty": 3,
+    "text": "Какой механизм управления памятью у CPython?",
+    "options": [
+      "Только сборщик мусора с поколениями",
+      "Подсчёт ссылок плюс циклический сборщик мусора",
+      "Только Mark and Sweep",
+      "Ручное управление памятью"
+    ],
+    "correct_index": 1,
+    "explanation": "Основной механизм - reference counting. Когда счётчик ссылок становится 0, объект уничтожается. Циклы ссылок ловит дополнительный поколенческий GC (модуль gc)."
+  },
+  {
+    "external_key": "py-014",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает оператор `*args` в сигнатуре функции?",
+    "options": [
+      "Передаёт указатель на аргумент",
+      "Принимает произвольное количество позиционных аргументов как кортеж",
+      "Распаковывает словарь",
+      "Делает аргумент необязательным"
+    ],
+    "correct_index": 1,
+    "explanation": "*args собирает дополнительные позиционные аргументы в tuple. **kwargs собирает именованные в dict."
+  },
+  {
+    "external_key": "py-015",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое лямбда-функция?",
+    "options": [
+      "Любая короткая функция",
+      "Анонимная функция из одного выражения, объявленная через ключевое слово lambda",
+      "Способ описать классы без class",
+      "Альтернатива yield"
+    ],
+    "correct_index": 1,
+    "explanation": "lambda x: x+1 - анонимная функция в одно выражение. Удобна для коротких callable вроде ключей сортировки. Для сложной логики используйте def."
+  },
+  {
+    "external_key": "py-016",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт type(lambda x: x)?",
+    "options": ["function", "lambda", "callable", "method"],
+    "correct_index": 0,
+    "explanation": "lambda - это обычный объект function, разница только в синтаксисе и наличии единственного выражения."
+  },
+  {
+    "external_key": "py-017",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "В чём разница между списком и кортежем?",
+    "options": [
+      "Кортеж быстрее работает с асинхронным кодом",
+      "Список изменяемый, кортеж - нет; кортежи компактнее в памяти и могут быть ключом dict, если содержат hashable элементы",
+      "Никакой разницы, просто синтаксис",
+      "Кортеж - это всегда список из двух элементов"
+    ],
+    "correct_index": 1,
+    "explanation": "list - mutable, удобен для коллекций изменяемого размера. tuple - immutable, может использоваться как ключ dict и потребляет меньше памяти."
+  },
+  {
+    "external_key": "py-018",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какой из вариантов корректно создаёт shallow copy списка?",
+    "options": [
+      "a == b",
+      "list(a) или a[:] или copy.copy(a)",
+      "copy.deepcopy(a)",
+      "a.shallow()"
+    ],
+    "correct_index": 1,
+    "explanation": "Все три варианта дают новый список с теми же ссылками. deepcopy глубоко копирует элементы, что обычно избыточно и дороже."
+  },
+  {
+    "external_key": "py-019",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое аннотации типов и кто их проверяет?",
+    "options": [
+      "Они проверяются интерпретатором в рантайме и кидают TypeError",
+      "Это подсказки, не проверяются интерпретатором; статическая проверка делается mypy/pyright и т.п.",
+      "Они автоматически конвертируют значения",
+      "Они нужны только для документации Sphinx"
+    ],
+    "correct_index": 1,
+    "explanation": "PEP 484 - type hints доступны через __annotations__, но рантайм CPython их не проверяет. Проверкой занимается статический анализатор."
+  },
+  {
+    "external_key": "py-020",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое try/except/else/finally?",
+    "options": [
+      "else выполняется при любом исключении",
+      "else выполняется, если в try НЕ было исключения; finally выполняется всегда",
+      "finally работает только в asyncio",
+      "else - синоним except"
+    ],
+    "correct_index": 1,
+    "explanation": "Поток: try -> (except если поймали) -> else (если исключения не было) -> finally (всегда). finally удобен для освобождения ресурсов."
+  },
+  {
+    "external_key": "py-021",
+    "topic": "python",
+    "difficulty": 3,
+    "text": "Что такое дескриптор в Python?",
+    "options": [
+      "Класс с методами __get__/__set__/__delete__, контролирующий доступ к атрибуту",
+      "Описание модуля в setup.py",
+      "Файл readme",
+      "Специальный тип кортежа"
+    ],
+    "correct_index": 0,
+    "explanation": "Descriptor protocol используется property, classmethod, staticmethod, ORM-полями. Через __get__/__set__ можно перехватывать обращение к атрибуту класса."
+  },
+  {
+    "external_key": "py-022",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое property?",
+    "options": [
+      "Атрибут с публичным доступом",
+      "Дескриптор, превращающий метод в свойство с логикой getter/setter/deleter",
+      "Только в Pydantic",
+      "Аналог Java private"
+    ],
+    "correct_index": 1,
+    "explanation": "@property превращает метод в getter; добавляются @x.setter/@x.deleter. Под капотом - дескриптор."
+  },
+  {
+    "external_key": "py-023",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое виртуальное окружение и зачем оно?",
+    "options": [
+      "Виртуальная машина внутри Python",
+      "Изолированный набор зависимостей и версии интерпретатора для проекта",
+      "Только в Docker",
+      "Просто папка node_modules"
+    ],
+    "correct_index": 1,
+    "explanation": "venv (или virtualenv, poetry, uv) изолирует пакеты проекта, чтобы они не конфликтовали с системными или другими проектами."
+  },
+  {
+    "external_key": "py-024",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем match/case отличается от if/elif/else?",
+    "options": [
+      "Это синонимы",
+      "match выполняет structural pattern matching по структуре значения и поддерживает деструктуризацию",
+      "match быстрее для строк",
+      "match доступен только в Python 2"
+    ],
+    "correct_index": 1,
+    "explanation": "match (PEP 634, Python 3.10+) даёт structural pattern matching: можно матчить по типу, структуре dict/list, dataclass, использовать guards (if-условия в case)."
+  },
+  {
+    "external_key": "py-025",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое dataclass?",
+    "options": [
+      "Класс данных в БД",
+      "Декоратор @dataclass из dataclasses, генерирующий __init__/__repr__/__eq__ по аннотациям полей",
+      "Только в Pydantic",
+      "Это просто dict"
+    ],
+    "correct_index": 1,
+    "explanation": "@dataclass упрощает определение классов, в которых код большей частью - хранение полей. Добавляет boilerplate-методы автоматически."
+  },
+  {
+    "external_key": "py-026",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что такое PEP 8?",
+    "options": [
+      "Python Encapsulation Protocol",
+      "Style Guide for Python Code: гайдлайн по стилю кода",
+      "Спецификация байт-кода",
+      "Стандарт документации"
+    ],
+    "correct_index": 1,
+    "explanation": "PEP 8 описывает соглашения о стиле кода: отступы, длина строки, naming, импорты. ruff/black/flake8 автоматизируют проверку."
+  },
+  {
+    "external_key": "py-027",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что делает yield from?",
+    "options": [
+      "Возвращает значение и завершает функцию",
+      "Делегирует итерацию (и значения, и исключения) вложенному генератору",
+      "Конвертирует функцию в asyncio task",
+      "Эквивалент return"
+    ],
+    "correct_index": 1,
+    "explanation": "yield from sub_gen транслирует все yield/throw/send из sub_gen наружу, удобно при композиции генераторов."
+  },
+  {
+    "external_key": "py-028",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое slots в классе?",
+    "options": [
+      "Способ задать порядок MRO",
+      "__slots__ ограничивает множество атрибутов экземпляра, экономя память (нет __dict__)",
+      "Только для дата-классов",
+      "Способ зарегистрировать класс в реестре"
+    ],
+    "correct_index": 1,
+    "explanation": "__slots__ = ('a', 'b') запрещает добавление новых атрибутов и убирает __dict__. На больших количествах объектов значительно экономит RAM."
+  },
+  {
+    "external_key": "py-029",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое magic methods (dunder methods)?",
+    "options": [
+      "Скрытые методы интерпретатора, недоступные пользователю",
+      "Методы со специальными именами вроде __init__, __len__, __eq__, реализующие протоколы языка",
+      "Только методы класса object",
+      "Методы только из abc"
+    ],
+    "correct_index": 1,
+    "explanation": "Dunder-методы реализуют протоколы: итерации, контекст-менеджера, сравнения, хеширования и т.п. Через них объект участвует в синтаксических конструкциях."
+  },
+  {
+    "external_key": "py-030",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print(0.1 + 0.2 == 0.3)?",
+    "options": ["True", "False, из-за бинарного представления float", "SyntaxError", "0.3"],
+    "correct_index": 1,
+    "explanation": "0.1 и 0.2 в IEEE 754 - бесконечные дроби. Сумма даёт ~0.30000000000000004. Для денежных вычислений используйте decimal.Decimal."
+  },
+  {
+    "external_key": "alg-001",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какова временная сложность поиска в отсортированном массиве бинарным поиском?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    "correct_index": 1,
+    "explanation": "Бинарный поиск делит диапазон пополам на каждой итерации, поэтому log2(n) шагов в худшем случае."
+  },
+  {
+    "external_key": "alg-002",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какая средняя сложность quicksort?",
+    "options": ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+    "correct_index": 1,
+    "explanation": "В среднем quicksort работает за O(n log n). В худшем случае (плохой выбор pivot) деградирует до O(n^2). На практике рандомизированный pivot решает проблему."
+  },
+  {
+    "external_key": "alg-003",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Чем отличается стек от очереди?",
+    "options": [
+      "Стек FIFO, очередь LIFO",
+      "Стек LIFO (последний пришёл - первый вышел), очередь FIFO (первый пришёл - первый вышел)",
+      "Это синонимы",
+      "Стек - двусторонний, очередь - односторонняя"
+    ],
+    "correct_index": 1,
+    "explanation": "Стек: push/pop с одного конца. Очередь: enqueue с одного, dequeue с другого. В Python: list для стека, collections.deque для очереди."
+  },
+  {
+    "external_key": "alg-004",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая структура данных лучше всего для проверки 'есть ли элемент в коллекции' за O(1)?",
+    "options": ["list", "tuple", "set / dict", "linked list"],
+    "correct_index": 2,
+    "explanation": "set и dict в Python используют хеш-таблицу. Проверка x in s для set - O(1) в среднем. Для list - O(n)."
+  },
+  {
+    "external_key": "alg-005",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "В чём разница между BFS и DFS?",
+    "options": [
+      "BFS использует стек, DFS - очередь",
+      "BFS обходит вершины по уровням (использует очередь), DFS уходит вглубь сначала (стек или рекурсия)",
+      "Это идентичные алгоритмы",
+      "BFS работает только на деревьях"
+    ],
+    "correct_index": 1,
+    "explanation": "BFS - очередь, по уровням; находит кратчайший путь по числу рёбер. DFS - стек/рекурсия, удобен для топологической сортировки и поиска компонент связности."
+  },
+  {
+    "external_key": "alg-006",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое хеш-коллизия?",
+    "options": [
+      "Когда массив переполняется",
+      "Когда два разных ключа дают одинаковый хеш и попадают в один bucket",
+      "Когда хеш-функция возвращает 0",
+      "Когда сервер недоступен"
+    ],
+    "correct_index": 1,
+    "explanation": "Решается через chaining (список в bucket), open addressing или perfect hashing. В Python dict используется open addressing с перебором."
+  },
+  {
+    "external_key": "alg-007",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какой алгоритм сортировки гарантирует O(n log n) и стабильность?",
+    "options": ["quicksort", "mergesort", "selection sort", "bubble sort"],
+    "correct_index": 1,
+    "explanation": "mergesort стабильный (сохраняет порядок равных элементов) и гарантирует O(n log n). Использует O(n) дополнительной памяти. Python sorted() основан на TimSort - гибрид merge и insertion."
+  },
+  {
+    "external_key": "alg-008",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое два указателя (two pointers)?",
+    "options": [
+      "Способ адресации в C",
+      "Техника с двумя индексами/итераторами в массиве для решения задач за O(n) вместо O(n^2)",
+      "Только метод сортировки",
+      "Только в графах"
+    ],
+    "correct_index": 1,
+    "explanation": "Классические задачи: пара с заданной суммой в отсортированном массиве, удаление дубликатов на месте, sliding window."
+  },
+  {
+    "external_key": "alg-009",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое sliding window?",
+    "options": [
+      "GUI-окно, которое скроллится",
+      "Техника обработки подмассивов фиксированной/переменной длины с поддержкой суммы/счётчика, что даёт O(n)",
+      "Алгоритм компрессии",
+      "Только для строк"
+    ],
+    "correct_index": 1,
+    "explanation": "Поддерживаешь окно [l, r], двигаешь правую границу, сжимаешь левую при нарушении условия. Применимо для задач 'максимум суммы подмассива длины k', 'longest substring without repeating' и т.п."
+  },
+  {
+    "external_key": "alg-010",
+    "topic": "algorithms",
+    "difficulty": 3,
+    "text": "Что такое динамическое программирование (DP)?",
+    "options": [
+      "Рандомизированный алгоритм",
+      "Подход, разбивающий задачу на перекрывающиеся подзадачи, кеширующий их решения (top-down мемоизация или bottom-up таблица)",
+      "Любая рекурсия",
+      "Только генетические алгоритмы"
+    ],
+    "correct_index": 1,
+    "explanation": "DP помогает свести экспоненциальную рекурсию к полиномиальной за счёт кеширования. Классика: knapsack, edit distance, longest common subsequence."
+  },
+  {
+    "external_key": "alg-011",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Что такое связный список и какова сложность вставки в начало?",
+    "options": [
+      "Массив, вставка O(n)",
+      "Структура из узлов с указателем на следующий, вставка в начало O(1)",
+      "Только дерево",
+      "Хеш-таблица"
+    ],
+    "correct_index": 1,
+    "explanation": "Связный список: O(1) на вставку/удаление известного узла, но O(n) на доступ по индексу. В Python для FIFO с быстрым append/pop с обоих концов используют collections.deque."
+  },
+  {
+    "external_key": "alg-012",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое бинарное дерево поиска (BST)?",
+    "options": [
+      "Любое дерево с двумя потомками",
+      "Бинарное дерево, где у каждого узла слева ключи меньше, справа больше; в среднем поиск O(log n)",
+      "Хеш-таблица",
+      "Heap"
+    ],
+    "correct_index": 1,
+    "explanation": "В сбалансированном BST (AVL, Red-Black) поиск/вставка/удаление - O(log n). Несбалансированное BST в худшем случае вырождается в список с O(n)."
+  },
+  {
+    "external_key": "alg-013",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое heap (куча) и зачем она?",
+    "options": [
+      "Просто массив",
+      "Структура с порядком: min-heap - корень минимален; даёт O(log n) на push/pop, O(1) на peek - удобна для приоритетной очереди",
+      "Любой список",
+      "Стек"
+    ],
+    "correct_index": 1,
+    "explanation": "В Python heapq реализует min-heap поверх list. Используется для top-k, Dijkstra, scheduler-ов."
+  },
+  {
+    "external_key": "alg-014",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какова сложность доступа по индексу в массиве?",
+    "options": ["O(log n)", "O(n)", "O(1)", "O(n log n)"],
+    "correct_index": 2,
+    "explanation": "Массив - непрерывный блок памяти, адрес i-го элемента = base + i*stride. Доступ - O(1)."
+  },
+  {
+    "external_key": "alg-015",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что лучше использовать для частых операций append/pop с обеих сторон?",
+    "options": ["list", "tuple", "collections.deque", "set"],
+    "correct_index": 2,
+    "explanation": "deque реализует двустороннюю очередь с O(1) append/pop с обеих сторон. У list pop(0) - O(n)."
+  },
+  {
+    "external_key": "alg-016",
+    "topic": "algorithms",
+    "difficulty": 3,
+    "text": "Что такое big-O нотация?",
+    "options": [
+      "Точное время выполнения в секундах",
+      "Асимптотическая верхняя граница роста времени/памяти при увеличении входа",
+      "Размер программы",
+      "Только для рекурсивных алгоритмов"
+    ],
+    "correct_index": 1,
+    "explanation": "O(f(n)) описывает рост в худшем случае с точностью до константы. Игнорирует константы и младшие члены."
+  },
+  {
+    "external_key": "alg-017",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое жадный алгоритм?",
+    "options": [
+      "Алгоритм, требующий максимальной памяти",
+      "Алгоритм, делающий локально оптимальный выбор на каждом шаге в надежде, что это даст глобальный оптимум",
+      "Перебор всех вариантов",
+      "Любой DP"
+    ],
+    "correct_index": 1,
+    "explanation": "Жадный подход работает, когда у задачи есть свойства жадного выбора и оптимальной подструктуры (например, минимальное остовное дерево, монеты с подходящими номиналами)."
+  },
+  {
+    "external_key": "alg-018",
+    "topic": "algorithms",
+    "difficulty": 3,
+    "text": "Какой алгоритм находит кратчайший путь из одной вершины во взвешенном графе без отрицательных рёбер?",
+    "options": ["BFS", "Dijkstra", "Floyd-Warshall", "Bubble Sort"],
+    "correct_index": 1,
+    "explanation": "Алгоритм Дейкстры с min-heap работает за O((V+E) log V). На неотрицательных рёбрах - стандарт. С отрицательными - Bellman-Ford."
+  },
+  {
+    "external_key": "alg-019",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое мемоизация?",
+    "options": [
+      "Запись логов",
+      "Кеширование результатов функции по аргументам, чтобы не пересчитывать (functools.lru_cache)",
+      "Создание копии массива",
+      "Магический метод __cache__"
+    ],
+    "correct_index": 1,
+    "explanation": "Мемоизация - частный случай DP top-down. В Python @functools.cache (3.9+) и @functools.lru_cache(maxsize=N) работают из коробки."
+  },
+  {
+    "external_key": "alg-020",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность у поиска подстроки наивным алгоритмом?",
+    "options": ["O(n + m)", "O(n*m) в худшем случае", "O(log n)", "O(1)"],
+    "correct_index": 1,
+    "explanation": "Наивный поиск перебирает каждую позицию в строке длины n и сравнивает с подстрокой длины m. Алгоритмы KMP/Boyer-Moore/Rabin-Karp дают O(n+m) или близко к этому."
+  },
+  {
+    "external_key": "alg-021",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Что такое рекурсия?",
+    "options": [
+      "Цикл while",
+      "Функция, которая вызывает саму себя, обычно с условием выхода (base case)",
+      "Только итерация",
+      "Только мемоизация"
+    ],
+    "correct_index": 1,
+    "explanation": "Без base case рекурсия даст RecursionError. В Python sys.getrecursionlimit() обычно 1000, можно увеличить, но лучше переписать в итерацию или хвостовую форму."
+  },
+  {
+    "external_key": "alg-022",
+    "topic": "algorithms",
+    "difficulty": 3,
+    "text": "Что такое Big-Theta?",
+    "options": [
+      "Только верхняя оценка",
+      "Точная асимптотика - и верхняя, и нижняя оценки совпадают",
+      "Нижняя оценка",
+      "Случайное значение"
+    ],
+    "correct_index": 1,
+    "explanation": "Theta(f(n)) означает алгоритм работает за c1*f(n) <= T(n) <= c2*f(n). Big-O - только сверху, Omega - только снизу."
+  },
+  {
+    "external_key": "async-001",
+    "topic": "async",
+    "difficulty": 1,
+    "text": "Что такое корутина в asyncio?",
+    "options": [
+      "Нативный поток ОС",
+      "Объект, возвращаемый async-функцией; выполняется кооперативно через event loop",
+      "Только thread",
+      "Только process"
+    ],
+    "correct_index": 1,
+    "explanation": "async def возвращает корутину. Сама по себе она не выполняется - её запускает event loop через await/asyncio.run/asyncio.create_task."
+  },
+  {
+    "external_key": "async-002",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Когда asyncio даст реальный профит?",
+    "options": [
+      "При CPU-bound нагрузке (тяжёлые вычисления)",
+      "При I/O-bound нагрузке (сеть, диск, БД), где много времени уходит на ожидание",
+      "Никогда",
+      "Только в GUI"
+    ],
+    "correct_index": 1,
+    "explanation": "asyncio даёт конкурентность для I/O. Для CPU-bound нужны процессы (multiprocessing) или внешние воркеры, потому что GIL блокирует параллельное исполнение байт-кода."
+  },
+  {
+    "external_key": "async-003",
+    "topic": "async",
+    "difficulty": 1,
+    "text": "Что делает await?",
+    "options": [
+      "Блокирует поток ОС",
+      "Приостанавливает корутину до завершения awaitable, отдавая управление event loop",
+      "Запускает новый поток",
+      "Создаёт новый процесс"
+    ],
+    "correct_index": 1,
+    "explanation": "await говорит event loop: 'я пока подожду этот awaitable; пока он не готов, можешь работать с другими задачами'. Не блокирует поток."
+  },
+  {
+    "external_key": "async-004",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "В чём разница между threading и multiprocessing для CPU-bound задач?",
+    "options": [
+      "Они идентичны",
+      "threading из-за GIL не параллелит CPU-bound; multiprocessing запускает отдельные процессы с собственным интерпретатором и GIL",
+      "multiprocessing медленнее всегда",
+      "threading работает только в Linux"
+    ],
+    "correct_index": 1,
+    "explanation": "Каждый Python-процесс имеет свой GIL, поэтому multiprocessing даёт реальный параллелизм. Цена - накладные расходы на форк и сериализацию аргументов."
+  },
+  {
+    "external_key": "async-005",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое asyncio.gather?",
+    "options": [
+      "Запускает корутины последовательно",
+      "Запускает несколько корутин конкурентно и ждёт все, возвращает список результатов",
+      "Создаёт новый процесс",
+      "Альтернатива map()"
+    ],
+    "correct_index": 1,
+    "explanation": "asyncio.gather(*coros) - удобный способ конкурентно выполнить набор корутин. Если одна упала - по умолчанию остальные тоже отменятся (return_exceptions=False)."
+  },
+  {
+    "external_key": "async-006",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое asyncio.create_task?",
+    "options": [
+      "Запускает корутину в отдельном потоке",
+      "Оборачивает корутину в Task и запускает её в event loop, возвращая Task для управления",
+      "Просто await",
+      "Создаёт процесс"
+    ],
+    "correct_index": 1,
+    "explanation": "Task - awaitable, но он начинает работать сразу. Можно дождаться через await, отменить через .cancel(), сложить в gather."
+  },
+  {
+    "external_key": "async-007",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Зачем нужен asyncio.Lock, если внутри одной корутины есть GIL?",
+    "options": [
+      "Не нужен",
+      "Чтобы координировать критическую секцию между корутинами в одном event loop",
+      "Только для multiprocessing",
+      "Для совместимости с Java"
+    ],
+    "correct_index": 1,
+    "explanation": "GIL не помогает: между двумя await управление переходит к другим корутинам и они могут увидеть промежуточное состояние. asyncio.Lock даёт mutual exclusion."
+  },
+  {
+    "external_key": "async-008",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что произойдёт, если внутри async-функции вызвать time.sleep(5)?",
+    "options": [
+      "Ничего не блокирует",
+      "Заблокирует event loop и все другие корутины тоже встанут на 5 секунд",
+      "Ошибка SyntaxError",
+      "Запустит новый поток"
+    ],
+    "correct_index": 1,
+    "explanation": "Синхронные блокирующие вызовы внутри async-функции - частая ошибка. Используйте await asyncio.sleep(5) или вынесите блокирующий вызов в asyncio.to_thread/run_in_executor."
+  },
+  {
+    "external_key": "async-009",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое async with?",
+    "options": [
+      "Синоним обычного with",
+      "Контекстный менеджер с асинхронным __aenter__/__aexit__, например, для пулов соединений",
+      "Только декоратор",
+      "Аналог try/finally"
+    ],
+    "correct_index": 1,
+    "explanation": "Используется для ресурсов, которые открываются/закрываются асинхронно: aiohttp.ClientSession, asyncpg connection pool, aiofiles."
+  },
+  {
+    "external_key": "async-010",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Что такое asyncio.wait_for?",
+    "options": [
+      "Бесконечно ждёт корутину",
+      "Ждёт awaitable не дольше timeout, иначе кидает asyncio.TimeoutError и отменяет задачу",
+      "Только для tcp",
+      "Альтернатива await"
+    ],
+    "correct_index": 1,
+    "explanation": "Удобный таймаут на одну корутину. В 3.11+ есть и asyncio.timeout() контекстный менеджер."
+  },
+  {
+    "external_key": "async-011",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что произойдёт, если NOT await корутину?",
+    "options": [
+      "Корутина выполнится в фоне",
+      "Будет предупреждение 'coroutine was never awaited' и тело не выполнится",
+      "Сломается интерпретатор",
+      "Ничего, всё работает"
+    ],
+    "correct_index": 1,
+    "explanation": "Корутина без await/create_task - просто объект; тело не выполнится. RuntimeWarning подскажет, но логика проекта будет молча сломана."
+  },
+  {
+    "external_key": "async-012",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Что такое concurrent.futures.ThreadPoolExecutor?",
+    "options": [
+      "Запускает процессы",
+      "Пул потоков с интерфейсом submit/map/Future для конкурентного запуска I/O-bound задач",
+      "Только для GUI",
+      "Альтернатива asyncio.Lock"
+    ],
+    "correct_index": 1,
+    "explanation": "Удобен для интеграции блокирующего кода в asyncio через loop.run_in_executor или asyncio.to_thread."
+  },
+  {
+    "external_key": "async-013",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое race condition?",
+    "options": [
+      "Гонки между процессорами",
+      "Ситуация, когда корректность результата зависит от планирования потоков/корутин и проявляется недетерминированно",
+      "Любой await",
+      "Bug, специфичный для Windows"
+    ],
+    "correct_index": 1,
+    "explanation": "Решается через locks, atomic-операции, неизменяемые данные, очереди. Без синхронизации общая mutable-структура - источник тонких багов."
+  },
+  {
+    "external_key": "async-014",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое deadlock?",
+    "options": [
+      "Утечка памяти",
+      "Взаимная блокировка: A держит lock1 и ждёт lock2, B держит lock2 и ждёт lock1",
+      "Просто медленный код",
+      "Ошибка в БД"
+    ],
+    "correct_index": 1,
+    "explanation": "Профилактика: единый порядок захвата локов, таймауты, минимизация общих ресурсов, immutable-данные."
+  },
+  {
+    "external_key": "async-015",
+    "topic": "async",
+    "difficulty": 1,
+    "text": "Что вернёт asyncio.run(coro)?",
+    "options": [
+      "Task",
+      "Запустит event loop, выполнит корутину и вернёт её результат; нельзя вызывать из уже работающего loop",
+      "None всегда",
+      "Запустит новый поток"
+    ],
+    "correct_index": 1,
+    "explanation": "asyncio.run - точка входа в async-приложение. Создаёт loop, запускает корутину, корректно закрывает loop."
+  },
+  {
+    "external_key": "sql-001",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что означает аббревиатура ACID?",
+    "options": [
+      "Async, Consistent, Indexed, Distributed",
+      "Atomicity, Consistency, Isolation, Durability - набор гарантий транзакций",
+      "Application, Cache, Index, Database",
+      "Atomic, Concurrent, Isolated, Durable - но без Consistency"
+    ],
+    "correct_index": 1,
+    "explanation": "ACID - четыре гарантии: атомарность (всё или ничего), согласованность (инварианты), изоляция (как будто транзакции последовательны), долговечность (изменения переживают сбой)."
+  },
+  {
+    "external_key": "sql-002",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что делает INNER JOIN?",
+    "options": [
+      "Возвращает все строки из обеих таблиц",
+      "Возвращает только строки, у которых есть совпадение по условию в обеих таблицах",
+      "Возвращает левую таблицу целиком",
+      "Возвращает правую таблицу целиком"
+    ],
+    "correct_index": 1,
+    "explanation": "INNER JOIN отбрасывает строки, у которых нет соответствия. LEFT JOIN сохранит все строки из левой и подставит NULL в правую при отсутствии."
+  },
+  {
+    "external_key": "sql-003",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое индекс в реляционной БД?",
+    "options": [
+      "Просто колонка PRIMARY KEY",
+      "Структура данных (обычно B-tree), ускоряющая поиск ценой места и замедления записи",
+      "Глобальный счётчик",
+      "Кеш строк"
+    ],
+    "correct_index": 1,
+    "explanation": "Индекс - отсортированная структура, позволяющая искать за O(log n). Каждая запись/обновление поддерживает индекс, поэтому слишком много индексов замедляют OLTP."
+  },
+  {
+    "external_key": "sql-004",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какая команда покажет план выполнения запроса в PostgreSQL?",
+    "options": ["DESCRIBE", "EXPLAIN", "ANALYZE_ONLY", "PROFILE"],
+    "correct_index": 1,
+    "explanation": "EXPLAIN покажет план; EXPLAIN ANALYZE дополнительно выполнит и измерит фактическое время. Это первый инструмент в диагностике медленных запросов."
+  },
+  {
+    "external_key": "sql-005",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое нормализация?",
+    "options": [
+      "Удаление всех индексов",
+      "Процесс декомпозиции таблиц для устранения избыточности и аномалий вставки/обновления/удаления",
+      "Только сжатие данных",
+      "Перенос таблицы в JSONB"
+    ],
+    "correct_index": 1,
+    "explanation": "Нормальные формы (1НФ-3НФ, BCNF) предотвращают дублирование. Денормализация (обратное) применяется для ускорения чтения в OLAP."
+  },
+  {
+    "external_key": "sql-006",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое транзакция?",
+    "options": [
+      "Любой SELECT",
+      "Логически единая последовательность операций, выполняющаяся как единое целое (commit или rollback)",
+      "Только UPDATE",
+      "Только в SQLite"
+    ],
+    "correct_index": 1,
+    "explanation": "BEGIN/COMMIT/ROLLBACK или контекст в драйвере. Гарантирует ACID на наборе операций."
+  },
+  {
+    "external_key": "sql-007",
+    "topic": "sql",
+    "difficulty": 3,
+    "text": "Какие уровни изоляции описаны в стандарте SQL?",
+    "options": [
+      "Read, Write, Execute",
+      "Read Uncommitted, Read Committed, Repeatable Read, Serializable",
+      "Lock, Unlock, Pause, Resume",
+      "Atomic, Strong, Weak, Eventual"
+    ],
+    "correct_index": 1,
+    "explanation": "Слабее - быстрее, но возможны фантомы и грязное чтение. Serializable исключает все аномалии ценой производительности. PostgreSQL по умолчанию - Read Committed."
+  },
+  {
+    "external_key": "sql-008",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое первичный ключ (PRIMARY KEY)?",
+    "options": [
+      "Первая колонка таблицы",
+      "Уникальный, обязательно непустой идентификатор строки; на нём автоматически создаётся уникальный индекс",
+      "Любой UNIQUE",
+      "Просто счётчик"
+    ],
+    "correct_index": 1,
+    "explanation": "PK однозначно идентифицирует строку. Может быть составным. На него создаётся unique index (часто B-tree)."
+  },
+  {
+    "external_key": "sql-009",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое внешний ключ (FOREIGN KEY)?",
+    "options": [
+      "Просто индекс",
+      "Колонка, ссылающаяся на PK/UNIQUE другой таблицы; обеспечивает целостность связей",
+      "Любая VARCHAR",
+      "Только в Oracle"
+    ],
+    "correct_index": 1,
+    "explanation": "FK гарантирует, что значение существует в родительской таблице. ON DELETE CASCADE/RESTRICT/SET NULL описывает поведение при удалении родителя."
+  },
+  {
+    "external_key": "sql-010",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что делает GROUP BY?",
+    "options": [
+      "Сортирует строки",
+      "Группирует строки по выражению и применяет к каждой группе агрегатные функции (COUNT, SUM, AVG)",
+      "Удаляет дубликаты",
+      "Альтернатива JOIN"
+    ],
+    "correct_index": 1,
+    "explanation": "Каждая колонка в SELECT должна либо входить в GROUP BY, либо быть аргументом агрегатной функции. HAVING фильтрует группы."
+  },
+  {
+    "external_key": "sql-011",
+    "topic": "sql",
+    "difficulty": 3,
+    "text": "Что такое оконные (window) функции?",
+    "options": [
+      "Только агрегатные",
+      "Функции вроде RANK(), ROW_NUMBER(), SUM() OVER(...), которые считаются по 'окну' строк, не сворачивая результат в одну",
+      "Только GROUP BY",
+      "Только PostgreSQL-specific"
+    ],
+    "correct_index": 1,
+    "explanation": "Window-функции дают агрегаты/ранги вместе со строками. Удобны для топов, кумулятивных сумм, отставаний (LAG/LEAD)."
+  },
+  {
+    "external_key": "sql-012",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое CTE (WITH ...)?",
+    "options": [
+      "Временная таблица навсегда",
+      "Common Table Expression: поименованный подзапрос, который можно переиспользовать в одном SQL-statement",
+      "Только индекс",
+      "Только для джойнов"
+    ],
+    "correct_index": 1,
+    "explanation": "CTE улучшает читаемость, позволяет рекурсивные запросы (WITH RECURSIVE). В PostgreSQL до 12 был оптимизационным барьером."
+  },
+  {
+    "external_key": "sql-013",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "В чём разница между WHERE и HAVING?",
+    "options": [
+      "Это синонимы",
+      "WHERE фильтрует строки до GROUP BY, HAVING - после агрегации",
+      "WHERE только для JOIN",
+      "HAVING - только для индексов"
+    ],
+    "correct_index": 1,
+    "explanation": "Если фильтруете по агрегату (COUNT, SUM) - используйте HAVING. По колонке таблицы - WHERE (быстрее, потому что отсекает раньше)."
+  },
+  {
+    "external_key": "sql-014",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое LEFT JOIN?",
+    "options": [
+      "Возвращает только пересечение",
+      "Возвращает все строки левой таблицы, дополняя совпадающими строками правой (NULL, если совпадения нет)",
+      "Меняет местами таблицы",
+      "Только для индексов"
+    ],
+    "correct_index": 1,
+    "explanation": "LEFT/RIGHT/FULL OUTER JOIN сохраняют 'осиротевшие' строки. INNER возвращает только пересечение."
+  },
+  {
+    "external_key": "sql-015",
+    "topic": "sql",
+    "difficulty": 3,
     "text": "Что такое JSONB в PostgreSQL?",
     "options": [
-      "Текстовый JSON без валидации",
-      "Бинарный формат хранения JSON с поддержкой индексов и быстрых запросов",
-      "Только аналог BLOB",
-      "Внешнее расширение, недоступное по умолчанию"
+      "Текстовый JSON",
+      "Бинарный, проиндексируемый, дедуплицированный формат JSON; поддерживает GIN индексы и операторы (@>, ->>)",
+      "Просто varchar",
+      "Только в MySQL"
     ],
     "correct_index": 1,
-    "explanation": "JSONB хранит распарсенный JSON в бинарном формате, поддерживает GIN-индексы и операторы ->>, @>, ?."
+    "explanation": "JSONB удобен для гетерогенных данных (например, варианты ответа). На нем можно строить GIN индексы и фильтровать по ключам/путям."
   },
   {
-    "external_key": "py-cache-001",
-    "topic": "caching",
-    "difficulty": 3,
-    "text": "Зачем в высоконагруженных приложениях ставят кэш перед БД?",
+    "external_key": "sql-016",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое UNION и UNION ALL?",
     "options": [
-      "Чтобы повысить точность запросов",
-      "Чтобы снизить латентность и нагрузку на БД для частых запросов",
-      "Чтобы избавиться от транзакций",
-      "Чтобы хранить пароли"
+      "Это одно и то же",
+      "UNION объединяет наборы строк и удаляет дубликаты, UNION ALL сохраняет дубликаты и быстрее",
+      "UNION только для текста",
+      "UNION ALL только для одной таблицы"
     ],
     "correct_index": 1,
-    "explanation": "Кэш отдаёт горячие данные за O(1) из памяти, разгружая БД."
+    "explanation": "Если дубликаты не страшны, UNION ALL предпочтительнее: не делает sort/distinct и работает быстрее."
   },
   {
-    "external_key": "py-cache-002",
+    "external_key": "sql-017",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое LIMIT/OFFSET и его проблема?",
+    "options": [
+      "Только для рандомных выборок",
+      "LIMIT ограничивает кол-во строк, OFFSET пропускает; OFFSET на больших значениях линейно деградирует - keyset pagination предпочтительнее",
+      "Альтернатива JOIN",
+      "Не влияет на план"
+    ],
+    "correct_index": 1,
+    "explanation": "OFFSET 100000 LIMIT 20 будет читать и отбрасывать 100000 строк. Лучше WHERE id > :last_id ORDER BY id LIMIT 20."
+  },
+  {
+    "external_key": "sql-018",
+    "topic": "sql",
+    "difficulty": 3,
+    "text": "Что такое N+1 проблема?",
+    "options": [
+      "Ошибка переполнения",
+      "Анти-паттерн: 1 запрос за списком и N запросов за связанными сущностями для каждой строки",
+      "Тип индекса",
+      "Аномалия консистентности"
+    ],
+    "correct_index": 1,
+    "explanation": "Решается через JOIN или batch-выборку (IN(...)) и preload-механизмы ORM (select_related/prefetch_related в Django, joinedload/selectinload в SQLAlchemy)."
+  },
+  {
+    "external_key": "sql-019",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что такое DDL и DML?",
+    "options": [
+      "Это синонимы",
+      "DDL - язык определения схемы (CREATE/ALTER/DROP); DML - язык работы с данными (SELECT/INSERT/UPDATE/DELETE)",
+      "Только для NoSQL",
+      "Только для миграций"
+    ],
+    "correct_index": 1,
+    "explanation": "DDL обычно недоступен внутри транзакций пользовательских приложений и применяется через миграции. DML - повседневные SQL-команды."
+  },
+  {
+    "external_key": "sql-020",
+    "topic": "sql",
+    "difficulty": 3,
+    "text": "Что такое VACUUM в PostgreSQL?",
+    "options": [
+      "Удаляет таблицу",
+      "Утилизирует пустое место от удалённых/обновлённых строк (MVCC), обновляет статистику; AUTOVACUUM делает это в фоне",
+      "Создаёт индекс",
+      "Делает rollback"
+    ],
+    "correct_index": 1,
+    "explanation": "PostgreSQL не удаляет строки физически: они помечаются устаревшими (dead tuples). VACUUM возвращает место. VACUUM FULL компактизирует, но блокирует таблицу."
+  },
+  {
+    "external_key": "sql-021",
+    "topic": "sql",
+    "difficulty": 3,
+    "text": "Что такое isolation level Serializable в PostgreSQL?",
+    "options": [
+      "Только последовательное выполнение",
+      "Гарантирует, что результат набора транзакций эквивалентен какому-то их последовательному порядку; реализуется через SSI",
+      "Никаких блокировок",
+      "Только для read-only"
+    ],
+    "correct_index": 1,
+    "explanation": "PostgreSQL использует Serializable Snapshot Isolation: при конфликтных изменениях одну из транзакций откатывает с serialization_failure, и приложение должно ретраить."
+  },
+  {
+    "external_key": "sql-022",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что лучше: COUNT(*) или COUNT(column)?",
+    "options": [
+      "COUNT(column) всегда быстрее",
+      "COUNT(*) считает все строки; COUNT(col) считает только не-NULL значения; в современных PG разницы по скорости почти нет",
+      "Это синонимы",
+      "Это разные функции в SQL стандарте, COUNT(*) не валиден"
+    ],
+    "correct_index": 1,
+    "explanation": "Если нужна оценка - COUNT(*). Если нужно посчитать сколько в колонке не NULL - COUNT(col). На больших таблицах оба могут быть дорогими (full scan)."
+  },
+  {
+    "external_key": "http-001",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какой HTTP-метод считается идемпотентным и безопасным?",
+    "options": ["POST", "PUT", "GET", "PATCH"],
+    "correct_index": 2,
+    "explanation": "GET безопасен (не меняет состояние) и идемпотентен (повторный вызов даёт тот же результат). PUT/DELETE идемпотентны, но не безопасны. POST не гарантирует ни того, ни другого."
+  },
+  {
+    "external_key": "http-002",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какой статус возвращается при успешно созданном ресурсе через POST?",
+    "options": ["200 OK", "201 Created", "204 No Content", "302 Found"],
+    "correct_index": 1,
+    "explanation": "201 Created подразумевает успешное создание, обычно с заголовком Location, указывающим на новый ресурс."
+  },
+  {
+    "external_key": "http-003",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает статус 401 vs 403?",
+    "options": [
+      "Это синонимы",
+      "401 - не авторизован (нет/невалидные креды); 403 - авторизован, но нет прав",
+      "401 - временный сбой",
+      "403 - истёкший токен"
+    ],
+    "correct_index": 1,
+    "explanation": "401 говорит клиенту 'кто ты?', 403 - 'я знаю кто ты, но тебе сюда нельзя'. На 401 клиент должен повторно аутентифицироваться."
+  },
+  {
+    "external_key": "http-004",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "В чём разница между PUT и PATCH?",
+    "options": [
+      "Это синонимы",
+      "PUT заменяет ресурс целиком; PATCH применяет частичное изменение",
+      "PUT всегда возвращает 201",
+      "PATCH не идемпотентен"
+    ],
+    "correct_index": 1,
+    "explanation": "PUT идемпотентен и заменяет всё представление ресурса. PATCH описывает дельту/патч. Оба могут быть идемпотентными при правильном дизайне."
+  },
+  {
+    "external_key": "http-005",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CORS?",
+    "options": [
+      "Способ шифрования",
+      "Cross-Origin Resource Sharing - механизм, разрешающий браузеру делать запросы между разными origin через заголовки Access-Control-*",
+      "Замена HTTPS",
+      "Тип сжатия"
+    ],
+    "correct_index": 1,
+    "explanation": "Браузер блокирует cross-origin запросы по умолчанию. Сервер должен явно разрешить origin/methods/headers заголовками. preflight (OPTIONS) делается перед сложными запросами."
+  },
+  {
+    "external_key": "http-006",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое REST?",
+    "options": [
+      "Любая HTTP API",
+      "Архитектурный стиль, описывающий ресурсы через URI и стандартные HTTP-методы; ресурсы stateless и имеют единое представление",
+      "Альтернатива HTTPS",
+      "Только JSON"
+    ],
+    "correct_index": 1,
+    "explanation": "REST по Филдингу: ресурсы (URI), действия (методы), представления (JSON/XML), HATEOAS (часто игнорируется). На практике 'REST-like' часто звучит точнее."
+  },
+  {
+    "external_key": "http-007",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что значит 5xx статус?",
+    "options": [
+      "Ошибки клиента",
+      "Серверные ошибки: проблема на стороне сервера, клиент может ретраить",
+      "Информационные коды",
+      "Перенаправления"
+    ],
+    "correct_index": 1,
+    "explanation": "1xx info, 2xx success, 3xx redirect, 4xx client error, 5xx server error. 5xx обычно ретраимы (с экспоненциальным backoff)."
+  },
+  {
+    "external_key": "http-008",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое JWT?",
+    "options": [
+      "Java Web Token",
+      "JSON Web Token - подписанный (HMAC/RSA) base64-токен, содержащий клеймы; stateless-аутентификация",
+      "Алгоритм шифрования",
+      "Переменная окружения"
+    ],
+    "correct_index": 1,
+    "explanation": "JWT состоит из header.payload.signature. Сервер не хранит сессию, проверяет подпись. Минусы: сложно отзывать, нужно беречь секрет."
+  },
+  {
+    "external_key": "http-009",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое идемпотентность?",
+    "options": [
+      "Любой POST",
+      "Свойство операции: повторный вызов с теми же аргументами даёт тот же результат и состояние",
+      "Только GET",
+      "Только в БД"
+    ],
+    "correct_index": 1,
+    "explanation": "Важна для распределённых систем и retry-ев. PUT/DELETE/GET идемпотентны по спеке. POST можно сделать идемпотентным через Idempotency-Key."
+  },
+  {
+    "external_key": "http-010",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Где обычно передаются параметры запроса в GET?",
+    "options": [
+      "В теле запроса",
+      "В query string URL (?key=value&...) или в path-параметрах",
+      "В заголовке Authorization",
+      "Нигде, GET без параметров"
+    ],
+    "correct_index": 1,
+    "explanation": "Тело у GET по спеке не предусмотрено (хотя и не запрещено). Параметры идут в query string. Чувствительные данные не должны быть в URL (попадают в логи)."
+  },
+  {
+    "external_key": "http-011",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTPS?",
+    "options": [
+      "HTTP на порту 80",
+      "HTTP поверх TLS: шифрование, аутентификация сервера сертификатом, защита от MITM",
+      "Только сжатый HTTP",
+      "Любой POST"
+    ],
+    "correct_index": 1,
+    "explanation": "TLS даёт шифрование (confidentiality), целостность (integrity), аутентификацию (X.509 сертификаты). Современные best practices: TLS 1.2+, HSTS."
+  },
+  {
+    "external_key": "http-012",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Cache-Control?",
+    "options": [
+      "Управляет cookies",
+      "Управляет кешированием на клиентах и промежуточных прокси: max-age, no-cache, no-store, public/private",
+      "Только для CDN",
+      "Только для admin-эндпоинтов"
+    ],
+    "correct_index": 1,
+    "explanation": "no-store - вообще не кешировать; no-cache - можно кешировать, но валидировать; max-age - срок жизни. ETag/If-None-Match добавляют валидацию."
+  },
+  {
+    "external_key": "http-013",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое stateless в REST?",
+    "options": [
+      "Никаких сессий вообще",
+      "Сервер не хранит контекст клиента между запросами; всё нужное приходит в запросе (токен, параметры)",
+      "Только GET",
+      "Только в WebSocket"
+    ],
+    "correct_index": 1,
+    "explanation": "Stateless упрощает горизонтальное масштабирование: любой инстанс сервера может обработать запрос. Сессии хранятся либо у клиента (JWT), либо во внешнем хранилище (Redis)."
+  },
+  {
+    "external_key": "http-014",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое 429 Too Many Requests?",
+    "options": [
+      "Клиент превысил лимит запросов; обычно с заголовком Retry-After",
+      "Ошибка БД",
+      "Только при 5xx",
+      "Перенаправление"
+    ],
+    "correct_index": 0,
+    "explanation": "Используется для rate limiting. Хорошая практика - указывать Retry-After в секундах или дату."
+  },
+  {
+    "external_key": "http-015",
+    "topic": "http",
+    "difficulty": 3,
+    "text": "Что такое webhook?",
+    "options": [
+      "Любой POST",
+      "Способ интеграции: приложение регистрирует URL, на который сторонний сервис шлёт HTTP-уведомления о событиях",
+      "Только cron",
+      "Только GraphQL"
+    ],
+    "correct_index": 1,
+    "explanation": "Webhook - инверсия polling. Платежные системы, GitHub, мессенджеры (Telegram) шлют события на URL приложения. Важно подписывать payload."
+  },
+  {
+    "external_key": "http-016",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое OAuth2?",
+    "options": [
+      "Алгоритм хеширования",
+      "Протокол делегированной авторизации: клиент получает access_token, чтобы действовать от имени пользователя без пароля",
+      "Только для Google",
+      "Только для GET"
+    ],
+    "correct_index": 1,
+    "explanation": "OAuth2 описывает потоки (authorization code, client credentials, device flow и т.п.) и роли. Часто связан с OpenID Connect для аутентификации."
+  },
+  {
+    "external_key": "http-017",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Какой статус используется для перенаправления?",
+    "options": ["200", "404", "301/302/303/307/308", "500"],
+    "correct_index": 2,
+    "explanation": "301 - постоянное, 302/307 - временное, 303 - см. другой ресурс через GET, 308 - постоянное с сохранением метода. Браузеры по-разному ретраят POST на 301/302."
+  },
+  {
+    "external_key": "http-018",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Content-Type?",
+    "options": [
+      "Только Accept",
+      "Заголовок, описывающий MIME-тип тела запроса/ответа (application/json, text/html и т.п.)",
+      "Заголовок аутентификации",
+      "Только для multipart"
+    ],
+    "correct_index": 1,
+    "explanation": "Сервер использует Content-Type для парсинга тела. Несоответствие даст 415 Unsupported Media Type."
+  },
+  {
+    "external_key": "django-001",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Что такое Django ORM?",
+    "options": [
+      "Только SQL-запросы как строки",
+      "Object-Relational Mapper: модели на Python, которые транслируются в SQL для работы с БД",
+      "Альтернатива WSGI",
+      "Только для PostgreSQL"
+    ],
+    "correct_index": 1,
+    "explanation": "Модели Django описывают таблицы, ORM генерирует SQL. Поддерживает PostgreSQL, MySQL, SQLite, Oracle."
+  },
+  {
+    "external_key": "django-002",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Чем отличаются select_related и prefetch_related?",
+    "options": [
+      "Это синонимы",
+      "select_related делает SQL JOIN для ForeignKey/OneToOne; prefetch_related делает второй запрос и склеивает в Python для ManyToMany/обратных FK",
+      "select_related только для async",
+      "prefetch_related не делает SQL"
+    ],
+    "correct_index": 1,
+    "explanation": "select_related - один запрос с JOIN, выгоден для FK. prefetch_related - два запроса (или больше), необходим для M2M, потому что один JOIN дал бы декартовы строки."
+  },
+  {
+    "external_key": "django-003",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое QuerySet и какова его особенность?",
+    "options": [
+      "Список объектов",
+      "Ленивый объект, представляющий SQL-запрос; выполняется только при итерации/срезе/repr",
+      "Просто dict",
+      "Только сырые SQL-строки"
+    ],
+    "correct_index": 1,
+    "explanation": "QuerySet кеширует результаты после первой итерации. Цепочка filter/exclude/order_by строит SQL без обращения к БД."
+  },
+  {
+    "external_key": "django-004",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает миграция в Django?",
+    "options": [
+      "Просто бэкап БД",
+      "Описывает изменение схемы БД (Python-кодом) и применяет его последовательно; история хранится в django_migrations",
+      "Меняет код моделей",
+      "Только дамп данных"
+    ],
+    "correct_index": 1,
+    "explanation": "makemigrations создаёт миграцию из моделей, migrate применяет её к БД. Поддерживается откат и data migrations."
+  },
+  {
+    "external_key": "django-005",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое middleware в Django?",
+    "options": [
+      "Только декоратор",
+      "Слой обработки запроса/ответа между WSGI и view; цепочка из MIDDLEWARE settings",
+      "Замена admin",
+      "Только для шаблонов"
+    ],
+    "correct_index": 1,
+    "explanation": "Middleware видит request до view и response после. Удобно для аутентификации, CORS, логирования, gzip-сжатия."
+  },
+  {
+    "external_key": "django-006",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое сигналы (signals)?",
+    "options": [
+      "Только для async",
+      "Механизм публикации/подписки: на pre_save/post_save/m2m_changed и др. можно подписаться обработчиком",
+      "Только для middleware",
+      "Замена views"
+    ],
+    "correct_index": 1,
+    "explanation": "Сигналы удобны, но злоупотребление ведёт к скрытой логике. Часто стоит держать побочные эффекты в сервисах, а не в сигналах."
+  },
+  {
+    "external_key": "django-007",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Что такое Django admin?",
+    "options": [
+      "Только debug-страница",
+      "Готовая панель управления моделями: CRUD, фильтры, поиск, пермишены - регистрируется через admin.site.register",
+      "Только для миграций",
+      "Только для DRF"
+    ],
+    "correct_index": 1,
+    "explanation": "Кастомизируется через ModelAdmin: list_display, list_filter, fieldsets, inlines, readonly_fields. Для бизнес-пользователей часто строят отдельную UI."
+  },
+  {
+    "external_key": "django-008",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django REST framework?",
+    "options": [
+      "Замена Django",
+      "Библиотека поверх Django для построения REST API: сериализаторы, viewsets, routers, авторизация и пагинация",
+      "Только для GraphQL",
+      "Только для admin"
+    ],
+    "correct_index": 1,
+    "explanation": "DRF предоставляет ModelSerializer, ViewSet, Router, permissions, throttling, authentication. Стандартный выбор для REST API на Django."
+  },
+  {
+    "external_key": "django-009",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Чем отличается Class-Based View от Function-Based View?",
+    "options": [
+      "Это одно и то же",
+      "CBV - класс с методами get/post и миксинами для переиспользования логики; FBV - простая функция",
+      "CBV не поддерживает GET",
+      "FBV нужны только для admin"
+    ],
+    "correct_index": 1,
+    "explanation": "CBV (View, ListView, CreateView и т.п.) удобны для типичных CRUD-сценариев и переиспользования. FBV проще и явнее, особенно для нестандартной логики."
+  },
+  {
+    "external_key": "django-010",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое CSRF и как Django его защищает?",
+    "options": [
+      "Это просто XSS",
+      "Cross-Site Request Forgery - атака, когда сайт-злоумышленник делает запрос от имени пользователя; Django выдаёт CSRF-токен и проверяет его на POST",
+      "Любой 403",
+      "Только в DRF"
+    ],
+    "correct_index": 1,
+    "explanation": "CsrfViewMiddleware выдаёт токен в форме/cookie, форма передаёт его обратно. Для API на токенах CSRF обычно отключают (DRF SessionAuthentication требует, JWT - нет)."
+  },
+  {
+    "external_key": "django-011",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое manager в Django (objects)?",
+    "options": [
+      "Это сама модель",
+      "Объект-фабрика QuerySet-ов: User.objects.filter(...); можно делать кастомные менеджеры",
+      "Только admin",
+      "Только для миграций"
+    ],
+    "correct_index": 1,
+    "explanation": "По умолчанию у каждой модели есть Manager `objects`. Кастомные менеджеры удобны, чтобы инкапсулировать общие фильтры (например, ActiveUserManager)."
+  },
+  {
+    "external_key": "django-012",
+    "topic": "django",
+    "difficulty": 3,
+    "text": "В чём проблема .filter().count() против exists() для проверки наличия?",
+    "options": [
+      "exists() работает только в admin",
+      "exists() выполняет 'SELECT 1 ... LIMIT 1' и быстрее, чем COUNT(*); используйте exists() для проверки наличия хотя бы одной строки",
+      "Это одно и то же",
+      "count() работает только в SQLite"
+    ],
+    "correct_index": 1,
+    "explanation": "Если важно только наличие, exists() выгоднее. count() считает все строки, а это full scan."
+  },
+  {
+    "external_key": "django-013",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое F-объект?",
+    "options": [
+      "Только foreign key",
+      "Объект, ссылающийся на колонку в БД, для атомарных обновлений: User.objects.update(views=F('views')+1)",
+      "Только для миграций",
+      "Это форма"
+    ],
+    "correct_index": 1,
+    "explanation": "F() выполняет операцию на стороне БД, без race condition между read и write в Python. Q() аналогично для сложных условий с OR/AND."
+  },
+  {
+    "external_key": "django-014",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Q-объект?",
+    "options": [
+      "Кеширование",
+      "Объект для построения сложных условий с OR/AND/NOT в filter: Q(a=1) | Q(b=2)",
+      "Только для admin",
+      "Только sync"
+    ],
+    "correct_index": 1,
+    "explanation": "filter принимает аргументы, объединённые через AND. Q позволяет любые булевы выражения. Поддерживает оператор ~Q для NOT."
+  },
+  {
+    "external_key": "django-015",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Form/ModelForm?",
+    "options": [
+      "Только для шаблонов",
+      "Объект описания/валидации полей формы; ModelForm генерирует поля по модели и умеет save()",
+      "Только сериализатор",
+      "Только в DRF"
+    ],
+    "correct_index": 1,
+    "explanation": "Form: стандартная валидация html-форм. ModelForm: связан с моделью, упрощает CRUD. В API обычно используют DRF Serializer вместо Form."
+  },
+  {
+    "external_key": "django-016",
+    "topic": "django",
+    "difficulty": 3,
+    "text": "Что такое DATABASES['default']['ATOMIC_REQUESTS']?",
+    "options": [
+      "Размер пула",
+      "Если True, каждый view-запрос оборачивается в транзакцию автоматически; commit/rollback происходят на границе view",
+      "Тип базы",
+      "Только в SQLite"
+    ],
+    "correct_index": 1,
+    "explanation": "Удобно для безопасности, но может удерживать долгие транзакции. На сложных API лучше использовать @transaction.atomic точечно."
+  },
+  {
+    "external_key": "django-017",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django settings.SECRET_KEY?",
+    "options": [
+      "Просто строка",
+      "Ключ для подписи сессий, токенов, CSRF; должен быть секретным и стабильным; утечка - повод ротации",
+      "Любой пароль БД",
+      "Не критично"
+    ],
+    "correct_index": 1,
+    "explanation": "SECRET_KEY используется в HMAC для cookies/токенов. Хранится в .env, не коммитится. При утечке необходимо сгенерировать новый."
+  },
+  {
+    "external_key": "django-018",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое async views в Django (3.1+)?",
+    "options": [
+      "Только background tasks",
+      "Поддержка async def view-функций для I/O-bound сценариев; обслуживается через ASGI (Daphne/Uvicorn)",
+      "Только для admin",
+      "Только для middleware"
+    ],
+    "correct_index": 1,
+    "explanation": "Чтобы async view дал реальную пользу, ORM-вызовы тоже должны быть async (Django 4.1+ поддерживает aget/aupdate и т.п.) или вынесены в asyncio-совместимые драйверы."
+  },
+  {
+    "external_key": "django-019",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF serializer?",
+    "options": [
+      "Только формы",
+      "Класс для валидации входных данных и сериализации модели в JSON; ModelSerializer строит поля автоматически",
+      "Только admin",
+      "Только Form"
+    ],
+    "correct_index": 1,
+    "explanation": "Serializer.is_valid()/save()/data - стандартный workflow. Поддерживает вложенные сериализаторы и кастомную валидацию."
+  },
+  {
+    "external_key": "django-020",
+    "topic": "django",
+    "difficulty": 3,
+    "text": "Какие виды кеширования предлагает Django?",
+    "options": [
+      "Только Redis",
+      "Per-site (middleware), per-view (decorator), template fragments, low-level (cache.get/set); бэкенды: Memcached, Redis, locmem, db, file",
+      "Только browser",
+      "Только CDN"
+    ],
+    "correct_index": 1,
+    "explanation": "Гибкая система кеширования. Производственный выбор - Redis или Memcached. Низкоуровневый API подходит для кастомной инвалидации."
+  },
+  {
+    "external_key": "cache-001",
     "topic": "caching",
-    "difficulty": 4,
+    "difficulty": 1,
+    "text": "Зачем в системе нужен кеш?",
+    "options": [
+      "Только для уменьшения CPU",
+      "Сократить latency и снять нагрузку с источника данных за счёт хранения частых ответов в более быстром хранилище",
+      "Только для логов",
+      "Не нужен в современных приложениях"
+    ],
+    "correct_index": 1,
+    "explanation": "Кеш помогает в сценариях, где данные редко меняются и часто читаются. Цена - сложность инвалидации."
+  },
+  {
+    "external_key": "cache-002",
+    "topic": "caching",
+    "difficulty": 2,
     "text": "Что такое cache stampede?",
     "options": [
-      "Ситуация, когда после инвалидации все клиенты одновременно бьют в БД",
-      "Утечка памяти в Redis",
-      "Атака на TTL",
-      "Шифрование ключей"
+      "Просто высокий QPS",
+      "Когда у популярного ключа истёк TTL, и одновременно множество запросов пытаются перестроить значение, перегружая источник",
+      "Любой DDoS",
+      "Только в CDN"
+    ],
+    "correct_index": 1,
+    "explanation": "Митигация: блокировка пересчёта (single flight), пробабилистический ранний пересчёт (XFetch), stale-while-revalidate."
+  },
+  {
+    "external_key": "cache-003",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое стратегия cache-aside?",
+    "options": [
+      "Кеш сам пишет в БД",
+      "Приложение читает кеш; если miss - идёт в БД и кладёт результат в кеш",
+      "Только write-through",
+      "Только write-behind"
+    ],
+    "correct_index": 1,
+    "explanation": "Самый распространённый паттерн. Простая инвалидация (delete-on-write), но возможны кратковременные несоответствия."
+  },
+  {
+    "external_key": "cache-004",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое write-through и write-behind?",
+    "options": [
+      "Это стратегии кеша: write-through пишет в кеш и БД синхронно, write-behind - в кеш сразу и в БД асинхронно",
+      "Только варианты репликации",
+      "Только для NoSQL",
+      "Только для CDN"
     ],
     "correct_index": 0,
-    "explanation": "Решается через locks, single-flight, probabilistic early expiration или stale-while-revalidate."
+    "explanation": "write-through проще, но дороже на запись. write-behind быстрее, но рискованно при крахе кеша до сброса в БД."
   },
   {
-    "external_key": "py-celery-001",
-    "topic": "celery",
-    "difficulty": 3,
-    "text": "Зачем использовать Celery в бэкенде?",
+    "external_key": "cache-005",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Какая команда Redis устанавливает TTL?",
+    "options": ["DEL", "EXPIRE / SET ... EX / PEXPIRE", "INCRBY", "SUBSCRIBE"],
+    "correct_index": 1,
+    "explanation": "EXPIRE key seconds или SET key value EX seconds. PEXPIRE - в миллисекундах. Без TTL ключ живёт до явного удаления."
+  },
+  {
+    "external_key": "cache-006",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое политика вытеснения LRU в Redis?",
     "options": [
-      "Для синхронных HTTP запросов",
-      "Для запуска фоновых и периодических задач (рассылки, обработка, расчёты)",
-      "Только для миграций БД",
-      "Только для логирования"
+      "Случайное вытеснение",
+      "Least Recently Used - вытесняется наименее давно использованный ключ при превышении maxmemory",
+      "Только TTL",
+      "FIFO"
     ],
     "correct_index": 1,
-    "explanation": "Celery - распределённая очередь задач для асинхронной и периодической работы."
+    "explanation": "Redis поддерживает allkeys-lru, volatile-lru, allkeys-lfu и т.п. Выбор зависит от задачи: 'кеш горячих ключей' - LFU/LRU, 'разгружаемая очередь' - TTL."
   },
   {
-    "external_key": "py-celery-002",
-    "topic": "celery",
-    "difficulty": 3,
-    "text": "Что такое Celery Beat?",
+    "external_key": "cache-007",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Зачем хранить сессии в Redis?",
     "options": [
-      "Балансировщик воркеров",
-      "Планировщик задач по расписанию (cron-like)",
-      "Хранилище результатов",
-      "Транспорт сообщений"
+      "Просто красиво",
+      "Stateless приложение может масштабироваться горизонтально, потому что любой инстанс читает сессию из Redis за O(1)",
+      "Только для admin",
+      "Только для CDN"
     ],
     "correct_index": 1,
-    "explanation": "Beat периодически кладёт задачи в брокер, воркеры их разбирают."
+    "explanation": "Redis заменяет 'липкие' сессии и позволяет любому инстансу обслуживать любой запрос. Также удобен для FSM-стейтов ботов."
   },
   {
-    "external_key": "py-broker-001",
-    "topic": "broker",
-    "difficulty": 3,
-    "text": "Какие популярные брокеры используются в Celery?",
+    "external_key": "cache-008",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое pipeline в Redis?",
     "options": [
-      "PostgreSQL и MySQL",
-      "RabbitMQ и Redis",
-      "S3 и DynamoDB",
-      "Kafka и MongoDB только"
+      "Тип данных",
+      "Способ отправить несколько команд одной батчей и получить ответы пачкой - снижает round-trip overhead",
+      "Только для pub/sub",
+      "Только для replication"
     ],
     "correct_index": 1,
-    "explanation": "Celery лучше всего работает с RabbitMQ и Redis; Kafka доступен через сторонние транспорты."
+    "explanation": "Pipeline особенно эффективен в высокочастотных сценариях. Не путать с MULTI/EXEC, который добавляет атомарность."
   },
   {
-    "external_key": "py-aiogram-001",
-    "topic": "telegram",
+    "external_key": "cache-009",
+    "topic": "caching",
     "difficulty": 3,
-    "text": "Что такое Inline-кнопки в Telegram?",
+    "text": "Что такое инвалидация кеша и почему это сложно?",
     "options": [
-      "Реплай-клавиатура внизу чата",
-      "Кнопки, прикреплённые к сообщению, отправляющие callback_query при нажатии",
-      "Кнопки только для админов",
-      "Гиперссылки в тексте"
+      "Просто DEL",
+      "Удаление/обновление устаревших значений; сложна из-за множественных ключей, гонок и зависимости значений друг от друга",
+      "Только TTL",
+      "Не сложно"
     ],
     "correct_index": 1,
-    "explanation": "Inline кнопки прикрепляются к конкретному сообщению через InlineKeyboardMarkup."
+    "explanation": "Phil Karlton: 'There are only two hard things in Computer Science: cache invalidation and naming things.' Инвалидация версионированием ключей или event-driven подходом."
   },
   {
-    "external_key": "py-aiogram-002",
-    "topic": "telegram",
-    "difficulty": 3,
-    "text": "Зачем нужен FSM (StatesGroup) в aiogram?",
+    "external_key": "cache-010",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое локальный кеш vs распределённый?",
     "options": [
-      "Чтобы хранить пароли",
-      "Чтобы отслеживать состояние пользователя в многошаговом диалоге",
-      "Чтобы кэшировать фотографии",
-      "Чтобы шардировать БД"
+      "Это синонимы",
+      "Локальный (in-process, например functools.lru_cache) - быстрее, но не виден другим инстансам; распределённый (Redis, Memcached) - один источник истины для всех",
+      "Только Redis",
+      "Только Memcached"
     ],
     "correct_index": 1,
-    "explanation": "FSM хранит состояние per-user/per-chat, например в Redis, и позволяет вести диалог по шагам."
+    "explanation": "Часто используют двухуровневую схему: локальный кеш с короткой TTL поверх распределённого. Это даёт минимум круговых обходов."
   },
   {
-    "external_key": "py-system-001",
+    "external_key": "cache-011",
+    "topic": "caching",
+    "difficulty": 1,
+    "text": "Что такое hit ratio?",
+    "options": [
+      "Размер кеша",
+      "Доля запросов, обслуженных из кеша, без обращения к источнику",
+      "Скорость диска",
+      "Только сетевой показатель"
+    ],
+    "correct_index": 1,
+    "explanation": "Hit ratio = hits / (hits + misses). Целевой показатель зависит от нагрузки. Низкий ratio часто говорит о неудачно подобранных ключах или TTL."
+  },
+  {
+    "external_key": "cache-012",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Зачем Redis использует single-threaded модель для команд?",
+    "options": [
+      "Просто бага",
+      "Чтобы избежать локов и гонок: одна нить выполняет команды строго последовательно, что упрощает атомарность и ускоряет I/O при event loop",
+      "Только в Cluster",
+      "Это не так, Redis multi-threaded"
+    ],
+    "correct_index": 1,
+    "explanation": "Современные версии Redis используют I/O threads для сети, но команды по-прежнему обрабатываются последовательно одной нитью. Это даёт линеаризуемость без локов."
+  },
+  {
+    "external_key": "sd-001",
     "topic": "system_design",
-    "difficulty": 4,
-    "text": "Как уменьшить количество транзакций к БД при частых пользовательских действиях (например, нажатиях inline-кнопок)?",
+    "difficulty": 1,
+    "text": "Что такое DRY?",
     "options": [
-      "Делать SELECT FOR UPDATE на каждый клик",
-      "Накапливать промежуточное состояние в Redis и сбрасывать пачкой (batch update) по таймауту или завершению",
-      "Открывать подключение на каждый клик",
-      "Использовать только триггеры"
-    ],
-    "correct_index": 1,
-    "explanation": "In-memory буфер + batch flush уменьшают write-amplification и нагрузку на БД."
-  },
-  {
-    "external_key": "py-system-002",
-    "topic": "system_design",
-    "difficulty": 4,
-    "text": "Что такое идемпотентность операции?",
-    "options": [
-      "Свойство, при котором повторное выполнение операции не меняет результат",
-      "Операция всегда выполняется в одной транзакции",
-      "Операция работает только в кэше",
-      "Свойство, означающее использование UUID"
+      "Don't Repeat Yourself - принцип избегать дублирования кода/знаний",
+      "Просто стиль кода",
+      "Тип сжатия",
+      "Don't React Yet"
     ],
     "correct_index": 0,
-    "explanation": "Идемпотентность важна для retry-механики: повторный вызов даёт тот же результат."
+    "explanation": "DRY помогает поддерживать кодовую базу: одно место - одна правда. Не превращать в догму, иначе получится over-abstraction."
+  },
+  {
+    "external_key": "sd-002",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое KISS?",
+    "options": [
+      "Keep It Simple, Stupid: чем проще решение, тем меньше шансов на ошибку",
+      "Тип шифрования",
+      "Только маркетинг",
+      "Только в frontend"
+    ],
+    "correct_index": 0,
+    "explanation": "Простота - конкурентное преимущество: меньше багов, проще онбординг, быстрее изменения. Сложность вводится только когда оправдана."
+  },
+  {
+    "external_key": "sd-003",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое SOLID?",
+    "options": [
+      "Тип кеширования",
+      "Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion - пять принципов ООП-дизайна",
+      "Только наследование",
+      "Только TDD"
+    ],
+    "correct_index": 1,
+    "explanation": "SOLID - руководящие принципы, не догма. Помогают писать модульный, поддерживаемый код. Особо важны Single Responsibility и Dependency Inversion."
+  },
+  {
+    "external_key": "sd-004",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое idempotency-key?",
+    "options": [
+      "Ключ шифрования",
+      "Уникальный токен, посылаемый клиентом; сервер запоминает результат и при повторе того же ключа возвращает тот же ответ",
+      "Только для GET",
+      "Только в Stripe"
+    ],
+    "correct_index": 1,
+    "explanation": "Решает проблему повторных POST/PATCH при сетевых сбоях. Приложение хранит маппинг key -> response с TTL и проверяет на каждом запросе."
+  },
+  {
+    "external_key": "sd-005",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое очередь сообщений (message queue)?",
+    "options": [
+      "Просто список",
+      "Брокер (RabbitMQ, Kafka, Redis Streams), доставляющий сообщения от producer к consumer асинхронно с буферизацией",
+      "Только синхронный RPC",
+      "Только pub/sub"
+    ],
+    "correct_index": 1,
+    "explanation": "Очередь развязывает компоненты: producer не ждёт consumer, можно масштабировать воркеров, ретраить, изолировать сбои."
+  },
+  {
+    "external_key": "sd-006",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое at-least-once vs exactly-once?",
+    "options": [
+      "Это одно и то же",
+      "at-least-once - сообщение доставлено хотя бы раз (возможны дубли), exactly-once - ровно раз (трудно достижимо без идемпотентности)",
+      "Только в Kafka",
+      "Только в RabbitMQ"
+    ],
+    "correct_index": 1,
+    "explanation": "На практике достигается at-least-once + идемпотентный обработчик, что эффективно эквивалентно exactly-once с прикладной точки зрения."
+  },
+  {
+    "external_key": "sd-007",
+    "topic": "system_design",
+    "difficulty": 1,
+    "text": "Что такое Celery?",
+    "options": [
+      "ORM",
+      "Распределённая очередь задач для Python: producer (приложение) шлёт задачи через брокер (Redis/RabbitMQ), worker'ы их обрабатывают; есть Beat для периодики",
+      "Только cron",
+      "Только web-фреймворк"
+    ],
+    "correct_index": 1,
+    "explanation": "Celery идеален для отложенных задач: рассылки, отчёты, батч-обработка. Beat - расписание (cron-style)."
+  },
+  {
+    "external_key": "sd-008",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "В чём разница между RabbitMQ и Kafka?",
+    "options": [
+      "Это идентичные продукты",
+      "RabbitMQ - классический брокер с очередями, идеален для task queues и RPC; Kafka - лог с долговременным хранением, заточен под потоковую обработку и аналитику",
+      "Kafka не масштабируется",
+      "RabbitMQ только pub/sub"
+    ],
+    "correct_index": 1,
+    "explanation": "RabbitMQ оптимален для CQRS/задач/командных шин. Kafka - для event streaming, replay, аналитики и интеграций."
+  },
+  {
+    "external_key": "sd-009",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое горизонтальное и вертикальное масштабирование?",
+    "options": [
+      "Это одно и то же",
+      "Вертикальное - расширение одной машины (CPU/RAM); горизонтальное - добавление новых инстансов и распределение нагрузки между ними",
+      "Только Kubernetes",
+      "Только в облаке"
+    ],
+    "correct_index": 1,
+    "explanation": "Вертикальное проще, но имеет потолок и одну точку отказа. Горизонтальное - сложнее (нужны stateless, координация), но даёт фактически неограниченный рост."
+  },
+  {
+    "external_key": "sd-010",
+    "topic": "system_design",
+    "difficulty": 3,
+    "text": "Что такое CAP-теорема?",
+    "options": [
+      "Только про SQL",
+      "В распределённой системе при разделении сети (P) можно обеспечить либо Consistency, либо Availability, но не одновременно",
+      "Просто метрика",
+      "Только для CDN"
+    ],
+    "correct_index": 1,
+    "explanation": "CAP - грубая модель. На практике обсуждают PACELC: при разделении - C или A; иначе - latency или consistency."
+  },
+  {
+    "external_key": "sd-011",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое circuit breaker?",
+    "options": [
+      "Только rate limit",
+      "Паттерн: при росте ошибок зависимости временно перестаём её вызывать (open), потом пробуем (half-open), при успехе возвращаемся (closed)",
+      "Только в TCP",
+      "Только сетевой firewall"
+    ],
+    "correct_index": 1,
+    "explanation": "Защищает каскад деградации. Реализации: hystrix, resilience4j, py-breaker. На каждое внешнее API стоит ставить."
+  },
+  {
+    "external_key": "sd-012",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое retry с экспоненциальным backoff?",
+    "options": [
+      "Постоянный интервал",
+      "Стратегия повторов: между попытками увеличивается задержка (2^n) с дополнительным jitter, чтобы не создавать thundering herd",
+      "Только для GET",
+      "Только в Kafka"
+    ],
+    "correct_index": 1,
+    "explanation": "Backoff + jitter критичен в распределённых вызовах. Без него все клиенты ретраят синхронно и удваивают нагрузку на сервер."
+  },
+  {
+    "external_key": "sd-013",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое stateless service?",
+    "options": [
+      "Не хранит вообще ничего",
+      "Между запросами не хранит контекст в локальной памяти; всё нужное приходит из запроса/внешнего хранилища (Redis, БД)",
+      "Только sync",
+      "Только в Kubernetes"
+    ],
+    "correct_index": 1,
+    "explanation": "Stateless сервисы тривиально масштабируются за счёт балансировки нагрузки. Состояние (пользователи, сессии, очереди) выносится в специализированные хранилища."
+  },
+  {
+    "external_key": "sd-014",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое observability в проде?",
+    "options": [
+      "Только логи",
+      "Способность по логам, метрикам и трассам ответить на вопросы о поведении системы; три столпа - logs, metrics, traces",
+      "Только Datadog",
+      "Только uptime"
+    ],
+    "correct_index": 1,
+    "explanation": "Logs - что произошло; metrics - сколько и как часто; traces - что за чем шло между сервисами. Структурированные логи + Prometheus/OpenTelemetry - стандарт."
+  },
+  {
+    "external_key": "sd-015",
+    "topic": "system_design",
+    "difficulty": 3,
+    "text": "Что такое graceful shutdown?",
+    "options": [
+      "Просто kill -9",
+      "Корректное завершение: сервис перестаёт принимать новые запросы, дорабатывает текущие, закрывает соединения и только потом завершает процесс",
+      "Только для Docker",
+      "Только для Celery"
+    ],
+    "correct_index": 1,
+    "explanation": "Реализуется через сигналы (SIGTERM с грейс-периодом). Без этого можно потерять in-flight задачи и оборвать клиентские запросы посреди обработки."
   }
 ]

@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage
+from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
 from redis.asyncio import Redis
 
 from pylevelup.config import Settings, get_settings
@@ -12,13 +13,27 @@ from pylevelup.handlers import build_root_router
 from pylevelup.logger import configure_logging, get_logger
 from pylevelup.services.session_cache import RedisSessionCache
 from pylevelup.services.spaced_repetition import SpacedRepetitionEngine
+from pylevelup.services.study_service import StudyService
 from pylevelup.services.test_session_service import TestSessionService
 
 logger = get_logger(__name__)
 
 
+BOT_COMMANDS: tuple[BotCommand, ...] = (
+    BotCommand(command="start", description="Главное меню"),
+    BotCommand(command="test", description="Начать тест по выбранной категории"),
+    BotCommand(command="algorithms", description="Тренировка алгоритмов"),
+    BotCommand(command="stats", description="Моя статистика и рейтинг"),
+    BotCommand(command="info", description="О проекте и контакты"),
+)
+
+
 async def _on_startup(bot: Bot) -> None:
     me = await bot.get_me()
+    await bot.set_my_commands(
+        commands=list(BOT_COMMANDS),
+        scope=BotCommandScopeAllPrivateChats(),
+    )
     logger.info("bot_started", username=me.username, id=me.id)
 
 
@@ -48,10 +63,16 @@ async def _run(settings: Settings) -> None:
         engine=sr_engine,
         settings=settings,
     )
+    study_service = StudyService(
+        session_factory=sessionmaker,
+        redis=cache_redis,
+        ttl_seconds=settings.session_timeout_seconds,
+    )
 
     dp["session_factory"] = sessionmaker
     dp["session_service"] = session_service
     dp["session_cache"] = session_cache
+    dp["study_service"] = study_service
     dp["settings"] = settings
 
     dp.include_router(build_root_router())

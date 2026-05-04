@@ -1,11 +1,17 @@
 from aiogram import Router
 
-from pylevelup.handlers import info, start, stats, test
+from pylevelup.handlers import info, start, stats, study, test
 
 
 def build_root_router() -> Router:
     router = Router(name="pylevelup_root")
-    router.include_routers(start.router, test.router, stats.router, info.router)
+    router.include_routers(
+        start.router,
+        test.router,
+        study.router,
+        stats.router,
+        info.router,
+    )
     return router
 
 

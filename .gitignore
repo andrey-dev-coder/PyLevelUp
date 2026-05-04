@@ -32,5 +32,6 @@ logs/
 
 celerybeat-schedule
 celerybeat.pid
+celerybeat-schedule.*
 
 migrations/__pycache__/

@@ -6,12 +6,37 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 
-from pylevelup.keyboards import build_answer_keyboard, build_finish_keyboard
+from pylevelup.categories import (
+    ALL_CATEGORY_KEY,
+    CATEGORY_BY_KEY,
+    SESSION_MODES,
+    display_name,
+    list_topic_filter,
+)
+from pylevelup.keyboards import (
+    build_answer_keyboard,
+    build_category_keyboard,
+    build_finish_keyboard,
+    build_main_menu,
+    build_mode_keyboard,
+    build_purpose_keyboard,
+)
+from pylevelup.repositories import UserRepository
 from pylevelup.services.test_session_service import TestSessionService
 from pylevelup.states import TestStates
 from pylevelup.utils.text import clean_text, format_question_text
 
 router = Router(name="pylevelup_test")
+
+ALGORITHMS_KEY = "algorithms"
+
+
+async def _user_id(session_service: TestSessionService, telegram_id: int) -> int:
+    async with session_service.session_factory() as db:
+        user = await UserRepository(db).get_by_telegram_id(telegram_id)
+        if user is None:
+            raise RuntimeError("user not found")
+        return user.id
 
 
 async def _send_current_question(
@@ -20,12 +45,17 @@ async def _send_current_question(
     session_service: TestSessionService,
     state: FSMContext,
 ) -> None:
-    cache_state = await session_service.cache.load(await _user_id(session_service, telegram_id))
+    user_id = await _user_id(session_service, telegram_id)
+    cache_state = await session_service.cache.load(user_id)
     if cache_state is None:
-        await message.answer("Сессия не найдена. Запусти заново командой /test.")
+        await message.answer(
+            "Сессия не найдена. Запусти заново через /test.",
+            reply_markup=build_main_menu(),
+        )
         await state.clear()
         return
 
+    cache_state, _new_payloads = await session_service.refill_queue_if_needed(cache_state)
     question_id = cache_state.current_question_id()
     if question_id is None:
         await _finish(message, session_service, state, cache_state.user_id, by_user=False)
@@ -38,23 +68,19 @@ async def _send_current_question(
         return
 
     text, options, _correct = payload
+    if cache_state.is_unlimited:
+        progress_label = f"#{cache_state.answered + 1} (без лимита)"
+    else:
+        total = cache_state.target_total or len(cache_state.queue)
+        progress_label = f"#{cache_state.answered + 1} из {total}"
     rendered = format_question_text(text, options, cache_state.current_index, len(cache_state.queue))
+    rendered = f"<i>{progress_label}</i>\n\n" + rendered
     cache_state.last_question_sent_at = datetime.now(UTC)
     await session_service.cache.save(cache_state)
     await message.answer(
         rendered,
         reply_markup=build_answer_keyboard(question_id, len(options)),
     )
-
-
-async def _user_id(session_service: TestSessionService, telegram_id: int) -> int:
-    async with session_service.session_factory() as db:
-        from pylevelup.repositories import UserRepository
-
-        user = await UserRepository(db).get_by_telegram_id(telegram_id)
-        if user is None:
-            raise RuntimeError("user not found")
-        return user.id
 
 
 async def _finish(
@@ -66,9 +92,9 @@ async def _finish(
 ) -> None:
     await session_service.flush_session(user_id, mark_finished=True)
     await state.clear()
-    suffix = "по твоему запросу" if by_user else "лимит исчерпан"
+    suffix = "по твоему запросу" if by_user else "очередь закончилась"
     await message.answer(
-        f"Сессия завершена ({suffix}).\n\nПосмотри результат: /stats",
+        f"Сессия завершена ({suffix}).\n\nПосмотри результат через /stats или запусти ещё.",
         reply_markup=build_finish_keyboard(),
     )
 
@@ -78,19 +104,39 @@ async def _start_for(
     telegram_user,
     session_service: TestSessionService,
     state: FSMContext,
+    category_key: str,
+    target_total: int | None,
+    is_unlimited: bool,
 ) -> None:
     if telegram_user is None:
         return
-    result = await session_service.start_session(telegram_user)
+    topics = list_topic_filter(category_key)
+    counts_toward_daily = category_key == ALL_CATEGORY_KEY
+    result = await session_service.start_session(
+        telegram_user,
+        topics=topics,
+        target_total=target_total,
+        is_unlimited=is_unlimited,
+        counts_toward_daily=counts_toward_daily,
+    )
     if result is None:
         await message.answer(
-            "На сегодня лимит из 50 вопросов уже исчерпан или нет доступных вопросов. "
-            "Возвращайся завтра или загляни в /stats."
+            "Не нашёл вопросов под выбранные параметры. "
+            "Возможно, дневной лимит исчерпан - попробуй другую категорию или режим.",
+            reply_markup=build_main_menu(),
         )
         return
     await state.set_state(TestStates.in_session)
+    label = display_name(category_key)
+    if is_unlimited:
+        mode_label = "без лимита"
+    elif target_total is not None:
+        mode_label = f"{target_total} вопросов"
+    else:
+        mode_label = f"{len(result.state.queue)} вопросов"
     await message.answer(
-        f"Сессия запущена. В очереди {len(result.state.queue)} вопросов. Поехали!"
+        f"Запускаю режим: <b>{escape(label)}</b>, <b>{escape(mode_label)}</b>.\n"
+        "Поехали!"
     )
     await _send_current_question(message, telegram_user.id, session_service, state)
 
@@ -101,11 +147,26 @@ async def handle_test_command(
     session_service: TestSessionService,
     state: FSMContext,
 ) -> None:
-    await _start_for(message, message.from_user, session_service, state)
+    await message.answer(
+        "Выбери категорию вопросов:",
+        reply_markup=build_category_keyboard(),
+    )
 
 
-@router.callback_query(F.data == "test:start")
-async def handle_test_start_callback(
+@router.message(Command("algorithms"))
+async def handle_algorithms_command(
+    message: Message,
+    session_service: TestSessionService,
+    state: FSMContext,
+) -> None:
+    await message.answer(
+        f"Категория: <b>{escape(display_name(ALGORITHMS_KEY))}</b>\nВыбери режим:",
+        reply_markup=build_purpose_keyboard(ALGORITHMS_KEY),
+    )
+
+
+@router.callback_query(F.data == "menu:test")
+async def handle_menu_test(
     callback: CallbackQuery,
     session_service: TestSessionService,
     state: FSMContext,
@@ -114,7 +175,116 @@ async def handle_test_start_callback(
         await callback.answer()
         return
     await callback.answer()
-    await _start_for(callback.message, callback.from_user, session_service, state)
+    await callback.message.answer(
+        "Выбери категорию вопросов:",
+        reply_markup=build_category_keyboard(),
+    )
+
+
+@router.callback_query(F.data == "menu:main")
+async def handle_menu_main(callback: CallbackQuery, state: FSMContext) -> None:
+    if callback.message is None:
+        await callback.answer()
+        return
+    await callback.answer()
+    await callback.message.answer(
+        "Главное меню. Выбирай, что хочешь сделать:",
+        reply_markup=build_main_menu(),
+    )
+
+
+@router.callback_query(F.data.startswith("cat:"))
+async def handle_category_pick(
+    callback: CallbackQuery,
+    session_service: TestSessionService,
+    state: FSMContext,
+) -> None:
+    if callback.message is None or callback.data is None:
+        await callback.answer()
+        return
+    parts = callback.data.split(":", 1)
+    if len(parts) != 2:
+        await callback.answer()
+        return
+    category_key = parts[1]
+    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+        await callback.answer("Неизвестная категория", show_alert=True)
+        return
+    await callback.answer()
+    await callback.message.answer(
+        f"Категория: <b>{escape(display_name(category_key))}</b>\n"
+        "Выбери режим:",
+        reply_markup=build_purpose_keyboard(category_key),
+    )
+
+
+@router.callback_query(F.data.startswith("pur:practice:"))
+async def handle_purpose_practice(
+    callback: CallbackQuery,
+    session_service: TestSessionService,
+    state: FSMContext,
+) -> None:
+    if callback.message is None or callback.data is None:
+        await callback.answer()
+        return
+    parts = callback.data.split(":", 2)
+    if len(parts) != 3:
+        await callback.answer()
+        return
+    category_key = parts[2]
+    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+        await callback.answer("Неизвестная категория", show_alert=True)
+        return
+    await callback.answer()
+    await callback.message.answer(
+        f"Тренажёр: <b>{escape(display_name(category_key))}</b>\nСколько вопросов решаем?",
+        reply_markup=build_mode_keyboard(category_key),
+    )
+
+
+@router.callback_query(F.data.startswith("mode:"))
+async def handle_mode_pick(
+    callback: CallbackQuery,
+    session_service: TestSessionService,
+    state: FSMContext,
+) -> None:
+    if callback.message is None or callback.from_user is None or callback.data is None:
+        await callback.answer()
+        return
+    parts = callback.data.split(":")
+    if len(parts) != 3:
+        await callback.answer()
+        return
+    category_key = parts[1]
+    mode_token = parts[2]
+    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+        await callback.answer("Неизвестная категория", show_alert=True)
+        return
+    target_total: int | None
+    is_unlimited = False
+    if mode_token == "inf":
+        target_total = None
+        is_unlimited = True
+    else:
+        try:
+            target_total = int(mode_token)
+        except ValueError:
+            await callback.answer()
+            return
+        valid_values = {value for _label, value in SESSION_MODES if value is not None}
+        if target_total not in valid_values:
+            await callback.answer()
+            return
+    await callback.answer()
+    await _start_for(
+        callback.message,
+        callback.from_user,
+        session_service,
+        state,
+        category_key=category_key,
+        target_total=target_total,
+        is_unlimited=is_unlimited,
+    )
 
 
 @router.callback_query(F.data.startswith("ans:"))
@@ -176,7 +346,7 @@ async def handle_answer(
     await callback.message.answer(feedback)
     await callback.answer()
 
-    if cache_state.remaining() == 0:
+    if not cache_state.is_unlimited and cache_state.remaining() == 0:
         await _finish(callback.message, session_service, state, user_id, by_user=False)
         return
     if len(cache_state.pending) >= 10:
