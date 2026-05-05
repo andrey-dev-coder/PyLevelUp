@@ -59,14 +59,11 @@ async def _on_shutdown(bot: Bot) -> None:
 
 
 async def _run(settings: Settings) -> None:
-    print("BOT_RUN_STARTING", flush=True)
     engine = create_async_engine_instance(settings.database_url)
     sessionmaker = create_async_sessionmaker(engine)
-    print("BOT_DB_ENGINE_CREATED", flush=True)
 
     fsm_redis = Redis.from_url(settings.redis_fsm_url)
     cache_redis = Redis.from_url(settings.redis_cache_url)
-    print("BOT_REDIS_CLIENTS_CREATED", flush=True)
 
     storage = RedisStorage(redis=fsm_redis)
     bot = Bot(
@@ -100,7 +97,6 @@ async def _run(settings: Settings) -> None:
     dp.callback_query.outer_middleware(access_mw)
 
     dp.include_router(build_root_router())
-    print("BOT_ROUTER_INCLUDED", flush=True)
 
     async def _startup_wrapper(bot: Bot) -> None:
         await _on_startup(bot, settings)
@@ -109,10 +105,8 @@ async def _run(settings: Settings) -> None:
     dp.shutdown.register(_on_shutdown)
 
     try:
-        print("BOT_POLLING_START", flush=True)
         await dp.start_polling(bot)
     finally:
-        print("BOT_POLLING_FINALIZE", flush=True)
         await bot.session.close()
         await fsm_redis.aclose()
         await cache_redis.aclose()
@@ -120,15 +114,8 @@ async def _run(settings: Settings) -> None:
 
 
 def main() -> None:
-    print("BOT_MAIN_ENTERED", flush=True)
     configure_logging()
-    print("BOT_LOGGING_CONFIGURED", flush=True)
     settings = get_settings()
-    print(
-        f"BOT_SETTINGS_LOADED async_db={settings.database_url.split('@')[-1]} "
-        f"redis_fsm={settings.redis_fsm_url.split('@')[-1]}",
-        flush=True,
-    )
     asyncio.run(_run(settings))
 
 

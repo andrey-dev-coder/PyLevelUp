@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
 
 from sqlalchemy import func, select
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pylevelup.db.models import Question, UserProgress
@@ -33,20 +34,7 @@ class QuestionRepository:
         correct_index: int,
         explanation: str | None,
     ) -> Question:
-        stmt = select(Question).where(Question.external_key == external_key)
-        existing = (await self.session.execute(stmt)).scalar_one_or_none()
-        if existing is not None:
-            existing.topic = topic
-            existing.difficulty = difficulty
-            existing.text = text
-            existing.options = options
-            existing.correct_index = correct_index
-            existing.explanation = explanation
-            existing.is_active = True
-            await self.session.flush()
-            return existing
-
-        question = Question(
+        stmt = pg_insert(Question).values(
             external_key=external_key,
             topic=topic,
             difficulty=difficulty,
@@ -54,9 +42,26 @@ class QuestionRepository:
             options=options,
             correct_index=correct_index,
             explanation=explanation,
+            is_active=True,
         )
-        self.session.add(question)
+        stmt = stmt.on_conflict_do_update(
+            index_elements=[Question.external_key],
+            set_={
+                "topic": stmt.excluded.topic,
+                "difficulty": stmt.excluded.difficulty,
+                "text": stmt.excluded.text,
+                "options": stmt.excluded.options,
+                "correct_index": stmt.excluded.correct_index,
+                "explanation": stmt.excluded.explanation,
+                "is_active": True,
+            },
+        ).returning(Question.id)
+        result = await self.session.execute(stmt)
+        question_id = result.scalar_one()
         await self.session.flush()
+        question = await self.session.get(Question, question_id)
+        if question is None:
+            raise RuntimeError("question_upsert_failed")
         return question
 
     async def select_due_for_user(

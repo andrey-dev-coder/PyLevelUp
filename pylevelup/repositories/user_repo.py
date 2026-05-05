@@ -1,6 +1,7 @@
 from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import func, select, update
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pylevelup.db.models import User
@@ -32,23 +33,28 @@ class UserRepository:
         first_name: str | None,
         language_code: str | None,
     ) -> User:
-        existing = await self.get_by_telegram_id(telegram_id)
-        if existing is not None:
-            existing.username = username
-            existing.first_name = first_name
-            existing.language_code = language_code
-            existing.is_active = True
-            await self.session.flush()
-            return existing
-
-        user = User(
+        stmt = pg_insert(User).values(
             telegram_id=telegram_id,
             username=username,
             first_name=first_name,
             language_code=language_code,
+            is_active=True,
         )
-        self.session.add(user)
+        stmt = stmt.on_conflict_do_update(
+            index_elements=[User.telegram_id],
+            set_={
+                "username": stmt.excluded.username,
+                "first_name": stmt.excluded.first_name,
+                "language_code": stmt.excluded.language_code,
+                "is_active": True,
+            },
+        ).returning(User.id)
+        result = await self.session.execute(stmt)
+        user_id = result.scalar_one()
         await self.session.flush()
+        user = await self.session.get(User, user_id)
+        if user is None:
+            raise RuntimeError("user_upsert_failed")
         return user
 
     async def register_visit(self, user_id: int, today: date) -> User | None:
