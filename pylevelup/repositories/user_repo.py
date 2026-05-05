@@ -140,3 +140,25 @@ class UserRepository:
     async def list_for_admin(self, limit: int = 100) -> list[User]:
         stmt = select(User).order_by(User.created_at.desc()).limit(limit)
         return list((await self.session.execute(stmt)).scalars().all())
+
+    async def list_broadcast_recipients(self) -> list[User]:
+        stmt = select(User).where(
+            User.is_active.is_(True),
+            User.is_authorized.is_(True),
+            User.is_banned.is_(False),
+        )
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def consume_hint(self, user_id: int, today: date) -> tuple[bool, int]:
+        user = await self.get_by_id(user_id)
+        if user is None:
+            return False, 0
+        if user.hints_reset_date != today:
+            user.hints_used_today = 0
+            user.hints_reset_date = today
+        if user.hints_used_today >= 3:
+            await self.session.flush()
+            return False, 3 - user.hints_used_today
+        user.hints_used_today += 1
+        await self.session.flush()
+        return True, 3 - user.hints_used_today

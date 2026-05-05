@@ -48,6 +48,10 @@ class User(Base, TimestampMixin):
     authorized_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     banned_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
+    hints_used_today: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    hints_reset_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    last_digest_sent_at: Mapped[date | None] = mapped_column(Date, nullable=True)
+
     progress: Mapped[list["UserProgress"]] = relationship(
         back_populates="user", cascade="all, delete-orphan", lazy="raise"
     )
@@ -69,6 +73,7 @@ class Question(Base, TimestampMixin):
     options: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
     correct_index: Mapped[int] = mapped_column(Integer, nullable=False)
     explanation: Mapped[str | None] = mapped_column(Text, nullable=True)
+    option_explanations: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True)
     external_key: Mapped[str | None] = mapped_column(String(128), unique=True, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
@@ -152,3 +157,91 @@ class DailySession(Base, TimestampMixin):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     user: Mapped[User] = relationship(back_populates="sessions", lazy="raise")
+
+
+class Bookmark(Base, TimestampMixin):
+    __tablename__ = "bookmarks"
+    __table_args__ = (
+        UniqueConstraint("user_id", "question_id", name="uq_bookmarks_user_question"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    question_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("questions.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+
+
+class Achievement(Base, TimestampMixin):
+    __tablename__ = "achievements"
+
+    code: Mapped[str] = mapped_column(String(64), primary_key=True)
+    title: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    icon: Mapped[str] = mapped_column(String(8), nullable=False, default="⭐")
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+
+class UserAchievement(Base):
+    __tablename__ = "user_achievements"
+    __table_args__ = (
+        UniqueConstraint("user_id", "achievement_code", name="uq_user_achievements_user_code"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    achievement_code: Mapped[str] = mapped_column(
+        String(64), ForeignKey("achievements.code", ondelete="CASCADE"), nullable=False, index=True
+    )
+    earned_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class DailyChallenge(Base, TimestampMixin):
+    __tablename__ = "daily_challenges"
+
+    challenge_date: Mapped[date] = mapped_column(Date, primary_key=True)
+    question_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("questions.id", ondelete="RESTRICT"), nullable=False, index=True
+    )
+
+
+class DailyChallengeAttempt(Base):
+    __tablename__ = "daily_challenge_attempts"
+    __table_args__ = (
+        UniqueConstraint("user_id", "challenge_date", name="uq_dca_user_date"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    challenge_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
+    is_correct: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    response_time_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    answered_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+
+
+class MockSession(Base, TimestampMixin):
+    __tablename__ = "mock_sessions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    started_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    total_questions: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    correct_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    duration_seconds: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    breakdown: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    passed: Mapped[bool | None] = mapped_column(Boolean, nullable=True)

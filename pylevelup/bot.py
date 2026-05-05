@@ -30,6 +30,8 @@ BOT_COMMANDS: tuple[BotCommand, ...] = (
 )
 
 OWNER_COMMANDS: tuple[BotCommand, ...] = BOT_COMMANDS + (
+    BotCommand(command="broadcast", description="Рассылка всем пользователям"),
+    BotCommand(command="broadcast_test", description="Превью рассылки только себе"),
     BotCommand(command="setcode", description="Сменить кодовое слово"),
     BotCommand(command="getcode", description="Показать текущее кодовое слово"),
     BotCommand(command="ban", description="Забанить пользователя"),
