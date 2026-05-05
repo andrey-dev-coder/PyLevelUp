@@ -6452,5 +6452,733 @@
     ],
     "correct_index": 1,
     "explanation": "Алгоритм Тарьяна для мостов: один DFS, на спуске считаем tin, на возврате обновляем low = min(low[child], tin[ancestors_via_back_edge]). Ребро в DFS-дереве - мост, если low потомка строго больше tin родителя. Аналогично - точки сочленения (articulation points)."
+  },
+  {
+    "external_key": "xpy-001",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что выведет код: a = [1, 2, 3]; b = a; b.append(4); print(a)?",
+    "options": [
+      "[1, 2, 3]",
+      "[1, 2, 3, 4]",
+      "Ошибка",
+      "[4]"
+    ],
+    "correct_index": 1,
+    "explanation": "b = a связывает b с тем же объектом списка, что и a. Изменения через b видны через a."
+  },
+  {
+    "external_key": "xpy-002",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Какой результат: list('abc')?",
+    "options": [
+      "['abc']",
+      "['a', 'b', 'c']",
+      "[97, 98, 99]",
+      "Ошибка"
+    ],
+    "correct_index": 1,
+    "explanation": "list() итерирует строку, и каждый символ становится отдельным элементом."
+  },
+  {
+    "external_key": "xpy-003",
+    "topic": "python",
+    "difficulty": 1,
+    "text": "Что вернёт: bool([]) and bool([0])?",
+    "options": [
+      "True",
+      "False",
+      "[]",
+      "0"
+    ],
+    "correct_index": 1,
+    "explanation": "bool([]) = False, и and с False сразу возвращает False."
+  },
+  {
+    "external_key": "xpy-004",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что напечатает: print(0.1 + 0.2 == 0.3)?",
+    "options": [
+      "True",
+      "False",
+      "Ошибка",
+      "Зависит от версии Python"
+    ],
+    "correct_index": 1,
+    "explanation": "Из-за бинарного представления float сумма 0.1 и 0.2 даёт 0.30000000000000004, а не точное 0.3."
+  },
+  {
+    "external_key": "xpy-005",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print(type(lambda: 0))?",
+    "options": [
+      "<class 'lambda'>",
+      "<class 'function'>",
+      "<class 'callable'>",
+      "Ошибка"
+    ],
+    "correct_index": 1,
+    "explanation": "lambda - это анонимная функция, и её тип такой же как у обычной функции: function."
+  },
+  {
+    "external_key": "xpy-006",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт: {1, 2, 3} | {3, 4, 5}?",
+    "options": [
+      "{1, 2, 3, 4, 5}",
+      "{3}",
+      "{1, 2, 4, 5}",
+      "TypeError"
+    ],
+    "correct_index": 0,
+    "explanation": "Оператор | у set вычисляет объединение - все элементы из обоих множеств без повторов."
+  },
+  {
+    "external_key": "xpy-007",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: [x*2 for x in range(3) if x > 0]?",
+    "options": [
+      "[0, 2, 4]",
+      "[2, 4]",
+      "[1, 2]",
+      "[0, 1, 2]"
+    ],
+    "correct_index": 1,
+    "explanation": "range(3) даёт 0,1,2; фильтр x>0 отсекает 0; остаются 1 и 2, после x*2 - 2 и 4."
+  },
+  {
+    "external_key": "xpy-008",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "В чём опасность: def f(x, lst=[]): lst.append(x); return lst?",
+    "options": [
+      "Никакой - стандартный приём",
+      "lst создаётся один раз и переиспользуется между вызовами",
+      "Будет TypeError при первом вызове",
+      "Аргумент lst игнорируется"
+    ],
+    "correct_index": 1,
+    "explanation": "Дефолтные значения вычисляются один раз при определении функции. Изменяемый дефолт сохраняет изменения между вызовами."
+  },
+  {
+    "external_key": "xpy-009",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что напечатает: print({1: 'a', 1.0: 'b', True: 'c'})?",
+    "options": [
+      "{1: 'c'}",
+      "{1: 'a', 1.0: 'b', True: 'c'}",
+      "{True: 'c'}",
+      "Ошибка"
+    ],
+    "correct_index": 0,
+    "explanation": "1, 1.0 и True имеют одинаковый hash и равны между собой, поэтому это один и тот же ключ. Значение перезаписывается до 'c'."
+  },
+  {
+    "external_key": "xpy-010",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем отличается deepcopy от copy?",
+    "options": [
+      "deepcopy быстрее copy",
+      "copy копирует только верхний уровень, deepcopy - все вложенные объекты",
+      "deepcopy работает только со словарями",
+      "Это синонимы"
+    ],
+    "correct_index": 1,
+    "explanation": "copy.copy() делает поверхностную копию (вложенные объекты остаются shared), copy.deepcopy() рекурсивно копирует всё."
+  },
+  {
+    "external_key": "xpy-011",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое MRO в Python?",
+    "options": [
+      "Memory Reuse Optimizer",
+      "Method Resolution Order - порядок поиска метода в иерархии классов",
+      "Module Re-Order - порядок импорта модулей",
+      "Mutable Reference Object"
+    ],
+    "correct_index": 1,
+    "explanation": "MRO - это порядок, в котором Python ищет атрибут/метод по цепочке базовых классов. В CPython используется алгоритм C3."
+  },
+  {
+    "external_key": "xpy-012",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какой метод вызывается при str(obj)?",
+    "options": [
+      "__repr__",
+      "__str__",
+      "__format__",
+      "__init__"
+    ],
+    "correct_index": 1,
+    "explanation": "str() вызывает __str__; если он не определён, используется __repr__."
+  },
+  {
+    "external_key": "xpy-013",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что делает декоратор @staticmethod?",
+    "options": [
+      "Делает метод асинхронным",
+      "Метод не получает self/cls и привязан к классу как обычная функция",
+      "Метод можно вызывать только из дочерних классов",
+      "Запрещает наследование метода"
+    ],
+    "correct_index": 1,
+    "explanation": "@staticmethod превращает метод в функцию без неявных параметров self/cls. Удобно для логически связанных утилит."
+  },
+  {
+    "external_key": "xpy-014",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое @classmethod?",
+    "options": [
+      "Метод класса, первым аргументом получает сам класс (cls)",
+      "Метод, который можно вызывать только у класса, не у экземпляра",
+      "Метод, замораживающий класс",
+      "Синоним @staticmethod"
+    ],
+    "correct_index": 0,
+    "explanation": "@classmethod передаёт класс в cls. Часто используется для альтернативных конструкторов (from_dict, from_string)."
+  },
+  {
+    "external_key": "xpy-015",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print('abc'[::-1])?",
+    "options": [
+      "'abc'",
+      "'cba'",
+      "'a'",
+      "Ошибка"
+    ],
+    "correct_index": 1,
+    "explanation": "Срез [::-1] разворачивает строку благодаря шагу -1."
+  },
+  {
+    "external_key": "xpy-016",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое замыкание (closure)?",
+    "options": [
+      "Внутренняя функция, которая помнит переменные внешней области",
+      "Декоратор, фиксирующий количество аргументов",
+      "Закрытие файла после чтения",
+      "Атомарная операция"
+    ],
+    "correct_index": 0,
+    "explanation": "Замыкание - функция, которая запоминает значения переменных из внешнего scope, даже когда внешняя функция уже завершилась."
+  },
+  {
+    "external_key": "xpy-017",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое GIL?",
+    "options": [
+      "Global Interpreter Lock - один поток исполняет байт-код CPython одновременно",
+      "Generic Iteration Library - библиотека для итерирования",
+      "Garbage Initialization Layer - слой инициализации GC",
+      "Global Inheritance Limit - предел наследования"
+    ],
+    "correct_index": 0,
+    "explanation": "GIL - это мьютекс CPython, ограничивающий выполнение Python-байт-кода одним потоком. Снимает GIL только I/O или C-extension."
+  },
+  {
+    "external_key": "xpy-018",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какое утверждение про list comprehension верно?",
+    "options": [
+      "Создаёт генератор",
+      "Возвращает готовый список и выполняется быстрее ручного цикла с .append()",
+      "Не поддерживает условные выражения",
+      "Не работает с генераторами"
+    ],
+    "correct_index": 1,
+    "explanation": "List comprehension сразу строит список и обычно быстрее эквивалентного цикла, потому что байт-код оптимизирован."
+  },
+  {
+    "external_key": "xpy-019",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем отличается tuple от frozenset?",
+    "options": [
+      "tuple упорядочен и допускает дубликаты, frozenset - нет",
+      "frozenset быстрее tuple",
+      "tuple изменяемый, frozenset нет",
+      "Они одинаковы"
+    ],
+    "correct_index": 0,
+    "explanation": "tuple - упорядоченная коллекция с дубликатами. frozenset - неизменяемое множество без порядка и дубликатов."
+  },
+  {
+    "external_key": "xpy-020",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какой метод протокола контекстного менеджера вызывается при выходе из блока with?",
+    "options": [
+      "__del__",
+      "__close__",
+      "__exit__",
+      "__finalize__"
+    ],
+    "correct_index": 2,
+    "explanation": "Контекстный менеджер реализует __enter__ и __exit__. __exit__ получает (exc_type, exc_val, exc_tb)."
+  },
+  {
+    "external_key": "xpy-021",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print('-'.join(map(str, range(3))))?",
+    "options": [
+      "'012'",
+      "'0-1-2'",
+      "['0','1','2']",
+      "Ошибка"
+    ],
+    "correct_index": 1,
+    "explanation": "map(str, ...) превращает числа в строки, '-'.join соединяет их с разделителем."
+  },
+  {
+    "external_key": "xpy-022",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое dataclass?",
+    "options": [
+      "Декоратор для автоматической генерации __init__, __repr__, __eq__ и т.д.",
+      "Способ создать namespace без полей",
+      "Контейнер для read-only данных",
+      "Синоним TypedDict"
+    ],
+    "correct_index": 0,
+    "explanation": "@dataclass из модуля dataclasses генерирует boilerplate-методы по аннотациям полей."
+  },
+  {
+    "external_key": "xpy-023",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт: any([0, '', None, False])?",
+    "options": [
+      "True",
+      "False",
+      "0",
+      "Ошибка"
+    ],
+    "correct_index": 1,
+    "explanation": "any возвращает True если хотя бы один элемент truthy. Все элементы falsy, поэтому False."
+  },
+  {
+    "external_key": "xpy-024",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое iter(obj)?",
+    "options": [
+      "Создаёт копию объекта",
+      "Возвращает итератор - вызывает __iter__ объекта",
+      "Преобразует объект в список",
+      "Синоним list()"
+    ],
+    "correct_index": 1,
+    "explanation": "iter() возвращает итератор, под капотом вызывая obj.__iter__() или используя __getitem__ для индексируемых."
+  },
+  {
+    "external_key": "xpy-025",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что произойдёт: x = [1, 2]; x += (3, 4); print(x)?",
+    "options": [
+      "TypeError",
+      "[1, 2, 3, 4]",
+      "[1, 2, (3, 4)]",
+      "[(1, 2), (3, 4)]"
+    ],
+    "correct_index": 1,
+    "explanation": "list поддерживает += с любой итерируемой, поэтому tuple распаковывается и добавляется поэлементно."
+  },
+  {
+    "external_key": "xpy-026",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print(bool('False'))?",
+    "options": [
+      "False",
+      "True",
+      "Ошибка",
+      "0"
+    ],
+    "correct_index": 1,
+    "explanation": "Любая непустая строка - truthy. 'False' содержит символы, поэтому bool вернёт True."
+  },
+  {
+    "external_key": "xpy-027",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое slots в классе (__slots__)?",
+    "options": [
+      "Список разрешённых атрибутов; экономит память, не используется __dict__",
+      "Список приватных полей",
+      "Список методов, которые наследуются",
+      "Список запрещённых атрибутов"
+    ],
+    "correct_index": 0,
+    "explanation": "__slots__ заменяет __dict__ на массив фиксированного размера. Уменьшает потребление памяти и запрещает добавлять новые атрибуты."
+  },
+  {
+    "external_key": "xpy-028",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое monkey patching?",
+    "options": [
+      "Подмена методов или атрибутов объекта/модуля в runtime",
+      "Автоматический рефакторинг кода",
+      "Декоратор для тестов",
+      "Тип ошибки"
+    ],
+    "correct_index": 0,
+    "explanation": "Monkey patch - изменение поведения чужого кода через подмену атрибутов в runtime. Используется в тестах, но опасно в проде."
+  },
+  {
+    "external_key": "xpy-029",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт: divmod(17, 5)?",
+    "options": [
+      "(3, 2)",
+      "(2, 3)",
+      "3.4",
+      "(17, 5)"
+    ],
+    "correct_index": 0,
+    "explanation": "divmod(a, b) возвращает (a // b, a % b): 17//5=3, 17%5=2."
+  },
+  {
+    "external_key": "xpy-030",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Зачем нужна функция zip()?",
+    "options": [
+      "Сжимает данные",
+      "Объединяет несколько итерируемых поэлементно в кортежи",
+      "Архивирует папку",
+      "Сравнивает два списка"
+    ],
+    "correct_index": 1,
+    "explanation": "zip объединяет итерируемые: zip([1,2],['a','b']) -> [(1,'a'), (2,'b')]. Останавливается на самом коротком."
+  },
+  {
+    "external_key": "xpy-031",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем отличается @property от обычного метода?",
+    "options": [
+      "@property делает метод асинхронным",
+      "@property превращает метод в атрибут - доступ без скобок",
+      "@property работает только в наследниках",
+      "@property блокирует изменения"
+    ],
+    "correct_index": 1,
+    "explanation": "@property превращает метод в дескриптор для чтения; обращение idет без вызова: obj.value, а не obj.value()."
+  },
+  {
+    "external_key": "xpy-032",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какой результат: 'abc' * 3?",
+    "options": [
+      "'abcabcabc'",
+      "'aaabbbccc'",
+      "Ошибка",
+      "['abc', 'abc', 'abc']"
+    ],
+    "correct_index": 0,
+    "explanation": "Умножение строки на число повторяет её n раз и склеивает."
+  },
+  {
+    "external_key": "xpy-033",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что делает enumerate(seq, start=10)?",
+    "options": [
+      "Возвращает (индекс, элемент) с индексами от start",
+      "Возвращает только элементы с индексом >= start",
+      "Сортирует seq",
+      "Удаляет первые start элементов"
+    ],
+    "correct_index": 0,
+    "explanation": "enumerate возвращает пары (index, item). start задаёт стартовое значение индекса."
+  },
+  {
+    "external_key": "xpy-034",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем отличается is от ==?",
+    "options": [
+      "Это полные синонимы",
+      "is сравнивает идентичность (один и тот же объект), == сравнивает значения",
+      "== работает только с числами",
+      "is проверяет типы, == значения"
+    ],
+    "correct_index": 1,
+    "explanation": "is проверяет, что обе ссылки указывают на один и тот же объект (id), == вызывает __eq__ для сравнения значений."
+  },
+  {
+    "external_key": "xpy-035",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт: sorted([3,1,2], reverse=True)?",
+    "options": [
+      "[1, 2, 3]",
+      "[3, 2, 1]",
+      "[3, 1, 2]",
+      "Ошибка"
+    ],
+    "correct_index": 1,
+    "explanation": "sorted с reverse=True сортирует по убыванию."
+  },
+  {
+    "external_key": "xpy-036",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print(list(range(5, 0, -2)))?",
+    "options": [
+      "[5, 3, 1]",
+      "[5, 4, 3, 2, 1]",
+      "[1, 3, 5]",
+      "[]"
+    ],
+    "correct_index": 0,
+    "explanation": "range(5, 0, -2): начинаем с 5, идём с шагом -2 пока > 0: 5, 3, 1."
+  },
+  {
+    "external_key": "xpy-037",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что делает функция id() для объекта?",
+    "options": [
+      "Возвращает уникальный идентификатор объекта (адрес в памяти в CPython)",
+      "Возвращает hash объекта",
+      "Возвращает имя объекта",
+      "Возвращает количество ссылок"
+    ],
+    "correct_index": 0,
+    "explanation": "id() возвращает уникальный целочисленный идентификатор. В CPython это адрес объекта в памяти."
+  },
+  {
+    "external_key": "xpy-038",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое namespace в Python?",
+    "options": [
+      "Имя пакета",
+      "Отображение имён -> объектов; локальный, глобальный, builtin",
+      "Объект для группировки констант",
+      "URL-адрес модуля"
+    ],
+    "correct_index": 1,
+    "explanation": "Namespace - словарь, где живут имена. Иерархия: локальный (функции), enclosing, global (модуль), built-in."
+  },
+  {
+    "external_key": "xpy-039",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print({i: i**2 for i in range(3)})?",
+    "options": [
+      "{0: 0, 1: 1, 2: 4}",
+      "{1: 1, 2: 4}",
+      "[0, 1, 4]",
+      "Ошибка"
+    ],
+    "correct_index": 0,
+    "explanation": "Dict comprehension создаёт словарь: ключ = i, значение = i**2 для i от 0 до 2."
+  },
+  {
+    "external_key": "xpy-040",
+    "topic": "python",
+    "difficulty": 3,
+    "text": "Что делает walrus-оператор := (PEP 572)?",
+    "options": [
+      "Присваивает и возвращает значение в одном выражении",
+      "Сравнивает с допуском",
+      "Делает деление с остатком",
+      "Создаёт лямбду"
+    ],
+    "correct_index": 0,
+    "explanation": "Например: if (n := len(data)) > 10: ... - присваивание n и проверка в одном выражении."
+  },
+  {
+    "external_key": "xpy-041",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое typing.Optional[X]?",
+    "options": [
+      "X или None",
+      "Любой тип",
+      "X или строка",
+      "Только X"
+    ],
+    "correct_index": 0,
+    "explanation": "Optional[X] эквивалентно Union[X, None] - значение может быть X или None."
+  },
+  {
+    "external_key": "xpy-042",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Чем отличается __new__ от __init__?",
+    "options": [
+      "Это синонимы",
+      "__new__ создаёт экземпляр (фабричный метод), __init__ инициализирует уже созданный",
+      "__init__ статический, __new__ обычный",
+      "__new__ есть только у dataclass"
+    ],
+    "correct_index": 1,
+    "explanation": "__new__ - конструктор, возвращает новый объект. __init__ - инициализатор, наполняет уже созданный объект полями."
+  },
+  {
+    "external_key": "xpy-043",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какой результат: type(type)?",
+    "options": [
+      "type",
+      "object",
+      "class",
+      "metaclass"
+    ],
+    "correct_index": 0,
+    "explanation": "type - метакласс по умолчанию. type(type) возвращает type."
+  },
+  {
+    "external_key": "xpy-044",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое generator expression?",
+    "options": [
+      "Lazy-выражение в круглых скобках, возвращающее генератор",
+      "Декоратор для функций",
+      "Функция с return",
+      "Выражение, кэширующее результат"
+    ],
+    "correct_index": 0,
+    "explanation": "(x*x for x in range(10)) - генератор-выражение. Не материализует список, выдаёт значения по одному."
+  },
+  {
+    "external_key": "xpy-045",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт hash(()) (пустой кортеж)?",
+    "options": [
+      "TypeError",
+      "0",
+      "Целое число",
+      "None"
+    ],
+    "correct_index": 2,
+    "explanation": "Пустой кортеж хешируется (он immutable и содержит только хешируемые элементы). Значение - постоянное целое."
+  },
+  {
+    "external_key": "xpy-046",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print('a' if 0 else 'b' if '' else 'c')?",
+    "options": [
+      "'a'",
+      "'b'",
+      "'c'",
+      "Ошибка"
+    ],
+    "correct_index": 2,
+    "explanation": "0 -> falsy, идём дальше. '' -> falsy, идём в else. Возвращается 'c'."
+  },
+  {
+    "external_key": "xpy-047",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какая разница между del list[i] и list.pop(i)?",
+    "options": [
+      "del не возвращает удалённый элемент, pop возвращает",
+      "pop работает только в конце",
+      "del не работает в Python 3",
+      "Это одно и то же"
+    ],
+    "correct_index": 0,
+    "explanation": "del удаляет элемент без возврата. pop удаляет и возвращает значение. Оба - O(n) для произвольной позиции."
+  },
+  {
+    "external_key": "xpy-048",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что выведет: print(set('abracadabra'))?",
+    "options": [
+      "{'a', 'b', 'r', 'c', 'd'} (порядок может отличаться)",
+      "['a', 'b', 'r', 'c', 'd']",
+      "'abracadabra'",
+      "Ошибка"
+    ],
+    "correct_index": 0,
+    "explanation": "set из строки - множество уникальных символов. Порядок не определён."
+  },
+  {
+    "external_key": "xpy-049",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Какое утверждение про garbage collection в CPython верно?",
+    "options": [
+      "Используется только mark-and-sweep",
+      "Основной механизм - подсчёт ссылок (reference counting), плюс GC для циклов",
+      "GC отключён в Python 3 по умолчанию",
+      "GC работает только в asyncio"
+    ],
+    "correct_index": 1,
+    "explanation": "CPython использует reference counting (немедленно освобождает объект при refcount=0) и дополнительный циклический GC для разрыва циклов."
+  },
+  {
+    "external_key": "xpy-050",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что такое typing.Protocol?",
+    "options": [
+      "HTTP-протокол",
+      "Структурная типизация (duck typing для статических анализаторов)",
+      "Класс для асинхронных протоколов",
+      "Класс для serialization"
+    ],
+    "correct_index": 1,
+    "explanation": "Protocol описывает 'форму' объекта (какие методы он имеет). mypy и подобные используют это для duck typing на этапе проверки типов."
+  },
+  {
+    "external_key": "xpy-051",
+    "topic": "python",
+    "difficulty": 2,
+    "text": "Что вернёт: int('0x1F', 16)?",
+    "options": [
+      "31",
+      "16",
+      "Ошибка",
+      "'1F'"
+    ],
+    "correct_index": 0,
+    "explanation": "int с base=16 парсит шестнадцатеричную строку. 0x1F = 1*16 + 15 = 31."
+  },
+  {
+    "external_key": "xpy-052",
+    "topic": "python",
+    "difficulty": 3,
+    "text": "Что произойдёт: a = (1, 2, [3]); a[2].append(4)?",
+    "options": [
+      "TypeError - tuple неизменяем",
+      "Список внутри изменится, t = (1, 2, [3, 4])",
+      "Будет новый кортеж",
+      "Список не изменится"
+    ],
+    "correct_index": 1,
+    "explanation": "Кортеж неизменяем (нельзя заменить элемент), но если элемент - mutable объект, его внутреннее состояние можно менять."
   }
 ]
