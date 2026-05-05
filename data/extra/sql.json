@@ -1,0 +1,667 @@
+[
+  {
+    "external_key": "xsql-001",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что такое PRIMARY KEY?",
+    "options": [
+      "Уникальный идентификатор строки, не может быть NULL",
+      "Внешний ключ",
+      "Индекс по нескольким столбцам",
+      "Любой уникальный столбец"
+    ],
+    "correct_index": 0,
+    "explanation": "PK однозначно определяет запись и не допускает NULL. Таблица может иметь только один PRIMARY KEY."
+  },
+  {
+    "external_key": "xsql-002",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Чем отличается WHERE от HAVING?",
+    "options": [
+      "Это синонимы",
+      "WHERE фильтрует строки до агрегации, HAVING - после GROUP BY",
+      "WHERE для INSERT",
+      "HAVING работает только с JOIN"
+    ],
+    "correct_index": 1,
+    "explanation": "WHERE применяется до агрегатных функций; HAVING фильтрует группы после GROUP BY."
+  },
+  {
+    "external_key": "xsql-003",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Что вернёт SELECT COUNT(*) FROM users WHERE age IS NULL?",
+    "options": [
+      "Кол-во строк, где age = NULL (это всегда 0)",
+      "Кол-во строк с NULL в age",
+      "TypeError",
+      "Все строки"
+    ],
+    "correct_index": 1,
+    "explanation": "IS NULL - правильный способ проверить NULL. age = NULL никогда не сработает (NULL не равен ничему)."
+  },
+  {
+    "external_key": "xsql-004",
+    "topic": "sql",
+    "difficulty": 1,
+    "text": "Какой тип JOIN возвращает строки даже если справа нет совпадений?",
+    "options": ["INNER JOIN", "LEFT JOIN", "CROSS JOIN", "FULL JOIN"],
+    "correct_index": 1,
+    "explanation": "LEFT JOIN сохраняет все строки из левой таблицы; справа NULL если match отсутствует."
+  },
+  {
+    "external_key": "xsql-005",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое индекс в БД?",
+    "options": [
+      "Структура (обычно B-tree), ускоряющая поиск по столбцу за счёт места и скорости INSERT/UPDATE",
+      "Файл с данными",
+      "Снимок таблицы",
+      "Тип ключа"
+    ],
+    "correct_index": 0,
+    "explanation": "Индекс ускоряет SELECT/JOIN/WHERE, но замедляет INSERT/UPDATE и занимает место."
+  },
+  {
+    "external_key": "xsql-006",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что произойдёт при удалении строки в parent-таблице с FOREIGN KEY ON DELETE CASCADE?",
+    "options": [
+      "Дочерние строки также будут удалены",
+      "Будет ошибка",
+      "Дочерние строки получат NULL",
+      "Дочерние не изменятся"
+    ],
+    "correct_index": 0,
+    "explanation": "ON DELETE CASCADE автоматически удаляет связанные дочерние строки."
+  },
+  {
+    "external_key": "xsql-007",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое транзакция?",
+    "options": [
+      "Атомарная единица работы; либо вся применяется, либо вся откатывается",
+      "Просто команда SQL",
+      "Запись в логах",
+      "Последовательность SELECT"
+    ],
+    "correct_index": 0,
+    "explanation": "Транзакция гарантирует ACID: атомарность, согласованность, изоляция, долговечность."
+  },
+  {
+    "external_key": "xsql-008",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что значит ACID?",
+    "options": [
+      "Atomicity, Consistency, Isolation, Durability",
+      "Auth, Cache, Index, Database",
+      "Application Cluster Index Disk",
+      "Active Connection ID"
+    ],
+    "correct_index": 0,
+    "explanation": "ACID - четыре свойства транзакций реляционной БД."
+  },
+  {
+    "external_key": "xsql-009",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какой уровень изоляции допускает phantom reads?",
+    "options": [
+      "READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ",
+      "SERIALIZABLE",
+      "Только REPEATABLE READ",
+      "Никакой"
+    ],
+    "correct_index": 0,
+    "explanation": "Phantom reads возникают, когда вторая транзакция вставляет строки, попадающие в WHERE первой. SERIALIZABLE их предотвращает."
+  },
+  {
+    "external_key": "xsql-010",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое нормализация БД?",
+    "options": [
+      "Процесс устранения избыточности через разделение таблиц",
+      "Сжатие данных",
+      "Шифрование",
+      "Создание индексов"
+    ],
+    "correct_index": 0,
+    "explanation": "Нормализация (1NF, 2NF, 3NF, BCNF...) уменьшает избыточность и аномалии обновления."
+  },
+  {
+    "external_key": "xsql-011",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое денормализация и зачем?",
+    "options": [
+      "Намеренное добавление избыточности для ускорения чтения",
+      "Откат нормализации из-за бага",
+      "Удаление таблиц",
+      "Шардинг"
+    ],
+    "correct_index": 0,
+    "explanation": "Денормализация (например, добавить вычисляемое поле) уменьшает количество JOIN'ов в горячих запросах."
+  },
+  {
+    "external_key": "xsql-012",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что вернёт NULL = NULL в SQL?",
+    "options": ["TRUE", "FALSE", "NULL (UNKNOWN)", "Ошибку"],
+    "correct_index": 2,
+    "explanation": "NULL означает 'неизвестно'; сравнение даёт NULL/UNKNOWN. Нужно использовать IS NULL."
+  },
+  {
+    "external_key": "xsql-013",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем отличается UNION от UNION ALL?",
+    "options": [
+      "UNION удаляет дубликаты, UNION ALL сохраняет все строки",
+      "UNION быстрее",
+      "UNION ALL только в PostgreSQL",
+      "Они одинаковы"
+    ],
+    "correct_index": 0,
+    "explanation": "UNION ALL быстрее, потому что не делает DISTINCT. Используйте, когда дубликаты не страшны."
+  },
+  {
+    "external_key": "xsql-014",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что вернёт SELECT 1 + NULL?",
+    "options": ["1", "NULL", "0", "Ошибка"],
+    "correct_index": 1,
+    "explanation": "Любая арифметическая операция с NULL даёт NULL."
+  },
+  {
+    "external_key": "xsql-015",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какая функция возвращает первое не-NULL значение из списка?",
+    "options": ["IFNULL", "COALESCE", "ISNULL", "NULLIF"],
+    "correct_index": 1,
+    "explanation": "COALESCE(a, b, c) - стандарт SQL; возвращает первое не-NULL значение."
+  },
+  {
+    "external_key": "xsql-016",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое window function (оконная функция)?",
+    "options": [
+      "Функция, вычисляющая агрегат над 'окном' строк, не группируя их (ROW_NUMBER, RANK, SUM OVER...)",
+      "Тип JOIN",
+      "Просто GROUP BY",
+      "Триггер"
+    ],
+    "correct_index": 0,
+    "explanation": "Window functions сохраняют все строки и возвращают агрегат в дополнительном столбце - ROW_NUMBER, RANK, LAG, LEAD."
+  },
+  {
+    "external_key": "xsql-017",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем отличается DELETE от TRUNCATE?",
+    "options": [
+      "DELETE построчный, можно WHERE; TRUNCATE быстро очищает таблицу, не логирует строки",
+      "DELETE быстрее",
+      "TRUNCATE поддерживает WHERE",
+      "Они одинаковы"
+    ],
+    "correct_index": 0,
+    "explanation": "TRUNCATE = быстрая очистка таблицы, обычно не вызывает триггеры и не журналирует каждую строку (зависит от СУБД)."
+  },
+  {
+    "external_key": "xsql-018",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какой результат: SELECT * FROM users WHERE age IN (NULL, 18)?",
+    "options": [
+      "Все строки с age=18",
+      "Все строки с age IS NULL или 18",
+      "Никаких строк (NULL некорректно)",
+      "Ошибка"
+    ],
+    "correct_index": 0,
+    "explanation": "IN (NULL, 18) эквивалентно age=NULL OR age=18. age=NULL никогда не TRUE, поэтому только age=18."
+  },
+  {
+    "external_key": "xsql-019",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое CTE (Common Table Expression)?",
+    "options": [
+      "Именованный подзапрос: WITH name AS (...) SELECT ... FROM name",
+      "Временная таблица в БД",
+      "Транзакция",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "CTE улучшает читаемость; в некоторых СУБД могут быть рекурсивными."
+  },
+  {
+    "external_key": "xsql-020",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем отличается VARCHAR от TEXT в PostgreSQL?",
+    "options": [
+      "В Postgres функционально похожи; VARCHAR(n) добавляет проверку длины",
+      "TEXT медленнее",
+      "VARCHAR хранится в RAM",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "В Postgres VARCHAR(n) и TEXT хранятся одинаково (TOAST для длинных), VARCHAR(n) лишь делает проверку длины."
+  },
+  {
+    "external_key": "xsql-021",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое EXPLAIN ANALYZE?",
+    "options": [
+      "Команда, показывающая план запроса с реальным временем выполнения",
+      "Только просмотр плана без выполнения",
+      "Команда оптимизации",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "EXPLAIN показывает план, EXPLAIN ANALYZE - выполняет запрос и показывает реальные времена/количества строк."
+  },
+  {
+    "external_key": "xsql-022",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какой индекс эффективен для LIKE 'abc%'?",
+    "options": ["B-tree обычный", "GIN", "только Hash", "Никакой"],
+    "correct_index": 0,
+    "explanation": "B-tree поддерживает префиксный поиск (column LIKE 'abc%'), но не суффиксный ('%abc')."
+  },
+  {
+    "external_key": "xsql-023",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое composite index?",
+    "options": [
+      "Индекс по нескольким столбцам; порядок имеет значение для leftmost prefix",
+      "Индекс с уникальностью",
+      "Индекс с условием",
+      "Тип hash"
+    ],
+    "correct_index": 0,
+    "explanation": "Composite index (a, b) полезен для WHERE a=? AND b=? и WHERE a=?, но не для WHERE b=?."
+  },
+  {
+    "external_key": "xsql-024",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем отличается INNER JOIN от CROSS JOIN?",
+    "options": [
+      "INNER JOIN с условием; CROSS JOIN - декартово произведение",
+      "Это синонимы",
+      "INNER медленнее",
+      "CROSS только в Postgres"
+    ],
+    "correct_index": 0,
+    "explanation": "CROSS JOIN: каждая строка слева комбинируется с каждой справа. Размер - n*m."
+  },
+  {
+    "external_key": "xsql-025",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что вернёт SELECT 'a' || NULL в стандартном SQL?",
+    "options": ["'a'", "NULL", "Ошибка", "''"],
+    "correct_index": 1,
+    "explanation": "Конкатенация со NULL даёт NULL в стандартном SQL и Postgres. Используйте COALESCE."
+  },
+  {
+    "external_key": "xsql-026",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое subquery (подзапрос)?",
+    "options": [
+      "Запрос внутри другого запроса (SELECT внутри FROM/WHERE/SELECT)",
+      "Транзакция",
+      "Триггер",
+      "JOIN-операция"
+    ],
+    "correct_index": 0,
+    "explanation": "Подзапросы могут быть scalar, IN, EXISTS, и в FROM (derived table)."
+  },
+  {
+    "external_key": "xsql-027",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какая разница между IN и EXISTS?",
+    "options": [
+      "EXISTS прерывается при первом совпадении, часто эффективнее на больших данных",
+      "IN быстрее всегда",
+      "IN не работает с подзапросами",
+      "EXISTS требует индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "EXISTS останавливается при первой найденной строке. IN строит весь набор. Современные оптимизаторы часто эквивалентны."
+  },
+  {
+    "external_key": "xsql-028",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое 'N+1' проблема?",
+    "options": [
+      "Антипаттерн: 1 запрос за списком + N запросов за связанными объектами",
+      "Тип SQL injection",
+      "Проблема с lock",
+      "Нумерация ошибок"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается JOIN, IN-подзапросом, или ORM-методами prefetch_related/joinedload."
+  },
+  {
+    "external_key": "xsql-029",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое транзакционный лог (WAL/redo log)?",
+    "options": [
+      "Журнал, куда записываются изменения до применения; обеспечивает D в ACID",
+      "Лог запросов",
+      "Кэш страниц",
+      "Лог аудита"
+    ],
+    "correct_index": 0,
+    "explanation": "WAL/redo log обеспечивает durability: при сбое БД восстановит состояние из лога."
+  },
+  {
+    "external_key": "xsql-030",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое VIEW?",
+    "options": [
+      "Сохранённый запрос, к которому можно обращаться как к таблице",
+      "Тип индекса",
+      "Транзакция",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "VIEW - виртуальная таблица. Materialized view - физически хранит результат, обновляется по требованию."
+  },
+  {
+    "external_key": "xsql-031",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем отличается materialized view от обычной view?",
+    "options": [
+      "Materialized хранит результат на диске; обычная пересчитывается при каждом обращении",
+      "Materialized всегда автообновляется",
+      "Обычная view быстрее",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "Materialized view ускоряет тяжёлые агрегации, но требует обновления (REFRESH MATERIALIZED VIEW)."
+  },
+  {
+    "external_key": "xsql-032",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое stored procedure?",
+    "options": [
+      "Сохранённая процедура внутри СУБД, написанная на PL/pgSQL/T-SQL и т.п.",
+      "Хранилище конфигов",
+      "Триггер",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Stored procedure - именованная программа в БД; можно вызвать CALL/EXEC."
+  },
+  {
+    "external_key": "xsql-033",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое триггер?",
+    "options": [
+      "Хранимый код, который автоматически выполняется на INSERT/UPDATE/DELETE",
+      "Тип индекса",
+      "Stored procedure",
+      "Сжатие"
+    ],
+    "correct_index": 0,
+    "explanation": "Триггеры реагируют на события таблицы. BEFORE/AFTER INSERT/UPDATE/DELETE."
+  },
+  {
+    "external_key": "xsql-034",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какой результат: SELECT 5/2 в Postgres (целые числа)?",
+    "options": ["2", "2.5", "Ошибка", "0"],
+    "correct_index": 0,
+    "explanation": "Деление целых даёт целое (округление к нулю). Для вещественного нужен 5::numeric/2 или 5.0/2."
+  },
+  {
+    "external_key": "xsql-035",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое UPSERT и как делается в Postgres?",
+    "options": [
+      "INSERT ... ON CONFLICT (...) DO UPDATE / DO NOTHING",
+      "MERGE",
+      "INSERT IGNORE",
+      "REPLACE"
+    ],
+    "correct_index": 0,
+    "explanation": "Postgres использует ON CONFLICT (column) DO UPDATE/DO NOTHING. MySQL имеет ON DUPLICATE KEY UPDATE."
+  },
+  {
+    "external_key": "xsql-036",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое serial / IDENTITY / autoincrement?",
+    "options": [
+      "Автоматически растущий ID, используется как PK",
+      "Тип индекса",
+      "Хеш-функция",
+      "Тип JOIN"
+    ],
+    "correct_index": 0,
+    "explanation": "SERIAL (Postgres), IDENTITY (стандарт SQL/SQL Server), AUTO_INCREMENT (MySQL) - автоматическая генерация чисел."
+  },
+  {
+    "external_key": "xsql-037",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что вернёт SELECT COUNT(column) против COUNT(*)?",
+    "options": [
+      "COUNT(column) считает только не-NULL; COUNT(*) считает все строки",
+      "Они одинаковы",
+      "COUNT(*) исключает дубликаты",
+      "COUNT(column) быстрее"
+    ],
+    "correct_index": 0,
+    "explanation": "COUNT(*) - все строки. COUNT(column) - не-NULL значения. COUNT(DISTINCT column) - уникальные не-NULL."
+  },
+  {
+    "external_key": "xsql-038",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое MERGE / UPSERT?",
+    "options": [
+      "Команда, которая INSERT или UPDATE в зависимости от существования записи",
+      "Соединение таблиц",
+      "Только в Oracle",
+      "Изменение схемы"
+    ],
+    "correct_index": 0,
+    "explanation": "MERGE - стандарт SQL для условной вставки/обновления. Postgres и MySQL имеют свои UPSERT-синтаксисы."
+  },
+  {
+    "external_key": "xsql-039",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое UNIQUE constraint?",
+    "options": [
+      "Гарантирует уникальность значения в столбце; допускает NULL (обычно один)",
+      "PRIMARY KEY",
+      "Hash-индекс",
+      "Тип внешнего ключа"
+    ],
+    "correct_index": 0,
+    "explanation": "UNIQUE можно нарушать NULL'ами в Postgres (NULL != NULL). PK не допускает NULL."
+  },
+  {
+    "external_key": "xsql-040",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое CHECK constraint?",
+    "options": [
+      "Условие на значение в столбце (например, age > 0)",
+      "Триггер",
+      "Транзакция",
+      "Внешний ключ"
+    ],
+    "correct_index": 0,
+    "explanation": "CHECK ограничивает значения столбца; например, CHECK (price >= 0)."
+  },
+  {
+    "external_key": "xsql-041",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Чем отличается RANK от DENSE_RANK?",
+    "options": [
+      "RANK пропускает позиции при равных значениях, DENSE_RANK не пропускает",
+      "Это синонимы",
+      "DENSE_RANK медленнее",
+      "RANK не сортирует"
+    ],
+    "correct_index": 0,
+    "explanation": "RANK: 1, 2, 2, 4. DENSE_RANK: 1, 2, 2, 3."
+  },
+  {
+    "external_key": "xsql-042",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое OFFSET в SQL и в чём проблема большого offset?",
+    "options": [
+      "Пропуск N строк; большой offset медленный, потому что СУБД всё равно читает все строки",
+      "Только лимит",
+      "Кэш",
+      "Аналог LIMIT"
+    ],
+    "correct_index": 0,
+    "explanation": "Для глубокой пагинации лучше keyset pagination: WHERE id > last_seen_id ORDER BY id LIMIT n."
+  },
+  {
+    "external_key": "xsql-043",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое keyset / cursor pagination?",
+    "options": [
+      "Пагинация на основе last seen value (WHERE id > last_id LIMIT n) - O(log n)",
+      "Просто LIMIT/OFFSET",
+      "Хранение страниц в кэше",
+      "Это тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "Keyset pagination ускоряет глубокую пагинацию по индексированному столбцу."
+  },
+  {
+    "external_key": "xsql-044",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое 'soft delete'?",
+    "options": [
+      "Логическое удаление - запись помечается как deleted, но остаётся в таблице",
+      "TRUNCATE",
+      "DROP",
+      "Hash-удаление"
+    ],
+    "correct_index": 0,
+    "explanation": "Soft delete: deleted_at timestamp; запросы фильтруют WHERE deleted_at IS NULL. Удобно для аудита и восстановления."
+  },
+  {
+    "external_key": "xsql-045",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Какие проблемы вызывает SELECT *?",
+    "options": [
+      "Не контролирует возвращаемые столбцы; ломает приложение при изменении схемы; больше I/O",
+      "Это ошибка SQL",
+      "Не работает с JOIN",
+      "Никаких"
+    ],
+    "correct_index": 0,
+    "explanation": "Лучше явно перечислять нужные столбцы: меньше нагрузки и больше предсказуемости."
+  },
+  {
+    "external_key": "xsql-046",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое savepoint?",
+    "options": [
+      "Промежуточная точка внутри транзакции, к которой можно откатиться без отмены всей транзакции",
+      "Бэкап БД",
+      "Точка синхронизации",
+      "Триггер"
+    ],
+    "correct_index": 0,
+    "explanation": "SAVEPOINT и ROLLBACK TO SAVEPOINT позволяют делать вложенные откаты внутри транзакции."
+  },
+  {
+    "external_key": "xsql-047",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое 'lost update' в БД?",
+    "options": [
+      "Когда две транзакции обновляют одну строку и одно изменение перезаписывается без учёта",
+      "Тип индекса",
+      "Тип JOIN",
+      "Repository ошибка"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается оптимистическим/пессимистическим локированием или SERIALIZABLE."
+  },
+  {
+    "external_key": "xsql-048",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое optimistic locking?",
+    "options": [
+      "Версионирование строки (version_column); UPDATE проверяет, что версия не изменилась",
+      "Вид FOREIGN KEY",
+      "Сериализация",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "Используется в SQLAlchemy/Hibernate; UPDATE ... WHERE id=? AND version=?, возврат 0 строк - конфликт."
+  },
+  {
+    "external_key": "xsql-049",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое pessimistic locking (SELECT ... FOR UPDATE)?",
+    "options": [
+      "Блокирует выбранные строки до конца транзакции; другие транзакции ждут",
+      "Просто SELECT",
+      "Только в MySQL",
+      "Не поддерживается в Postgres"
+    ],
+    "correct_index": 0,
+    "explanation": "FOR UPDATE удобно при необходимости гарантированно изменить строку без race condition."
+  },
+  {
+    "external_key": "xsql-050",
+    "topic": "sql",
+    "difficulty": 2,
+    "text": "Что такое covering index?",
+    "options": [
+      "Индекс, который содержит все столбцы, нужные для запроса; СУБД может ответить только из индекса",
+      "Индекс с уникальностью",
+      "Composite index",
+      "Hash-индекс"
+    ],
+    "correct_index": 0,
+    "explanation": "В Postgres: INCLUDE; в MySQL: добавление столбцов в индекс. Index-only scan быстрее."
+  }
+]

@@ -1,0 +1,692 @@
+[
+  {
+    "external_key": "xasync-001",
+    "topic": "async",
+    "difficulty": 1,
+    "text": "Что делает ключевое слово await?",
+    "options": [
+      "Запускает поток",
+      "Приостанавливает корутину до завершения awaited объекта и возвращает результат",
+      "Создаёт новую задачу",
+      "Закрывает event loop"
+    ],
+    "correct_index": 1,
+    "explanation": "await yield'ит управление event loop'у до тех пор, пока awaited корутина/Future не завершится."
+  },
+  {
+    "external_key": "xasync-002",
+    "topic": "async",
+    "difficulty": 1,
+    "text": "Чем отличается concurrency от parallelism?",
+    "options": [
+      "Это одно и то же",
+      "Concurrency - перемежающееся выполнение задач, parallelism - реальное одновременное на разных ядрах",
+      "Parallelism только в Python",
+      "Concurrency только в Java"
+    ],
+    "correct_index": 1,
+    "explanation": "Concurrency про структуру (управление многими задачами), parallelism про hardware (физически одновременно)."
+  },
+  {
+    "external_key": "xasync-003",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что вернёт asyncio.gather(*tasks)?",
+    "options": [
+      "Список результатов всех корутин в порядке их передачи",
+      "Только первый результат",
+      "True/False",
+      "Future, который надо awaitить отдельно"
+    ],
+    "correct_index": 0,
+    "explanation": "gather запускает все корутины параллельно и возвращает список результатов в порядке аргументов."
+  },
+  {
+    "external_key": "xasync-004",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что произойдёт при time.sleep(5) внутри корутины?",
+    "options": [
+      "Заблокирует event loop на 5 секунд",
+      "Уйдёт в фон автоматически",
+      "Выкинет TypeError",
+      "Преобразуется в asyncio.sleep"
+    ],
+    "correct_index": 0,
+    "explanation": "time.sleep блокирующий; в async-коде надо использовать asyncio.sleep, иначе встают все остальные корутины."
+  },
+  {
+    "external_key": "xasync-005",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Чем отличается asyncio.Task от корутины?",
+    "options": [
+      "Task запланирован на event loop и выполняется конкурентно; корутина - просто описание",
+      "Task медленнее",
+      "Корутина не может быть awaited",
+      "Это синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "create_task() заворачивает корутину в Task и сразу планирует её. Просто await coroutine() запускает её последовательно."
+  },
+  {
+    "external_key": "xasync-006",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что выведет: await asyncio.sleep(0)?",
+    "options": [
+      "Пропустит итерацию event loop, давая шанс другим задачам",
+      "Заблокирует поток",
+      "Ошибку",
+      "None через 0 секунд (без yield управления)"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.sleep(0) - идиома 'отдать управление'; помогает другим задачам выполниться."
+  },
+  {
+    "external_key": "xasync-007",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает asyncio.run(main())?",
+    "options": [
+      "Создаёт новый event loop, запускает main и закрывает loop",
+      "Использует существующий loop",
+      "Запускает main в потоке",
+      "Создаёт процесс"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.run - high-level точка входа: создаёт loop, выполняет корутину, корректно закрывает (включая отмену задач)."
+  },
+  {
+    "external_key": "xasync-008",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое event loop?",
+    "options": [
+      "Цикл, опрашивающий готовые задачи и обрабатывающий ввод-вывод",
+      "Сам поток исполнения",
+      "Очередь сообщений",
+      "Тип future"
+    ],
+    "correct_index": 0,
+    "explanation": "Event loop - сердце asyncio. Запускает корутины, ждёт I/O через select/epoll, переключает задачи."
+  },
+  {
+    "external_key": "xasync-009",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Чем asyncio отличается от threading в Python?",
+    "options": [
+      "asyncio - cooperative multitasking в одном потоке без GIL-проблем для CPU; threading - реальные потоки с GIL",
+      "asyncio быстрее всегда",
+      "threading не работает в Python 3",
+      "Это одно и то же"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio - один поток с переключением на await, нет накладных расходов на синхронизацию. threading - OS-потоки, ограничен GIL для CPU."
+  },
+  {
+    "external_key": "xasync-010",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что выведет gather(coro1, coro2) если coro1 поднимет исключение?",
+    "options": [
+      "Все остальные корутины завершатся, исключение коро1 пробросится после await",
+      "Все корутины немедленно отменятся",
+      "Только coro1 упадёт, остальные продолжат бесконечно",
+      "ProgramError"
+    ],
+    "correct_index": 0,
+    "explanation": "gather с return_exceptions=False (default) пробрасывает первое исключение, но остальные tasks доезжают до конца. С return_exceptions=True - получаем список с исключениями."
+  },
+  {
+    "external_key": "xasync-011",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое Future в asyncio?",
+    "options": [
+      "Объект, представляющий результат, который будет доступен в будущем",
+      "Тип задачи в Python 4",
+      "Декоратор для корутин",
+      "Stop signal"
+    ],
+    "correct_index": 0,
+    "explanation": "Future - placeholder результата, можно set_result/set_exception извне. Task - подкласс Future, оборачивающий корутину."
+  },
+  {
+    "external_key": "xasync-012",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой синтаксис у async-генератора?",
+    "options": [
+      "def с yield",
+      "async def с yield (используется через async for)",
+      "@gen.coroutine",
+      "Невозможно в Python"
+    ],
+    "correct_index": 1,
+    "explanation": "async def gen(): yield ...; затем async for x in gen(): ... - PEP 525."
+  },
+  {
+    "external_key": "xasync-013",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Зачем нужен asyncio.Lock?",
+    "options": [
+      "Защищает критическую секцию между корутинами в одном event loop",
+      "Блокирует поток",
+      "Останавливает event loop",
+      "Тип кэша"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.Lock - cooperative mutex; асинхронно ждёт acquire без блокировки потока."
+  },
+  {
+    "external_key": "xasync-014",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает asyncio.wait_for(coro, timeout)?",
+    "options": [
+      "Запускает coro и поднимает TimeoutError если не завершилась за timeout секунд",
+      "Бесконечно ждёт corо",
+      "Возвращает None всегда",
+      "Создаёт поток"
+    ],
+    "correct_index": 0,
+    "explanation": "wait_for ожидает корутину, отменяет её и поднимает TimeoutError по истечении лимита."
+  },
+  {
+    "external_key": "xasync-015",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое cooperative multitasking?",
+    "options": [
+      "Задачи добровольно отдают управление через await/yield",
+      "ОС преемптивно переключает потоки",
+      "Все задачи параллельно",
+      "Многопроцессность"
+    ],
+    "correct_index": 0,
+    "explanation": "В cooperative модели задача держит управление до явного yield/await. asyncio - именно такая."
+  },
+  {
+    "external_key": "xasync-016",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает asyncio.create_task(coro)?",
+    "options": [
+      "Заворачивает корутину в Task и планирует выполнение в текущем loop",
+      "Запускает её в новом потоке",
+      "Делает копию корутины",
+      "Прерывает её"
+    ],
+    "correct_index": 0,
+    "explanation": "Task сразу планируется на event loop, корутина начинает выполняться при следующем переключении контекста."
+  },
+  {
+    "external_key": "xasync-017",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Чем отличается asyncio.gather от asyncio.wait?",
+    "options": [
+      "gather возвращает список результатов в порядке аргументов; wait возвращает (done, pending) множества",
+      "gather быстрее",
+      "wait не поддерживает таймаут",
+      "Это одно и то же"
+    ],
+    "correct_index": 0,
+    "explanation": "gather удобен для финальных результатов; wait даёт точный контроль (FIRST_COMPLETED, ALL_COMPLETED, FIRST_EXCEPTION)."
+  },
+  {
+    "external_key": "xasync-018",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое async with?",
+    "options": [
+      "Контекстный менеджер с асинхронными __aenter__ и __aexit__",
+      "Запуск with в потоке",
+      "Декоратор",
+      "Просто синоним with"
+    ],
+    "correct_index": 0,
+    "explanation": "async with позволяет открывать/закрывать ресурсы асинхронно - например, async db connection."
+  },
+  {
+    "external_key": "xasync-019",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой паттерн использует Semaphore в asyncio?",
+    "options": [
+      "Ограничение одновременных операций (например, 10 запросов параллельно)",
+      "Лочит поток",
+      "Создаёт очередь",
+      "Просто синоним Lock"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.Semaphore(n) разрешает n одновременных await'ов; используется для rate limiting."
+  },
+  {
+    "external_key": "xasync-020",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое asyncio.Queue?",
+    "options": [
+      "Асинхронная очередь FIFO для обмена данными между корутинами",
+      "Multi-process queue",
+      "Очередь HTTP-запросов",
+      "Просто список"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.Queue.put/get - корутины; producer/consumer pattern в asyncio."
+  },
+  {
+    "external_key": "xasync-021",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Что произойдёт, если в корутине вызвать blocking I/O (например, requests.get)?",
+    "options": [
+      "Заблокирует event loop, останавливая все остальные корутины",
+      "Автоматически уйдёт в фоновый поток",
+      "Сразу TypeError",
+      "Будет работать как обычно, без блокировки"
+    ],
+    "correct_index": 0,
+    "explanation": "Любой блокирующий I/O в корутине останавливает loop. Решение: aiohttp/httpx или run_in_executor."
+  },
+  {
+    "external_key": "xasync-022",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что вернёт asyncio.shield(coro)?",
+    "options": [
+      "Защищает coro от отмены извне; внешняя отмена обернётся в CancelledError, но coro продолжит",
+      "Делает корутину быстрее",
+      "Снимает GIL",
+      "Тип Future"
+    ],
+    "correct_index": 0,
+    "explanation": "shield предотвращает отмену внутренней корутины при отмене внешнего await."
+  },
+  {
+    "external_key": "xasync-023",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что выведет: asyncio.run(main()) если уже есть запущенный loop?",
+    "options": [
+      "RuntimeError: cannot run while already running",
+      "Создаст новый loop поверх",
+      "Завершит существующий",
+      "Игнорирует и идёт дальше"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.run нельзя вызывать из работающего loop. Внутри loop используют await main()."
+  },
+  {
+    "external_key": "xasync-024",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое run_in_executor?",
+    "options": [
+      "Запускает блокирующую функцию в ThreadPoolExecutor/ProcessPoolExecutor и возвращает Future",
+      "Запускает корутину параллельно",
+      "Создаёт новый event loop",
+      "Тип задачи"
+    ],
+    "correct_index": 0,
+    "explanation": "loop.run_in_executor(None, blocking_fn, args) - стандартный способ выполнить sync-функцию из async-кода без блокировки event loop."
+  },
+  {
+    "external_key": "xasync-025",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "В чём проблема: tasks = [asyncio.create_task(work(i)) for i in range(10)]; await tasks?",
+    "options": [
+      "Нельзя await список напрямую - надо asyncio.gather(*tasks) или цикл await",
+      "Сразу TypeError",
+      "Создаст один task",
+      "Будет работать корректно"
+    ],
+    "correct_index": 0,
+    "explanation": "list не awaitable. Нужно собирать через gather или wait."
+  },
+  {
+    "external_key": "xasync-026",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает Task.cancel()?",
+    "options": [
+      "Запрашивает отмену корутины - в неё бросится CancelledError на следующем await",
+      "Немедленно убивает thread",
+      "Помечает task как done без CancelledError",
+      "Удаляет task из event loop без эффекта"
+    ],
+    "correct_index": 0,
+    "explanation": "cancel() - cooperative; корутина может перехватить CancelledError и сделать cleanup."
+  },
+  {
+    "external_key": "xasync-027",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое back-pressure в асинхронных системах?",
+    "options": [
+      "Механизм замедления продюсера, когда консьюмер не успевает",
+      "Тип ошибки",
+      "Сброс TCP-соединения",
+      "Очередь без лимита"
+    ],
+    "correct_index": 0,
+    "explanation": "Back-pressure - сигнал producer'у, что consumer перегружен; реализуется через bounded queues, semaphore."
+  },
+  {
+    "external_key": "xasync-028",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает asyncio.as_completed(tasks)?",
+    "options": [
+      "Возвращает итератор, выдающий task'и в порядке завершения",
+      "Возвращает все результаты сразу",
+      "Сортирует tasks",
+      "Отменяет tasks"
+    ],
+    "correct_index": 0,
+    "explanation": "as_completed позволяет обрабатывать задачи по мере их готовности, не ждать всех."
+  },
+  {
+    "external_key": "xasync-029",
+    "topic": "async",
+    "difficulty": 3,
+    "text": "Какие стратегии у пула потоков в Python (concurrent.futures.ThreadPoolExecutor)?",
+    "options": [
+      "Submit/map с возвратом Future; for f in as_completed(futures)",
+      "Только submit",
+      "Только map",
+      "Невозможно ждать результат"
+    ],
+    "correct_index": 0,
+    "explanation": "ThreadPoolExecutor.submit возвращает Future; map возвращает iterator; as_completed - в порядке завершения."
+  },
+  {
+    "external_key": "xasync-030",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое async generator vs sync generator?",
+    "options": [
+      "Async generator yield'ит и может await; используется через async for",
+      "Они идентичны",
+      "Async быстрее",
+      "Async generator не может yield"
+    ],
+    "correct_index": 0,
+    "explanation": "Async generator - генератор, в котором можно использовать await перед yield. Используется через async for."
+  },
+  {
+    "external_key": "xasync-031",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое asynccontextmanager?",
+    "options": [
+      "Декоратор @contextlib.asynccontextmanager для async with",
+      "Класс с __aenter__",
+      "Just synonym",
+      "Тип контекста"
+    ],
+    "correct_index": 0,
+    "explanation": "@asynccontextmanager превращает async-генератор в async context manager - стандарт для async db sessions."
+  },
+  {
+    "external_key": "xasync-032",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что произойдёт при использовании asyncio.gather(*tasks, return_exceptions=True)?",
+    "options": [
+      "Исключения вернутся в списке как обычные значения, не пробросятся",
+      "Все исключения проброшены",
+      "Не выполняется ни одна задача",
+      "TypeError"
+    ],
+    "correct_index": 0,
+    "explanation": "С return_exceptions=True исключения становятся элементами результата; полезно для робастных батчей."
+  },
+  {
+    "external_key": "xasync-033",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой паттерн правильный для запуска N параллельных запросов с лимитом?",
+    "options": [
+      "asyncio.Semaphore(N) и await sem.acquire() в каждой корутине",
+      "Просто asyncio.gather всех",
+      "threading.Lock",
+      "time.sleep"
+    ],
+    "correct_index": 0,
+    "explanation": "Semaphore - стандартный rate limiter в asyncio: одновременно работает не более N задач."
+  },
+  {
+    "external_key": "xasync-034",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое asyncio Event?",
+    "options": [
+      "Сигнал между корутинами: один корутин ждёт event.wait(), другой делает event.set()",
+      "Тип ошибки",
+      "Аналог heartbeat",
+      "Событие event loop'а"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio.Event - sync primitive: множество ожидающих, один публикующий."
+  },
+  {
+    "external_key": "xasync-035",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает aiohttp/httpx в отличие от requests?",
+    "options": [
+      "Они асинхронные - возвращают корутины, не блокируют event loop",
+      "Быстрее в одном потоке",
+      "Поддерживают только GET",
+      "Используют threading"
+    ],
+    "correct_index": 0,
+    "explanation": "aiohttp и httpx (с AsyncClient) выполняют I/O асинхронно через event loop. requests блокирующий."
+  },
+  {
+    "external_key": "xasync-036",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает loop.call_soon(callback)?",
+    "options": [
+      "Планирует callback на следующую итерацию loop'а",
+      "Запускает callback в новом потоке",
+      "Запускает callback через 1 секунду",
+      "Игнорирует"
+    ],
+    "correct_index": 0,
+    "explanation": "call_soon - low-level API; cb выполнится при следующем переключении event loop."
+  },
+  {
+    "external_key": "xasync-037",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой sync примитив в asyncio для сигнализации ограниченным количеством разрешений?",
+    "options": ["Lock", "Event", "Semaphore", "Future"],
+    "correct_index": 2,
+    "explanation": "Semaphore поддерживает счётчик разрешений (например, 5 параллельных запросов)."
+  },
+  {
+    "external_key": "xasync-038",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "В каком случае выгодно использовать multiprocessing вместо asyncio?",
+    "options": [
+      "CPU-bound задачи (тяжёлые вычисления) - GIL мешает asyncio/threading",
+      "Когда I/O много",
+      "Для скриптов",
+      "Никогда"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio эффективен для I/O-bound; для CPU-bound нужно multiprocessing, чтобы реально использовать несколько ядер."
+  },
+  {
+    "external_key": "xasync-039",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что произойдёт, если корутина не awaited и не превращена в task?",
+    "options": [
+      "Она не выполнится, и Python выдаст RuntimeWarning: coroutine was never awaited",
+      "Запустится автоматически",
+      "Превратится в Future",
+      "Выкинет TypeError"
+    ],
+    "correct_index": 0,
+    "explanation": "Корутина - просто описание; без await/create_task она не запустится."
+  },
+  {
+    "external_key": "xasync-040",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое 'callback hell' и как его избежать в Python?",
+    "options": [
+      "Глубокая вложенность колбэков; решается async/await",
+      "Это рекурсия",
+      "Тип ошибки",
+      "Метод оптимизации"
+    ],
+    "correct_index": 0,
+    "explanation": "Async/await позволяет писать асинхронный код в стиле линейного, избегая вложенных колбэков."
+  },
+  {
+    "external_key": "xasync-041",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что вернёт: asyncio.gather() (без аргументов)?",
+    "options": ["[]", "TypeError", "None", "Future, который сразу done"],
+    "correct_index": 3,
+    "explanation": "gather без задач сразу возвращает законченный future со значением []."
+  },
+  {
+    "external_key": "xasync-042",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое idempotency в контексте retry?",
+    "options": [
+      "Многократный вызов даёт тот же эффект, что и однократный",
+      "Идемпотентность ошибок",
+      "Уникальность ID",
+      "Просто логирование"
+    ],
+    "correct_index": 0,
+    "explanation": "Идемпотентные операции безопасно ретраить. Например, PUT идемпотентен, POST - нет."
+  },
+  {
+    "external_key": "xasync-043",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что делает декоратор @asyncio.coroutine (deprecated)?",
+    "options": [
+      "Превращает обычную функцию-генератор в корутину (старый стиль до async/await)",
+      "Запускает функцию",
+      "Создаёт лок",
+      "Это активный декоратор"
+    ],
+    "correct_index": 0,
+    "explanation": "@asyncio.coroutine + yield from использовался до PEP 492. Сейчас deprecated; используется async def."
+  },
+  {
+    "external_key": "xasync-044",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой stack trace при rejected task без awaiter?",
+    "options": [
+      "Python ругается, если task ловит исключение и не имеет ожидающего; warning при сборке мусора",
+      "Сразу падает программа",
+      "Ничего не происходит, потеря исключения",
+      "Уходит в stderr"
+    ],
+    "correct_index": 0,
+    "explanation": "asyncio логирует unawaited exception при удалении task'а. Лучше всегда await tasks."
+  },
+  {
+    "external_key": "xasync-045",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой паттерн supervises группу корутин с гарантированным cleanup?",
+    "options": [
+      "asyncio.TaskGroup (3.11+)",
+      "threading.Pool",
+      "atexit",
+      "with statement без async"
+    ],
+    "correct_index": 0,
+    "explanation": "TaskGroup структурированный: все задачи внутри блока завершатся до выхода, исключения собираются в ExceptionGroup."
+  },
+  {
+    "external_key": "xasync-046",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое contextvars?",
+    "options": [
+      "Контекстные переменные, корректно работающие в asyncio (request id, current user)",
+      "ENV переменные",
+      "Глобальные переменные",
+      "thread-local"
+    ],
+    "correct_index": 0,
+    "explanation": "contextvars - аналог thread-local для async; копируется на каждый task, не пересекается между задачами."
+  },
+  {
+    "external_key": "xasync-047",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой способ корректно остановить долгую задачу по таймауту?",
+    "options": [
+      "asyncio.wait_for / asyncio.timeout (3.11+)",
+      "time.sleep + кастомный sleep",
+      "Просто break в цикле",
+      "ProcessExit"
+    ],
+    "correct_index": 0,
+    "explanation": "wait_for и timeout context manager поднимут TimeoutError и отменят задачу корректно."
+  },
+  {
+    "external_key": "xasync-048",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое 'структурная конкурентность' (structured concurrency)?",
+    "options": [
+      "Парадигма, где жизненный цикл задач ограничен явным scope (TaskGroup)",
+      "Графовая структура задач",
+      "Случайная конкурентность",
+      "Только threading"
+    ],
+    "correct_index": 0,
+    "explanation": "Structured concurrency: задачи не переживают свой scope, исключения собираются и пробрасываются. trio популяризовал, asyncio.TaskGroup в 3.11."
+  },
+  {
+    "external_key": "xasync-049",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Что такое 'fan-out / fan-in' паттерн?",
+    "options": [
+      "Запуск множества задач параллельно (fan-out) и сбор результатов (fan-in)",
+      "Сетевой паттерн",
+      "Метод оптимизации БД",
+      "Тип очереди"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, разослать 50 запросов одновременно (fan-out) и собрать ответы через gather (fan-in)."
+  },
+  {
+    "external_key": "xasync-050",
+    "topic": "async",
+    "difficulty": 2,
+    "text": "Какой подход для CPU-bound кода внутри asyncio?",
+    "options": [
+      "loop.run_in_executor с ProcessPoolExecutor",
+      "asyncio.gather",
+      "time.sleep",
+      "asyncio.Task"
+    ],
+    "correct_index": 0,
+    "explanation": "Для тяжёлых вычислений выносят их в ProcessPoolExecutor через run_in_executor, чтобы не блокировать event loop."
+  }
+]
