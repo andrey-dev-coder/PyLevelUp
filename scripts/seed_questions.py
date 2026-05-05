@@ -43,15 +43,24 @@ async def _seed(path: Path) -> int:
 
 
 def main() -> None:
+    print("SEED_MAIN_ENTERED", flush=True)
     configure_logging()
     if len(sys.argv) > 1:
         path = Path(sys.argv[1])
     else:
         path = Path(__file__).resolve().parent.parent / "data" / "questions.json"
+    print(f"SEED_PATH={path} exists={path.exists()}", flush=True)
     if not path.exists():
         logger.error("seed_file_missing", path=str(path))
         raise SystemExit(2)
-    count = asyncio.run(_seed(path))
+    try:
+        count = asyncio.run(_seed(path))
+    except BaseException as exc:
+        print(f"SEED_CRASHED: {type(exc).__name__}: {exc}", flush=True)
+        import traceback
+        traceback.print_exc()
+        raise
+    print(f"SEED_DONE count={count}", flush=True)
     logger.info("seed_done", count=count, path=str(path))
 
 
