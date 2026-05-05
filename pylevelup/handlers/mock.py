@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from html import escape
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import (
@@ -18,6 +18,8 @@ from pylevelup.repositories import (
     QuestionRepository,
     UserRepository,
 )
+from pylevelup.services.achievement_evaluator import evaluate_and_grant
+from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.states import MockStates
 from pylevelup.utils.text import clean_text
 
@@ -144,6 +146,7 @@ async def _finish_session(
     session_factory: async_sessionmaker,
     telegram_id: int,
     by_timeout: bool,
+    bot: Bot | None = None,
 ) -> None:
     data = await state.get_data()
     queue: list[int] = data.get("mock_queue") or []
@@ -231,6 +234,12 @@ async def _finish_session(
     await state.clear()
     await target.answer("\n".join(parts), reply_markup=_result_keyboard())
 
+    async with session_factory() as db:
+        new_codes = await evaluate_and_grant(db, user.id)
+        await db.commit()
+    if new_codes and bot is not None:
+        await notify_user_about_codes(bot, telegram_id, new_codes)
+
 
 @router.message(Command("mock"))
 async def handle_mock_command(
@@ -284,12 +293,15 @@ async def handle_mock_stop(
     call: CallbackQuery,
     state: FSMContext,
     session_factory: async_sessionmaker,
+    bot: Bot,
 ) -> None:
     if call.message is None or call.from_user is None:
         await call.answer()
         return
     await call.answer()
-    await _finish_session(call.message, state, session_factory, call.from_user.id, by_timeout=False)
+    await _finish_session(
+        call.message, state, session_factory, call.from_user.id, by_timeout=False, bot=bot
+    )
 
 
 @router.callback_query(F.data.startswith("mock:ans:"), MockStates.in_session)
@@ -297,6 +309,7 @@ async def handle_mock_answer(
     call: CallbackQuery,
     state: FSMContext,
     session_factory: async_sessionmaker,
+    bot: Bot,
 ) -> None:
     if call.message is None or call.from_user is None or call.data is None:
         await call.answer()
@@ -346,10 +359,14 @@ async def handle_mock_answer(
 
     now = datetime.now(UTC)
     if next_index >= len(queue):
-        await _finish_session(call.message, state, session_factory, call.from_user.id, by_timeout=False)
+        await _finish_session(
+            call.message, state, session_factory, call.from_user.id, by_timeout=False, bot=bot
+        )
         return
     if now >= deadline:
-        await _finish_session(call.message, state, session_factory, call.from_user.id, by_timeout=True)
+        await _finish_session(
+            call.message, state, session_factory, call.from_user.id, by_timeout=True, bot=bot
+        )
         return
     await _send_question(
         call.message,

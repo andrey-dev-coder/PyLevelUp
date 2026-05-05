@@ -1,6 +1,6 @@
 from html import escape
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.types import (
     CallbackQuery,
@@ -12,6 +12,8 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from pylevelup.db.models import User
 from pylevelup.repositories import BookmarkRepository, UserRepository
+from pylevelup.services.achievement_evaluator import evaluate_and_grant
+from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.utils.text import clean_text
 
 router = Router(name="pylevelup_bookmarks")
@@ -41,6 +43,7 @@ async def _resolve_user(session_factory: async_sessionmaker, telegram_id: int) -
 async def handle_toggle(
     call: CallbackQuery,
     session_factory: async_sessionmaker,
+    bot: Bot,
 ) -> None:
     if call.from_user is None or call.data is None or call.message is None:
         await call.answer()
@@ -81,6 +84,12 @@ async def handle_toggle(
         )
     except Exception:
         pass
+    if added:
+        async with session_factory() as db:
+            new_codes = await evaluate_and_grant(db, user.id)
+            await db.commit()
+        if new_codes:
+            await notify_user_about_codes(bot, call.from_user.id, new_codes)
 
 
 async def _show_list(

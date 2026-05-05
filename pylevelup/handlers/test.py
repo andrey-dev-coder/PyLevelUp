@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from html import escape
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
@@ -22,6 +22,8 @@ from pylevelup.keyboards import (
     build_purpose_keyboard,
 )
 from pylevelup.repositories import BookmarkRepository, QuestionRepository, UserRepository
+from pylevelup.services.achievement_evaluator import evaluate_and_grant
+from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.services.test_session_service import TestSessionService
 from pylevelup.states import TestStates
 from pylevelup.utils.text import clean_text, format_question_text
@@ -305,6 +307,7 @@ async def handle_answer(
     callback: CallbackQuery,
     session_service: TestSessionService,
     state: FSMContext,
+    bot: Bot,
 ) -> None:
     if callback.from_user is None or callback.message is None or callback.data is None:
         await callback.answer()
@@ -375,9 +378,15 @@ async def handle_answer(
 
     if not cache_state.is_unlimited and cache_state.remaining() == 0:
         await _finish(callback.message, session_service, state, user_id, by_user=False)
-        return
     if len(cache_state.pending) >= 10:
         await session_service.flush_session(user_id, mark_finished=False)
+    async with session_service.session_factory() as db:
+        new_codes = await evaluate_and_grant(db, user_id)
+        await db.commit()
+    if new_codes:
+        await notify_user_about_codes(bot, callback.from_user.id, new_codes)
+    if not cache_state.is_unlimited and cache_state.remaining() == 0:
+        return
     await _send_current_question(callback.message, callback.from_user.id, session_service, state)
 
 

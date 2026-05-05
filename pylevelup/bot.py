@@ -28,6 +28,7 @@ BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand(command="algorithms", description="Тренировка алгоритмов"),
     BotCommand(command="mistakes", description="Работа над ошибками"),
     BotCommand(command="bookmarks", description="Закладки"),
+    BotCommand(command="achievements", description="Мои ачивки"),
     BotCommand(command="stats", description="Мой профиль и статистика"),
     BotCommand(command="info", description="О проекте и контакты"),
 )

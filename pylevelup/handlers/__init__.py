@@ -1,6 +1,7 @@
 from aiogram import Router
 
 from pylevelup.handlers import (
+    achievements,
     admin,
     bookmarks,
     broadcast,
@@ -29,6 +30,7 @@ def build_root_router() -> Router:
         hints.router,
         daily.router,
         mock.router,
+        achievements.router,
     )
     return router
 

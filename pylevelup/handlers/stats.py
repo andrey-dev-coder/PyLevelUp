@@ -7,8 +7,9 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from pylevelup.categories import display_name
 from pylevelup.keyboards import build_profile_keyboard
-from pylevelup.repositories import UserRepository
+from pylevelup.repositories import AchievementRepository, UserRepository
 from pylevelup.services import StatsService, UserStats
+from pylevelup.services.achievements import ACHIEVEMENTS
 from pylevelup.services.mastery import compute_level, next_level
 
 router = Router(name="pylevelup_stats")
@@ -44,7 +45,7 @@ def _format_topics(stats: UserStats) -> str:
     return "\n".join(lines)
 
 
-def _format_profile(stats: UserStats | None, first_name: str | None) -> str:
+def _format_profile(stats: UserStats | None, first_name: str | None, achievements_earned: int = 0) -> str:
     name = escape(first_name) if first_name else "коллега"
     if stats is None:
         return (
@@ -81,8 +82,11 @@ def _format_profile(stats: UserStats | None, first_name: str | None) -> str:
         f"Место: <b>{stats.ranking_position}</b> из <b>{stats.total_users}</b>\n"
         f"Очки: <b>{stats.ranking_score}</b>\n"
     )
+    achievements_block = (
+        f"\n<b>Ачивки</b>: {achievements_earned}/{len(ACHIEVEMENTS)}\n"
+    )
     by_topic = "\n<b>По категориям</b>\n" + _format_topics(stats)
-    return header + streaks + answers + rank + by_topic
+    return header + streaks + answers + rank + achievements_block + by_topic
 
 
 async def _send_profile(
@@ -95,12 +99,15 @@ async def _send_profile(
         user = await UserRepository(db).get_by_telegram_id(telegram_id)
         stats = None
         mistakes = 0
+        achievements_earned = 0
         if user is not None:
             stats = await StatsService(db).get_user_stats(user.id)
             if stats is not None:
                 mistakes = stats.mistakes_count
+            earned = await AchievementRepository(db).get_user_codes(user.id)
+            achievements_earned = len(earned)
     await target.answer(
-        _format_profile(stats, first_name),
+        _format_profile(stats, first_name, achievements_earned),
         reply_markup=build_profile_keyboard(has_mistakes=mistakes > 0),
     )
 

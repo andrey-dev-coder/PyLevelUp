@@ -68,6 +68,7 @@ def build_main_menu() -> InlineKeyboardMarkup:
 
 def build_profile_keyboard(has_mistakes: bool) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
+    keyboard.button(text="Все ачивки", callback_data="ach:show")
     if has_mistakes:
         keyboard.button(text="Работа над ошибками", callback_data="mistakes:start")
     keyboard.button(text="Начать тест", callback_data="menu:test")

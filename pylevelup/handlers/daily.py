@@ -1,7 +1,7 @@
 from datetime import UTC, date, datetime
 from html import escape
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.types import (
     CallbackQuery,
@@ -17,6 +17,8 @@ from pylevelup.repositories import (
     QuestionRepository,
     UserRepository,
 )
+from pylevelup.services.achievement_evaluator import evaluate_and_grant
+from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.utils.text import clean_text
 
 router = Router(name="pylevelup_daily")
@@ -222,6 +224,7 @@ async def handle_daily_board(
 async def handle_daily_answer(
     call: CallbackQuery,
     session_factory: async_sessionmaker,
+    bot: Bot,
 ) -> None:
     if call.from_user is None or call.message is None or call.data is None:
         await call.answer()
@@ -262,6 +265,12 @@ async def handle_daily_answer(
         pass
     await call.answer()
     await _send_my_result(call.message, session_factory, user.id, question, today)
+
+    async with session_factory() as db:
+        new_codes = await evaluate_and_grant(db, user.id)
+        await db.commit()
+    if new_codes:
+        await notify_user_about_codes(bot, call.from_user.id, new_codes)
 
 
 __all__ = ["router"]
