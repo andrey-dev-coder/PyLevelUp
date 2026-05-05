@@ -7180,5 +7180,1405 @@
     ],
     "correct_index": 1,
     "explanation": "Кортеж неизменяем (нельзя заменить элемент), но если элемент - mutable объект, его внутреннее состояние можно менять."
+  },
+  {
+    "external_key": "xalg-001",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какова сложность поиска элемента в отсортированном массиве бинарным поиском?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Бинарный поиск на каждой итерации делит массив пополам - log2(n) шагов."
+  },
+  {
+    "external_key": "xalg-002",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Сложность вставки в хеш-таблицу в среднем?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct_index": 0,
+    "explanation": "В среднем хеш-таблица даёт O(1). Худший случай - O(n) при множестве коллизий."
+  },
+  {
+    "external_key": "xalg-003",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какая структура данных - LIFO?",
+    "options": [
+      "Очередь (queue)",
+      "Стек (stack)",
+      "Куча",
+      "Хеш-таблица"
+    ],
+    "correct_index": 1,
+    "explanation": "Stack - Last In First Out: последний добавленный извлекается первым."
+  },
+  {
+    "external_key": "xalg-004",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какая структура данных - FIFO?",
+    "options": [
+      "Stack",
+      "Queue",
+      "Hash-table",
+      "Tree"
+    ],
+    "correct_index": 1,
+    "explanation": "Queue - First In First Out: первый добавленный извлекается первым."
+  },
+  {
+    "external_key": "xalg-005",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Сложность доступа по индексу в массиве?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct_index": 0,
+    "explanation": "Массив занимает непрерывную память; адрес i-го элемента = base + i*size, доступ за O(1)."
+  },
+  {
+    "external_key": "xalg-006",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность у quicksort в среднем и в худшем случае?",
+    "options": [
+      "O(n log n) / O(n log n)",
+      "O(n log n) / O(n^2)",
+      "O(n^2) / O(n^2)",
+      "O(n) / O(n log n)"
+    ],
+    "correct_index": 1,
+    "explanation": "В среднем O(n log n), но при плохом выборе pivot (например, на отсортированных данных без рандомизации) - O(n^2)."
+  },
+  {
+    "external_key": "xalg-007",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сортировка стабильна и работает за O(n log n)?",
+    "options": [
+      "Quicksort",
+      "Mergesort",
+      "Bubble sort",
+      "Selection sort"
+    ],
+    "correct_index": 1,
+    "explanation": "Mergesort всегда O(n log n) и стабильна (сохраняет относительный порядок равных элементов)."
+  },
+  {
+    "external_key": "xalg-008",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность Python list.append() (амортизированная)?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 0,
+    "explanation": "list переиспользует выделенную память с запасом; amortized O(1) благодаря удвоению размера при ресайзе."
+  },
+  {
+    "external_key": "xalg-009",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность list.insert(0, x)?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct_index": 2,
+    "explanation": "Вставка в начало списка требует сдвига всех остальных элементов вправо - O(n)."
+  },
+  {
+    "external_key": "xalg-010",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая структура данных идеальна для очереди с обоих концов с O(1)?",
+    "options": [
+      "list",
+      "collections.deque",
+      "tuple",
+      "set"
+    ],
+    "correct_index": 1,
+    "explanation": "deque (двусвязный список с блоками) даёт O(1) на обоих концах. list O(n) в начале."
+  },
+  {
+    "external_key": "xalg-011",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое heapq в Python?",
+    "options": [
+      "Куча на основе массива - min-heap, push/pop O(log n)",
+      "Хеш-таблица",
+      "Двоичное дерево поиска",
+      "Очередь FIFO"
+    ],
+    "correct_index": 0,
+    "explanation": "heapq реализует min-heap через массив. Операции heappush/heappop за O(log n), heapify за O(n)."
+  },
+  {
+    "external_key": "xalg-012",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность поиска кратчайшего пути в графе у BFS на невзвешенном графе?",
+    "options": [
+      "O(V*E)",
+      "O(V + E)",
+      "O(V^2)",
+      "O(E log V)"
+    ],
+    "correct_index": 1,
+    "explanation": "BFS обходит все вершины и рёбра по разу - O(V + E)."
+  },
+  {
+    "external_key": "xalg-013",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какой алгоритм находит кратчайшие пути от одной вершины во взвешенном графе с неотрицательными весами?",
+    "options": [
+      "DFS",
+      "Dijkstra",
+      "Bellman-Ford",
+      "Floyd-Warshall"
+    ],
+    "correct_index": 1,
+    "explanation": "Dijkstra - O((V+E)log V) с приоритетной очередью. Не работает с отрицательными весами."
+  },
+  {
+    "external_key": "xalg-014",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая структура данных у словаря Python?",
+    "options": [
+      "Двоичное дерево",
+      "Хеш-таблица с open addressing",
+      "Связный список",
+      "Skip list"
+    ],
+    "correct_index": 1,
+    "explanation": "В CPython dict - хеш-таблица с пробированием (open addressing) и сохранением порядка вставки с 3.7."
+  },
+  {
+    "external_key": "xalg-015",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность поиска подстроки наивным алгоритмом в строке длины n при шаблоне длины m?",
+    "options": [
+      "O(n)",
+      "O(n + m)",
+      "O(n*m)",
+      "O(n log m)"
+    ],
+    "correct_index": 2,
+    "explanation": "Наивное сравнение - O(n*m). KMP/Boyer-Moore оптимизируют до O(n + m)."
+  },
+  {
+    "external_key": "xalg-016",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какой инвариант поддерживает min-heap?",
+    "options": [
+      "Каждый узел больше своих потомков",
+      "Каждый узел меньше или равен своим потомкам",
+      "Узлы отсортированы слева направо",
+      "Все листья на одном уровне"
+    ],
+    "correct_index": 1,
+    "explanation": "В min-heap корень - минимум, и каждый родитель <= потомков. Полное двоичное дерево."
+  },
+  {
+    "external_key": "xalg-017",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое big-O worst case у hash-таблицы для lookup?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct_index": 2,
+    "explanation": "Если все ключи попали в одну корзину (или цепочку), поиск становится O(n)."
+  },
+  {
+    "external_key": "xalg-018",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность сортировки в Python (Timsort)?",
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)",
+      "O(n^3)"
+    ],
+    "correct_index": 1,
+    "explanation": "Timsort - O(n log n) в худшем, O(n) в лучшем (на почти-отсортированных данных). Стабильная."
+  },
+  {
+    "external_key": "xalg-019",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность операций add/contains у set в среднем?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 0,
+    "explanation": "set реализован хеш-таблицей; средняя сложность O(1)."
+  },
+  {
+    "external_key": "xalg-020",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая глубина рекурсии у обхода полностью сбалансированного двоичного дерева высоты h?",
+    "options": [
+      "O(1)",
+      "O(log h)",
+      "O(h)",
+      "O(2^h)"
+    ],
+    "correct_index": 2,
+    "explanation": "Рекурсивный обход в глубину использует стек размером O(h) - максимальная глубина дерева."
+  },
+  {
+    "external_key": "xalg-021",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая структура данных лучше всего для приоритетной очереди?",
+    "options": [
+      "list",
+      "Хеш-таблица",
+      "Куча (heap)",
+      "Связный список"
+    ],
+    "correct_index": 2,
+    "explanation": "Куча даёт O(log n) на push/pop с минимумом/максимумом. heapq в Python - готовая реализация."
+  },
+  {
+    "external_key": "xalg-022",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое two pointers (метод двух указателей)?",
+    "options": [
+      "Структура данных с двумя адресами",
+      "Шаблон, где два индекса/указателя двигаются по массиву (часто навстречу или с разной скоростью)",
+      "Декоратор для функций",
+      "Тип hashmap"
+    ],
+    "correct_index": 1,
+    "explanation": "Two pointers решает задачи поиска пары/подстроки за O(n) вместо O(n^2)."
+  },
+  {
+    "external_key": "xalg-023",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность Counter(list).most_common()?",
+    "options": [
+      "O(1)",
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)"
+    ],
+    "correct_index": 2,
+    "explanation": "Counter строится за O(n), most_common сортирует - O(n log n) в общем случае."
+  },
+  {
+    "external_key": "xalg-024",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность объединения двух отсортированных списков длины m и n?",
+    "options": [
+      "O(min(m, n))",
+      "O(m + n)",
+      "O(m * n)",
+      "O((m+n) log(m+n))"
+    ],
+    "correct_index": 1,
+    "explanation": "Linear merge через два указателя проходит каждый элемент по разу - O(m + n)."
+  },
+  {
+    "external_key": "xalg-025",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что делает обход графа в глубину (DFS)?",
+    "options": [
+      "Идёт максимально глубоко перед возвратом",
+      "Обходит уровни поочерёдно",
+      "Случайно выбирает следующую вершину",
+      "Сортирует вершины"
+    ],
+    "correct_index": 0,
+    "explanation": "DFS использует стек/рекурсию; идёт вглубь, пока возможно, потом возвращается. BFS обходит уровни."
+  },
+  {
+    "external_key": "xalg-026",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность построения дерева из n элементов?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 3,
+    "explanation": "Каждая вставка в balanced BST за O(log n), n вставок - O(n log n)."
+  },
+  {
+    "external_key": "xalg-027",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое sliding window?",
+    "options": [
+      "Окно с фиксированным/динамическим размером, скользящее по массиву",
+      "Архитектурный паттерн",
+      "Тип очереди",
+      "Алгоритм сортировки"
+    ],
+    "correct_index": 0,
+    "explanation": "Sliding window решает задачи на подмассивы/подстроки за O(n) - подсчитываем агрегат при добавлении/удалении."
+  },
+  {
+    "external_key": "xalg-028",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какова сложность поиска медианы в неотсортированном массиве?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 2,
+    "explanation": "Quickselect находит k-й порядковый статистикой за O(n) в среднем."
+  },
+  {
+    "external_key": "xalg-029",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность поиска элемента в связанном списке?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 2,
+    "explanation": "Связный список - последовательный обход, O(n) в худшем случае."
+  },
+  {
+    "external_key": "xalg-030",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое мемоизация?",
+    "options": [
+      "Кэширование результатов функции по аргументам для повторных вызовов",
+      "Поверхностное копирование",
+      "Тип сборки мусора",
+      "Способ декодирования строк"
+    ],
+    "correct_index": 0,
+    "explanation": "Мемоизация хранит результат f(x) в кэше; повторный вызов с тем же x возвращает значение без пересчёта. functools.lru_cache."
+  },
+  {
+    "external_key": "xalg-031",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какой вид сортировки in-place и стабильный?",
+    "options": [
+      "Quicksort",
+      "Mergesort",
+      "Insertion sort",
+      "Heapsort"
+    ],
+    "correct_index": 2,
+    "explanation": "Insertion sort использует O(1) дополнительной памяти и не меняет порядок равных элементов."
+  },
+  {
+    "external_key": "xalg-032",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое hash collision?",
+    "options": [
+      "Когда два разных ключа имеют одинаковый hash",
+      "Когда hash превышает int64",
+      "Когда ключ - не строка",
+      "Падение программы при hash()"
+    ],
+    "correct_index": 0,
+    "explanation": "Коллизия - разные объекты с одинаковым хешем. Решается chaining или open addressing."
+  },
+  {
+    "external_key": "xalg-033",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность поиска в сбалансированном двоичном дереве поиска?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Высота сбалансированного BST - O(log n), поиск проходит по высоте."
+  },
+  {
+    "external_key": "xalg-034",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая структура подходит для поиска префиксов?",
+    "options": [
+      "Hash-таблица",
+      "Trie (префиксное дерево)",
+      "Стек",
+      "Куча"
+    ],
+    "correct_index": 1,
+    "explanation": "Trie хранит строки символ-за-символом по дереву; поиск префикса - O(длины префикса)."
+  },
+  {
+    "external_key": "xalg-035",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая операция у sorted списка дешевле, чем у обычного?",
+    "options": [
+      "list.append O(1)",
+      "Бинарный поиск O(log n) через bisect",
+      "list.insert(0, x) O(1)",
+      "len() O(log n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Если массив отсортирован, можно использовать bisect для поиска за O(log n) вместо линейного."
+  },
+  {
+    "external_key": "xalg-036",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность у обхода всех путей в графе?",
+    "options": [
+      "O(V + E)",
+      "O(V * E)",
+      "O(2^V)",
+      "O(V^2)"
+    ],
+    "correct_index": 2,
+    "explanation": "Количество путей в графе экспоненциально - O(2^V) в худшем случае."
+  },
+  {
+    "external_key": "xalg-037",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность вычисления факториала рекурсивно?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct_index": 2,
+    "explanation": "n рекурсивных вызовов, каждое - умножение - O(n) операций и O(n) стека."
+  },
+  {
+    "external_key": "xalg-038",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность вычисления Fibonacci(n) наивной рекурсией?",
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(2^n)",
+      "O(n!)"
+    ],
+    "correct_index": 2,
+    "explanation": "Наивная рекурсия пересчитывает поддеревья - экспоненциальная сложность 2^n. С мемоизацией - O(n)."
+  },
+  {
+    "external_key": "xalg-039",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Что такое LRU-кэш и какую сложность он гарантирует на get/put?",
+    "options": [
+      "Least Recently Used; O(1) с doubly linked list + hash map",
+      "Last Random Use; O(log n)",
+      "Linear Reuse; O(n)",
+      "Linked Recursive Update; O(n log n)"
+    ],
+    "correct_index": 0,
+    "explanation": "LRU удаляет давно неиспользуемое. Стандартная реализация - двусвязный список + hash для O(1)."
+  },
+  {
+    "external_key": "xalg-040",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какой паттерн поиска подходит для нахождения 'k самых больших' элементов?",
+    "options": [
+      "Полная сортировка",
+      "Min-heap размера k",
+      "Max-heap размера n",
+      "Bubble sort"
+    ],
+    "correct_index": 1,
+    "explanation": "Поддерживаем min-heap размера k. Если новый элемент больше корня - заменяем. O(n log k)."
+  },
+  {
+    "external_key": "xalg-041",
+    "topic": "algorithms",
+    "difficulty": 1,
+    "text": "Какая сложность доступа к элементу в dict по ключу в среднем?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n^2)"
+    ],
+    "correct_index": 0,
+    "explanation": "dict - hash-таблица; средний случай O(1), амортизированный O(1)."
+  },
+  {
+    "external_key": "xalg-042",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность обхода всех элементов n-арного дерева?",
+    "options": [
+      "O(n)",
+      "O(log n)",
+      "O(n^2)",
+      "O(n log n)"
+    ],
+    "correct_index": 0,
+    "explanation": "Каждый узел посещается ровно один раз - O(n)."
+  },
+  {
+    "external_key": "xalg-043",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сортировка лучше всего на почти-отсортированных данных?",
+    "options": [
+      "Quicksort",
+      "Insertion sort",
+      "Heapsort",
+      "Selection sort"
+    ],
+    "correct_index": 1,
+    "explanation": "Insertion sort даёт O(n) при почти-отсортированных данных и используется внутри Timsort на коротких подмассивах."
+  },
+  {
+    "external_key": "xalg-044",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая структура данных - union-find?",
+    "options": [
+      "Disjoint Set Union; быстрое объединение и поиск компонент связности",
+      "Тип hashmap для строк",
+      "Очередь с приоритетом",
+      "Алгоритм сортировки"
+    ],
+    "correct_index": 0,
+    "explanation": "DSU - представление непересекающихся множеств. Операции union/find почти O(1) с path compression и rank."
+  },
+  {
+    "external_key": "xalg-045",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность построения суффиксного массива базовым алгоритмом?",
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)",
+      "O(n^2 log n)"
+    ],
+    "correct_index": 3,
+    "explanation": "Наивный алгоритм сортирует n суффиксов длиной до n - O(n^2 log n). Существуют O(n) алгоритмы (DC3, SA-IS)."
+  },
+  {
+    "external_key": "xalg-046",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Сложность вычисления XOR всех элементов массива?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 2,
+    "explanation": "Один проход по массиву с накоплением XOR - O(n)."
+  },
+  {
+    "external_key": "xalg-047",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какой алгоритм находит цикл в связном списке за O(1) памяти?",
+    "options": [
+      "Хеш-множество посещённых",
+      "Алгоритм Флойда (заяц и черепаха)",
+      "Поиск в глубину",
+      "Bellman-Ford"
+    ],
+    "correct_index": 1,
+    "explanation": "Floyd's tortoise and hare: два указателя двигаются с разной скоростью; встреча означает цикл. O(1) памяти."
+  },
+  {
+    "external_key": "xalg-048",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Чем отличается стек на основе массива от стека на связном списке?",
+    "options": [
+      "Они эквивалентны",
+      "Массивный использует непрерывную память и амортизированный O(1) push; список - всегда O(1) push, но больше overhead на каждый узел",
+      "Стек на массиве не работает в Python",
+      "Стек на связном списке быстрее на любых данных"
+    ],
+    "correct_index": 1,
+    "explanation": "Массив быстрее по cache locality; list-стек проще растёт без копирований, но тратит больше памяти на указатели."
+  },
+  {
+    "external_key": "xalg-049",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность обращения списка длиной n in-place?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n)",
+      "O(n log n)"
+    ],
+    "correct_index": 2,
+    "explanation": "Идём двумя указателями навстречу и меняем элементы - O(n)."
+  },
+  {
+    "external_key": "xalg-050",
+    "topic": "algorithms",
+    "difficulty": 2,
+    "text": "Какая сложность поиска повторяющегося элемента в массиве через set?",
+    "options": [
+      "O(n) время, O(n) память",
+      "O(n log n) время, O(1) память",
+      "O(1)",
+      "O(n^2)"
+    ],
+    "correct_index": 0,
+    "explanation": "Проходим массив, добавляем в set; если элемент уже есть - дубликат. Время O(n), память O(n)."
+  },
+  {
+    "external_key": "xalga-001",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая ассимптотика у алгоритма Тарьяна для поиска компонент сильной связности?",
+    "options": [
+      "O(V + E)",
+      "O(V * E)",
+      "O(V^2)",
+      "O(E log V)"
+    ],
+    "correct_index": 0,
+    "explanation": "Tarjan's SCC обходит граф один раз DFS, O(V + E)."
+  },
+  {
+    "external_key": "xalga-002",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Сложность поиска кратчайших путей с одной вершины при отрицательных рёбрах?",
+    "options": [
+      "Dijkstra O(E log V)",
+      "Bellman-Ford O(V*E)",
+      "BFS O(V+E)",
+      "Floyd-Warshall O(V^3)"
+    ],
+    "correct_index": 1,
+    "explanation": "Bellman-Ford корректен при отрицательных рёбрах и обнаруживает циклы отрицательного веса. O(V*E)."
+  },
+  {
+    "external_key": "xalga-003",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность алгоритма Floyd-Warshall для всех пар?",
+    "options": [
+      "O(V*E)",
+      "O(V^2)",
+      "O(V^3)",
+      "O(V^2 log V)"
+    ],
+    "correct_index": 2,
+    "explanation": "Floyd-Warshall - три вложенных цикла по V вершинам, O(V^3)."
+  },
+  {
+    "external_key": "xalga-004",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое segment tree и какая у него сложность point update / range query?",
+    "options": [
+      "O(1) / O(1)",
+      "O(log n) / O(log n)",
+      "O(n) / O(log n)",
+      "O(log n) / O(n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Дерево отрезков поддерживает обе операции за O(log n) на массиве длины n."
+  },
+  {
+    "external_key": "xalga-005",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Fenwick tree (BIT)?",
+    "options": [
+      "Дерево для префиксных сумм с update/prefix-sum за O(log n)",
+      "Дерево с конечными состояниями",
+      "Дерево для парсинга",
+      "Структура для max-flow"
+    ],
+    "correct_index": 0,
+    "explanation": "Binary Indexed Tree - компактная структура для prefix sum/update за O(log n) каждая."
+  },
+  {
+    "external_key": "xalga-006",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность KMP для поиска шаблона длины m в тексте длины n?",
+    "options": [
+      "O(n*m)",
+      "O(n + m)",
+      "O(n log m)",
+      "O(n^2)"
+    ],
+    "correct_index": 1,
+    "explanation": "KMP препроцессирует шаблон за O(m) и сканирует текст за O(n) - суммарно O(n + m)."
+  },
+  {
+    "external_key": "xalga-007",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Сложность алгоритма Кнута-Морриса-Пратта на построение префикс-функции?",
+    "options": [
+      "O(m)",
+      "O(m log m)",
+      "O(m^2)",
+      "O(m^3)"
+    ],
+    "correct_index": 0,
+    "explanation": "Префикс-функция строится за линейное время O(m) одним проходом."
+  },
+  {
+    "external_key": "xalga-008",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Эратосфена и его сложность?",
+    "options": [
+      "Решето простых чисел до n за O(n log log n)",
+      "Сортировка за O(n)",
+      "Поиск максимального паросочетания",
+      "Алгоритм сжатия"
+    ],
+    "correct_index": 0,
+    "explanation": "Решето Эратосфена находит все простые до n за O(n log log n) и O(n) памяти."
+  },
+  {
+    "external_key": "xalga-009",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какой алгоритм для max-flow дает O(V^2 * E)?",
+    "options": [
+      "Ford-Fulkerson",
+      "Dinic",
+      "Edmonds-Karp",
+      "Push-relabel"
+    ],
+    "correct_index": 2,
+    "explanation": "Edmonds-Karp - вариант Ford-Fulkerson с BFS, гарантия O(V * E^2) или O(V^2 * E) в зависимости от графа."
+  },
+  {
+    "external_key": "xalga-010",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность алгоритма Краскала?",
+    "options": [
+      "O(E log E)",
+      "O(V * E)",
+      "O(V^2)",
+      "O(V + E)"
+    ],
+    "correct_index": 0,
+    "explanation": "Kruskal сортирует рёбра O(E log E) и использует DSU за почти O(E)."
+  },
+  {
+    "external_key": "xalga-011",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое топологическая сортировка?",
+    "options": [
+      "Линейный порядок вершин DAG, в котором каждое ребро u->v идёт слева направо",
+      "Сортировка ребер графа",
+      "Random shuffle вершин",
+      "Сортировка строк"
+    ],
+    "correct_index": 0,
+    "explanation": "Топологическая сортировка применима только к DAG. Используется в зависимостях сборки."
+  },
+  {
+    "external_key": "xalga-012",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность quick select для нахождения k-го элемента?",
+    "options": [
+      "O(1)",
+      "O(log n)",
+      "O(n) в среднем",
+      "O(n log n)"
+    ],
+    "correct_index": 2,
+    "explanation": "Quickselect делит массив pivot'ом и продолжает в нужной половине; в среднем O(n), худший O(n^2)."
+  },
+  {
+    "external_key": "xalga-013",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какой алгоритм находит k-й порядковый элемент за гарантированное O(n)?",
+    "options": [
+      "Quickselect",
+      "Median of medians",
+      "Heapsort",
+      "Mergesort"
+    ],
+    "correct_index": 1,
+    "explanation": "Median of medians выбирает pivot, гарантирующий разбиение на ~30/70, что даёт O(n) даже в худшем случае."
+  },
+  {
+    "external_key": "xalga-014",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая структура поддерживает range min query за O(1) после препроцессинга?",
+    "options": [
+      "Sparse Table",
+      "Hash table",
+      "Trie",
+      "Heap"
+    ],
+    "correct_index": 0,
+    "explanation": "Sparse Table предобрабатывается за O(n log n) и отвечает на RMQ за O(1) (для идемпотентных операций)."
+  },
+  {
+    "external_key": "xalga-015",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Aho-Corasick?",
+    "options": [
+      "Поиск множества подстрок в тексте за O(n + m + matches)",
+      "Сортировка строк",
+      "Сжатие текста",
+      "Хеш-функция"
+    ],
+    "correct_index": 0,
+    "explanation": "Aho-Corasick строит trie с failure links и одним проходом по тексту находит все вхождения шаблонов."
+  },
+  {
+    "external_key": "xalga-016",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность Dijkstra с бинарной кучей?",
+    "options": [
+      "O(V^2)",
+      "O((V+E) log V)",
+      "O(V*E)",
+      "O(E)"
+    ],
+    "correct_index": 1,
+    "explanation": "Каждое decrease-key/extract-min - O(log V); всего E + V операций."
+  },
+  {
+    "external_key": "xalga-017",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм A*?",
+    "options": [
+      "Эвристический поиск кратчайшего пути с f(n) = g(n) + h(n)",
+      "Алгоритм сортировки",
+      "Алгоритм SCC",
+      "Алгоритм поиска в строке"
+    ],
+    "correct_index": 0,
+    "explanation": "A* - расширение Dijkstra с эвристикой h(n), оценивающей оставшийся путь до цели."
+  },
+  {
+    "external_key": "xalga-018",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое суффиксное дерево / суффиксный массив?",
+    "options": [
+      "Структура для быстрого поиска подстрок и LCP за O(m) или O(log n)",
+      "Дерево поиска",
+      "Дерево разбора",
+      "Тип hashmap"
+    ],
+    "correct_index": 0,
+    "explanation": "Суффиксный массив + LCP позволяет искать любую подстроку за O(m log n) или O(m) с дополнительными структурами."
+  },
+  {
+    "external_key": "xalga-019",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое 0/1 рюкзак и его DP сложность?",
+    "options": [
+      "Knapsack: для каждого предмета взять или нет; O(n*W)",
+      "Greedy за O(n log n)",
+      "O(n^2)",
+      "O(2^n)"
+    ],
+    "correct_index": 0,
+    "explanation": "0/1 knapsack решается DP по ёмкости рюкзака, O(n*W) время и память (псевдополиномиально)."
+  },
+  {
+    "external_key": "xalga-020",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность longest common subsequence (LCS) DP?",
+    "options": [
+      "O(n + m)",
+      "O(n*m)",
+      "O(n*m^2)",
+      "O(n*m log n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Классическое DP по таблице n*m. С хитростями можно сократить память до O(min(n, m))."
+  },
+  {
+    "external_key": "xalga-021",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Манакера?",
+    "options": [
+      "Поиск максимального палиндрома в строке за O(n)",
+      "Сортировка перестановок",
+      "Шифрование",
+      "Тип хеш-функции"
+    ],
+    "correct_index": 0,
+    "explanation": "Манакер находит все палиндромные подстроки и максимальную из них за O(n)."
+  },
+  {
+    "external_key": "xalga-022",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность алгоритма Карацубы для умножения чисел длины n?",
+    "options": [
+      "O(n^2)",
+      "O(n^1.585)",
+      "O(n log n)",
+      "O(n)"
+    ],
+    "correct_index": 1,
+    "explanation": "Karatsuba делит числа пополам и сводит 4 умножения к 3, рекуррента T(n) = 3T(n/2) + O(n) даёт O(n^log2(3)) ~ O(n^1.585)."
+  },
+  {
+    "external_key": "xalga-023",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое FFT и зачем?",
+    "options": [
+      "Fast Fourier Transform; умножение полиномов за O(n log n)",
+      "Сортировка за O(n)",
+      "Алгоритм сжатия",
+      "Хеш-функция"
+    ],
+    "correct_index": 0,
+    "explanation": "FFT преобразует представление в частотное за O(n log n). Применяется в умножении больших чисел и DSP."
+  },
+  {
+    "external_key": "xalga-024",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое 'mo's algorithm' (метод мо)?",
+    "options": [
+      "Оффлайн-алгоритм обработки запросов на отрезках за O((N+Q)*sqrt(N))",
+      "Алгоритм сортировки",
+      "Алгоритм сжатия",
+      "Hash-функция"
+    ],
+    "correct_index": 0,
+    "explanation": "Mo's algorithm сортирует запросы по блокам и отвечает на каждый, инкрементально расширяя/сужая текущее окно."
+  },
+  {
+    "external_key": "xalga-025",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая структура поддерживает dynamic LCA?",
+    "options": [
+      "Link-Cut Tree",
+      "Hash table",
+      "Heap",
+      "Trie"
+    ],
+    "correct_index": 0,
+    "explanation": "Link-Cut Tree (Sleator-Tarjan) поддерживает добавление/удаление рёбер и LCA за амортизированное O(log n)."
+  },
+  {
+    "external_key": "xalga-026",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое heavy-light decomposition?",
+    "options": [
+      "Разбиение дерева на пути для путевых запросов за O(log^2 n)",
+      "Алгоритм для DAG",
+      "Метод сжатия графа",
+      "Случайное разбиение"
+    ],
+    "correct_index": 0,
+    "explanation": "HLD разбивает дерево на heavy/light edges; путь между двумя узлами проходит через O(log n) тяжёлых цепочек."
+  },
+  {
+    "external_key": "xalga-027",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое treap и какая сложность операций?",
+    "options": [
+      "BST с приоритетами; O(log n) в среднем",
+      "Hash-таблица",
+      "Очередь",
+      "Дерево отрезков"
+    ],
+    "correct_index": 0,
+    "explanation": "Treap = tree + heap. BST по ключу + heap по приоритетам; рандомные приоритеты дают O(log n) ожидаемо."
+  },
+  {
+    "external_key": "xalga-028",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое min-cost max-flow?",
+    "options": [
+      "Поток максимальной величины с минимальной стоимостью",
+      "Сортировка стоимостей",
+      "Случайный выбор пути",
+      "Граф со смешанными рёбрами"
+    ],
+    "correct_index": 0,
+    "explanation": "MCMF расширяет max-flow: ищет среди всех максимальных потоков тот, что минимизирует суммарную стоимость рёбер."
+  },
+  {
+    "external_key": "xalga-029",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какой алгоритм находит максимальное паросочетание в двудольном графе?",
+    "options": [
+      "Kuhn's algorithm",
+      "Quicksort",
+      "Floyd-Warshall",
+      "BFS"
+    ],
+    "correct_index": 0,
+    "explanation": "Алгоритм Куна на augmenting paths за O(V*E)."
+  },
+  {
+    "external_key": "xalga-030",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность нахождения мостов в графе?",
+    "options": [
+      "O(V + E)",
+      "O(V * E)",
+      "O(V^2)",
+      "O(E^2)"
+    ],
+    "correct_index": 0,
+    "explanation": "Алгоритм Тарьяна для мостов через DFS с low-link значениями за O(V + E)."
+  },
+  {
+    "external_key": "xalga-031",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое sqrt-декомпозиция?",
+    "options": [
+      "Разбиение массива на блоки sqrt(n) для запросов и обновлений за O(sqrt(n))",
+      "Сортировка пузырьком",
+      "Алгоритм поиска подстроки",
+      "Сжатие данных"
+    ],
+    "correct_index": 0,
+    "explanation": "Sqrt decomposition - простой способ обработки range query в O(sqrt(n)) с минимумом кода."
+  },
+  {
+    "external_key": "xalga-032",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Z-функции?",
+    "options": [
+      "Массив длин совпадения с префиксом строки; O(n)",
+      "Сортировка строк",
+      "Хеш для поиска подстроки",
+      "Алгоритм сжатия"
+    ],
+    "correct_index": 0,
+    "explanation": "Z[i] = длина наибольшего префикса s, совпадающего с подстрокой, начинающейся в i. Строится за O(n)."
+  },
+  {
+    "external_key": "xalga-033",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность поиска эйлерова цикла в графе?",
+    "options": [
+      "O(V + E)",
+      "O(V*E)",
+      "O(V^2)",
+      "O(2^V)"
+    ],
+    "correct_index": 0,
+    "explanation": "Алгоритм Хирхольцера находит эйлеров цикл/путь за O(V + E)."
+  },
+  {
+    "external_key": "xalga-034",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Чем отличается DP с мемоизацией от tabulation?",
+    "options": [
+      "Мемоизация - top-down рекурсия с кэшем; tabulation - bottom-up таблицами",
+      "Мемоизация быстрее всегда",
+      "Tabulation работает только в C++",
+      "Это синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "Memoization идёт от исходной задачи и сохраняет результаты подзадач. Tabulation сразу заполняет таблицу снизу вверх."
+  },
+  {
+    "external_key": "xalga-035",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность задачи коммивояжёра DP по битмаскам?",
+    "options": [
+      "O(n!)",
+      "O(2^n * n^2)",
+      "O(n^2)",
+      "O(n^3)"
+    ],
+    "correct_index": 1,
+    "explanation": "DP по подмножеству и текущей вершине: 2^n * n состояний, переход за O(n) - O(2^n * n^2)."
+  },
+  {
+    "external_key": "xalga-036",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Бойера-Мура?",
+    "options": [
+      "Поиск подстроки с эвристиками; в среднем O(n/m)",
+      "Сортировка",
+      "Дерево разбора",
+      "Хеш"
+    ],
+    "correct_index": 0,
+    "explanation": "Boyer-Moore сравнивает справа налево, использует bad-character и good-suffix; на практике быстрый, в худшем O(n*m)."
+  },
+  {
+    "external_key": "xalga-037",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Karatsuba и зачем он используется?",
+    "options": [
+      "Умножение длинных чисел быстрее наивного O(n^2)",
+      "Алгоритм сортировки",
+      "Hash-функция",
+      "Алгоритм поиска"
+    ],
+    "correct_index": 0,
+    "explanation": "Karatsuba умножает большие числа за O(n^1.585). Используется в bignum-библиотеках."
+  },
+  {
+    "external_key": "xalga-038",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность построения дерева Хаффмана?",
+    "options": [
+      "O(n)",
+      "O(n log n)",
+      "O(n^2)",
+      "O(n^3)"
+    ],
+    "correct_index": 1,
+    "explanation": "Используем приоритетную очередь; n-1 объединений с O(log n) каждое - O(n log n)."
+  },
+  {
+    "external_key": "xalga-039",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое биномиальная куча?",
+    "options": [
+      "Структура из биномиальных деревьев с decrease-key за O(log n)",
+      "Дерево с биномиальными коэффициентами",
+      "Hash-таблица",
+      "Алгоритм сортировки"
+    ],
+    "correct_index": 0,
+    "explanation": "Биномиальная куча поддерживает merge за O(log n), что лучше бинарной."
+  },
+  {
+    "external_key": "xalga-040",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое Fibonacci heap и где используется?",
+    "options": [
+      "Куча с amortized O(1) decrease-key, ускоряет Dijkstra до O(E + V log V)",
+      "Куча с числами Фибоначчи внутри",
+      "Очередь с приоритетом",
+      "Hash-таблица"
+    ],
+    "correct_index": 0,
+    "explanation": "Fibonacci heap даёт amortized O(1) на insert/decrease-key и O(log n) на extract-min."
+  },
+  {
+    "external_key": "xalga-041",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Косарайю?",
+    "options": [
+      "Алгоритм SCC, основанный на двух DFS",
+      "Сортировка",
+      "Алгоритм для дерева",
+      "Поиск кратчайшего пути"
+    ],
+    "correct_index": 0,
+    "explanation": "Kosaraju делает DFS, разворачивает граф и снова делает DFS в порядке убывания time finish, получая SCC."
+  },
+  {
+    "external_key": "xalga-042",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое NP-полная задача?",
+    "options": [
+      "Задача в NP, к которой сводятся все остальные NP-задачи (полиномиально)",
+      "Задача без решения",
+      "Задача за полиномиальное время",
+      "Задача в P"
+    ],
+    "correct_index": 0,
+    "explanation": "NP-complete - наиболее сложные в NP. SAT, TSP-decision, knapsack-decision и т.д."
+  },
+  {
+    "external_key": "xalga-043",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое аппроксимационный алгоритм?",
+    "options": [
+      "Полиномиальный алгоритм с гарантией близости к оптимуму для NP-hard задач",
+      "Случайный алгоритм",
+      "Алгоритм без оценки сложности",
+      "Алгоритм с ошибками"
+    ],
+    "correct_index": 0,
+    "explanation": "2-approximation для vertex cover, PTAS для TSP на евклидовой плоскости и т.д."
+  },
+  {
+    "external_key": "xalga-044",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое randomized algorithm?",
+    "options": [
+      "Алгоритм, использующий случайные выборы (Las Vegas или Monte Carlo)",
+      "Алгоритм с ошибками",
+      "Алгоритм без эффективности",
+      "Декоратор"
+    ],
+    "correct_index": 0,
+    "explanation": "Las Vegas всегда корректный, время рандомное; Monte Carlo детерминированное время, ответ с вероятностью ошибки."
+  },
+  {
+    "external_key": "xalga-045",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Какая сложность Bloom filter (вставка/проверка)?",
+    "options": [
+      "O(k) - количество хеш-функций",
+      "O(n)",
+      "O(log n)",
+      "O(1) гарантированно"
+    ],
+    "correct_index": 0,
+    "explanation": "Bloom filter использует k хеш-функций; обе операции за O(k)."
+  },
+  {
+    "external_key": "xalga-046",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое skip list?",
+    "options": [
+      "Связный список с многоуровневыми указателями для O(log n) поиска",
+      "Очередь",
+      "Стек",
+      "Hash-таблица"
+    ],
+    "correct_index": 0,
+    "explanation": "Skip list - вероятностная структура с O(log n) ожидаемой сложностью операций. Используется в Redis."
+  },
+  {
+    "external_key": "xalga-047",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое online vs offline алгоритм?",
+    "options": [
+      "Online обрабатывает запросы по мере поступления, offline видит все запросы заранее",
+      "Online работает в интернете",
+      "Offline быстрее всегда",
+      "Это синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, mo's algorithm offline (нужны все запросы), persistent structures online."
+  },
+  {
+    "external_key": "xalga-048",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм Чу-Лю/Эдмондса?",
+    "options": [
+      "Минимальное остовное древо в ориентированном графе (arborescence)",
+      "Сортировка",
+      "Поиск SCC",
+      "Алгоритм для DAG"
+    ],
+    "correct_index": 0,
+    "explanation": "Chu-Liu/Edmonds находит minimum spanning arborescence в ориентированном графе за O(VE) или O(E + V log V)."
+  },
+  {
+    "external_key": "xalga-049",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое алгоритм CDQ-divide-and-conquer?",
+    "options": [
+      "Метод divide-and-conquer для оффлайн-задач с зависимостями между запросами",
+      "Метод сортировки",
+      "Способ умножения",
+      "Алгоритм работы с деревом"
+    ],
+    "correct_index": 0,
+    "explanation": "CDQ - продвинутая техника оффлайн D&C, часто используется для задач 3D-доминирования."
+  },
+  {
+    "external_key": "xalga-050",
+    "topic": "algorithms_advanced",
+    "difficulty": 3,
+    "text": "Что такое 'функция мёбиуса' и где применяется в алгоритмах?",
+    "options": [
+      "Mu-функция в теории чисел; используется для обращения сумм по делителям",
+      "Hash-функция",
+      "Сортировка",
+      "Шифрование"
+    ],
+    "correct_index": 0,
+    "explanation": "Функция Мёбиуса позволяет применять формулу обращения Мёбиуса в задачах теории чисел и комбинаторики."
   }
 ]
