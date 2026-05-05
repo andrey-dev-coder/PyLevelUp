@@ -51,3 +51,93 @@ SESSION_MODES: tuple[tuple[str, int | None], ...] = (
     ("50 вопросов (дневная норма)", 50),
     ("Без лимита", None),
 )
+
+
+@dataclass(frozen=True)
+class Specialization:
+    key: str
+    title: str
+    topics: tuple[str, ...]
+
+
+SPECIALIZATIONS: tuple[Specialization, ...] = (
+    Specialization(
+        key="all",
+        title="Все темы",
+        topics=tuple(c.key for c in CATEGORIES),
+    ),
+    Specialization(
+        key="python_backend",
+        title="Python Backend",
+        topics=(
+            "python",
+            "algorithms",
+            "async",
+            "sql",
+            "http",
+            "fastapi",
+            "caching",
+            "testing",
+            "os_linux",
+        ),
+    ),
+    Specialization(
+        key="python_senior",
+        title="Python Backend (senior)",
+        topics=(
+            "python",
+            "algorithms",
+            "algorithms_advanced",
+            "async",
+            "sql",
+            "db_advanced",
+            "http",
+            "fastapi",
+            "caching",
+            "testing",
+            "os_linux",
+            "system_design",
+            "microservices",
+        ),
+    ),
+    Specialization(
+        key="django_dev",
+        title="Django разработчик",
+        topics=(
+            "python",
+            "django",
+            "sql",
+            "http",
+            "caching",
+            "testing",
+            "async",
+        ),
+    ),
+    Specialization(
+        key="fastapi_dev",
+        title="FastAPI разработчик",
+        topics=(
+            "python",
+            "async",
+            "http",
+            "fastapi",
+            "sql",
+            "caching",
+            "testing",
+            "system_design",
+        ),
+    ),
+    Specialization(
+        key="junior_python",
+        title="Junior Python",
+        topics=(
+            "python",
+            "algorithms",
+            "sql",
+            "http",
+            "testing",
+        ),
+    ),
+)
+
+SPECIALIZATIONS_BY_KEY: dict[str, Specialization] = {s.key: s for s in SPECIALIZATIONS}

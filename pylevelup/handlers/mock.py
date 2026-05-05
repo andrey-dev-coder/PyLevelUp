@@ -12,6 +12,12 @@ from aiogram.types import (
 )
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
+from pylevelup.categories import (
+    CATEGORIES,
+    SPECIALIZATIONS,
+    SPECIALIZATIONS_BY_KEY,
+    display_name,
+)
 from pylevelup.db.models import Question, User
 from pylevelup.repositories import (
     MockSessionRepository,
@@ -31,13 +37,40 @@ MOCK_PASS_THRESHOLD = 0.7
 
 
 def _intro_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text=f"Начать ({MOCK_TOTAL_QUESTIONS} вопросов, 30 мин)", callback_data="mock:start")],
-            [InlineKeyboardButton(text="История попыток", callback_data="mock:history")],
-            [InlineKeyboardButton(text="В главное меню", callback_data="menu:main")],
-        ]
+    rows: list[list[InlineKeyboardButton]] = []
+    for spec in SPECIALIZATIONS:
+        rows.append(
+            [InlineKeyboardButton(text=spec.title, callback_data=f"mock:spec:{spec.key}")]
+        )
+    rows.append(
+        [InlineKeyboardButton(text="Свой набор тем", callback_data="mock:custom")]
     )
+    rows.append(
+        [InlineKeyboardButton(text="История попыток", callback_data="mock:history")]
+    )
+    rows.append(
+        [InlineKeyboardButton(text="В главное меню", callback_data="menu:main")]
+    )
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def _custom_keyboard(selected: list[str]) -> InlineKeyboardMarkup:
+    rows: list[list[InlineKeyboardButton]] = []
+    for cat in CATEGORIES:
+        prefix = "☑" if cat.key in selected else "▫️"
+        rows.append(
+            [
+                InlineKeyboardButton(
+                    text=f"{prefix} {cat.short}",
+                    callback_data=f"mock:tog:{cat.key}",
+                )
+            ]
+        )
+    rows.append(
+        [InlineKeyboardButton(text=f"Начать ({len(selected)} тем)", callback_data="mock:custom_go")]
+    )
+    rows.append([InlineKeyboardButton(text="Назад", callback_data="mock:show")])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
 def _question_keyboard(question_id: int, options_count: int) -> InlineKeyboardMarkup:
@@ -62,7 +95,7 @@ def _question_keyboard(question_id: int, options_count: int) -> InlineKeyboardMa
 def _result_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Ещё попытка", callback_data="mock:start")],
+            [InlineKeyboardButton(text="Ещё попытка", callback_data="mock:show")],
             [InlineKeyboardButton(text="История попыток", callback_data="mock:history")],
             [InlineKeyboardButton(text="В главное меню", callback_data="menu:main")],
         ]
@@ -111,12 +144,17 @@ async def _start_session(
     target: Message,
     state: FSMContext,
     session_factory: async_sessionmaker,
+    topics: list[str] | None,
+    spec_label: str,
 ) -> None:
     async with session_factory() as db:
         repo = QuestionRepository(db)
-        questions = await repo.random_active(limit=MOCK_TOTAL_QUESTIONS, topics=None)
+        questions = await repo.random_active(limit=MOCK_TOTAL_QUESTIONS, topics=topics)
     if len(questions) < MOCK_TOTAL_QUESTIONS:
-        await target.answer("Недостаточно вопросов в базе для mock-собеса.")
+        await target.answer(
+            f"Недостаточно вопросов по выбранным темам ({len(questions)} из "
+            f"{MOCK_TOTAL_QUESTIONS}). Выбери больше тем."
+        )
         return
     started_at = datetime.now(UTC)
     deadline = datetime.fromtimestamp(
@@ -131,10 +169,12 @@ async def _start_session(
         mock_answers=answers,
         mock_started_at=started_at.isoformat(),
         mock_deadline=deadline.isoformat(),
+        mock_spec_label=spec_label,
     )
     await target.answer(
         f"<b>Mock-собес запущен.</b>\n"
-        f"{MOCK_TOTAL_QUESTIONS} вопросов из всех тем, лимит 30 минут.\n"
+        f"Специализация: {escape(spec_label)}\n"
+        f"{MOCK_TOTAL_QUESTIONS} вопросов, лимит 30 минут.\n"
         f"Удачи!"
     )
     await _send_question(target, session_factory, queue[0], 1, MOCK_TOTAL_QUESTIONS, deadline)
@@ -210,8 +250,10 @@ async def _finish_session(
 
     minutes, seconds = divmod(duration, 60)
     suffix = " (по таймауту)" if by_timeout else ""
+    spec_label = data.get("mock_spec_label") or "Все темы"
     parts: list[str] = [
         f"<b>Mock-собес завершён{suffix}</b>",
+        f"Специализация: {escape(spec_label)}",
         "",
         f"Вопросов отвечено: {total_answered} из {MOCK_TOTAL_QUESTIONS}",
         f"Правильных: {correct_count} ({accuracy * 100:.0f}%)",
@@ -241,19 +283,23 @@ async def _finish_session(
         await notify_user_about_codes(bot, telegram_id, new_codes)
 
 
+def _intro_text() -> str:
+    return (
+        "<b>Mock-собеседование</b>\n\n"
+        f"{MOCK_TOTAL_QUESTIONS} случайных вопросов по выбранной специализации.\n"
+        f"Лимит времени: 30 минут.\n"
+        f"Порог сдачи: {int(MOCK_PASS_THRESHOLD * 100)}%.\n\n"
+        "Выбери специализацию:"
+    )
+
+
 @router.message(Command("mock"))
 async def handle_mock_command(
     message: Message,
     state: FSMContext,
 ) -> None:
     await state.clear()
-    await message.answer(
-        f"<b>Mock-собеседование</b>\n\n"
-        f"{MOCK_TOTAL_QUESTIONS} случайных вопросов из всех тем.\n"
-        f"Лимит времени: 30 минут.\n"
-        f"Порог сдачи: {int(MOCK_PASS_THRESHOLD * 100)}%.",
-        reply_markup=_intro_keyboard(),
-    )
+    await message.answer(_intro_text(), reply_markup=_intro_keyboard())
 
 
 @router.callback_query(F.data == "mock:show")
@@ -266,17 +312,80 @@ async def handle_mock_show(
         return
     await state.clear()
     await call.answer()
+    await call.message.answer(_intro_text(), reply_markup=_intro_keyboard())
+
+
+@router.callback_query(F.data.startswith("mock:spec:"))
+async def handle_mock_spec(
+    call: CallbackQuery,
+    state: FSMContext,
+    session_factory: async_sessionmaker,
+) -> None:
+    if call.message is None or call.data is None:
+        await call.answer()
+        return
+    parts = call.data.split(":", 2)
+    if len(parts) != 3:
+        await call.answer()
+        return
+    spec = SPECIALIZATIONS_BY_KEY.get(parts[2])
+    if spec is None:
+        await call.answer("Неизвестная специализация", show_alert=True)
+        return
+    await call.answer()
+    topics = None if spec.key == "all" else list(spec.topics)
+    await _start_session(call.message, state, session_factory, topics, spec.title)
+
+
+@router.callback_query(F.data == "mock:custom")
+async def handle_mock_custom(
+    call: CallbackQuery,
+    state: FSMContext,
+) -> None:
+    if call.message is None:
+        await call.answer()
+        return
+    await call.answer()
+    await state.update_data(mock_custom_topics=[])
     await call.message.answer(
-        f"<b>Mock-собеседование</b>\n\n"
-        f"{MOCK_TOTAL_QUESTIONS} случайных вопросов из всех тем.\n"
-        f"Лимит времени: 30 минут.\n"
-        f"Порог сдачи: {int(MOCK_PASS_THRESHOLD * 100)}%.",
-        reply_markup=_intro_keyboard(),
+        "<b>Свой набор тем</b>\nОтметь нужные и нажми 'Начать':",
+        reply_markup=_custom_keyboard([]),
     )
 
 
-@router.callback_query(F.data == "mock:start")
-async def handle_mock_start(
+@router.callback_query(F.data.startswith("mock:tog:"))
+async def handle_mock_toggle(
+    call: CallbackQuery,
+    state: FSMContext,
+) -> None:
+    if call.message is None or call.data is None:
+        await call.answer()
+        return
+    parts = call.data.split(":", 2)
+    if len(parts) != 3:
+        await call.answer()
+        return
+    topic_key = parts[2]
+    valid_keys = {c.key for c in CATEGORIES}
+    if topic_key not in valid_keys:
+        await call.answer()
+        return
+    data = await state.get_data()
+    selected: list[str] = list(data.get("mock_custom_topics") or [])
+    if topic_key in selected:
+        selected.remove(topic_key)
+    else:
+        selected.append(topic_key)
+    await state.update_data(mock_custom_topics=selected)
+    await call.answer()
+    try:
+        await call.message.edit_reply_markup(reply_markup=_custom_keyboard(selected))
+    except Exception:
+        pass
+
+
+@router.callback_query(F.data == "mock:custom_go")
+async def handle_mock_custom_go(
     call: CallbackQuery,
     state: FSMContext,
     session_factory: async_sessionmaker,
@@ -284,8 +393,16 @@ async def handle_mock_start(
     if call.message is None:
         await call.answer()
         return
+    data = await state.get_data()
+    selected: list[str] = list(data.get("mock_custom_topics") or [])
+    if not selected:
+        await call.answer("Выбери хотя бы одну тему", show_alert=True)
+        return
     await call.answer()
-    await _start_session(call.message, state, session_factory)
+    label = "Свой набор: " + ", ".join(display_name(t) for t in selected)
+    if len(label) > 200:
+        label = f"Свой набор ({len(selected)} тем)"
+    await _start_session(call.message, state, session_factory, selected, label)
 
 
 @router.callback_query(F.data == "mock:stop", MockStates.in_session)
