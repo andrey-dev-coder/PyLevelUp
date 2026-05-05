@@ -91,7 +91,7 @@ async def _send_current_question(
             question_id,
             len(options),
             bookmarked=bookmarked,
-            hint_available=False,
+            hint_available=True,
         ),
     )
 

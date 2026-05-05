@@ -4,6 +4,7 @@ from pylevelup.handlers import (
     admin,
     bookmarks,
     broadcast,
+    hints,
     info,
     start,
     stats,
@@ -23,6 +24,7 @@ def build_root_router() -> Router:
         stats.router,
         info.router,
         bookmarks.router,
+        hints.router,
     )
     return router
 
