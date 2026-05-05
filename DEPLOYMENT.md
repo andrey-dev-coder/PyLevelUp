@@ -103,28 +103,14 @@ Railway отлично подходит, потому что умеет одно
 ### 3.2. Подключение PostgreSQL
 
 1. В вашем проекте Railway: New -> Database -> PostgreSQL.
-2. После провижининга откройте сервис, вкладка `Variables`.
-3. Скопируйте `DATABASE_URL` (формат `postgres://...`).
-4. В сервисе бота добавьте переменные:
-   - `DATABASE_URL=postgresql+asyncpg://USER:PASS@HOST:PORT/DB`
-   - `DATABASE_URL_SYNC=postgresql+psycopg2://USER:PASS@HOST:PORT/DB`
-
-   Railway даёт `DATABASE_URL` в формате `postgres://`. Перепишите его руками в asyncpg/psycopg2
-   формат.
+2. Railway сам создаст переменную `DATABASE_URL` и пропишет её в сервис бота через Reference Variables.
+3. Никакой ручной правки URL не нужно: код сам нормализует `postgres://` и `postgresql://` в asyncpg формат, а `DATABASE_URL_SYNC` для миграций тоже выводится автоматически.
 
 ### 3.3. Подключение Redis
 
 1. New -> Database -> Redis.
-2. Скопируйте `REDIS_URL` (`redis://default:PASSWORD@HOST:PORT`).
-3. В сервисе бота:
-   - `REDIS_URL=redis://default:PASSWORD@HOST:PORT/0`
-   - `REDIS_FSM_URL=redis://default:PASSWORD@HOST:PORT/1`
-   - `REDIS_CACHE_URL=redis://default:PASSWORD@HOST:PORT/2`
-   - `CELERY_BROKER_URL=redis://default:PASSWORD@HOST:PORT/3`
-   - `CELERY_RESULT_BACKEND=redis://default:PASSWORD@HOST:PORT/4`
-
-Redis на Railway по умолчанию даёт одну базу. Чтобы использовать несколько `db`-номеров, просто
-указывайте разные индексы в URL: разделение происходит логически на стороне клиента.
+2. Railway создаст переменную `REDIS_URL` (формат `redis://default:PASSWORD@HOST:PORT`).
+3. Никакой ручной правки не нужно: переменные `REDIS_FSM_URL`, `REDIS_CACHE_URL`, `CELERY_BROKER_URL`, `CELERY_RESULT_BACKEND` автоматически выводятся из `REDIS_URL` с индексами /1, /2, /3, /4.
 
 ### 3.4. RabbitMQ (опционально)
 
@@ -138,17 +124,21 @@ Redis на Railway по умолчанию даёт одну базу. Чтоб�
 
 ### 3.5. Переменные окружения сервиса
 
-В сервисе бота на Railway укажите:
+Минимальный набор для Railway (всё остальное автоматически выводится из этих значений):
 
 ```
-BOT_TOKEN=...
-DATABASE_URL=...
-DATABASE_URL_SYNC=...
-REDIS_URL=...
-REDIS_FSM_URL=...
-REDIS_CACHE_URL=...
-CELERY_BROKER_URL=...
-CELERY_RESULT_BACKEND=...
+BOT_TOKEN=ваш_токен_от_BotFather
+DATABASE_URL=${{Postgres.DATABASE_URL}}
+REDIS_URL=${{Redis.REDIS_URL}}
+OWNER_TELEGRAM_ID=896090535
+DEFAULT_ACCESS_CODE=pylevelup_2026
+```
+
+При добавлении PostgreSQL и Redis сервисов в проект Railway сам подставит эти Reference Variables. Если выбираете значения вручную, скопируйте `DATABASE_URL` и `REDIS_URL` из вкладок Variables соответствующих сервисов и вставьте в Raw Editor.
+
+Дополнительные параметры (опционально):
+
+```
 DAILY_QUESTION_LIMIT=50
 SESSION_TIMEOUT_SECONDS=3600
 DAILY_REMINDER_HOUR_UTC=9
