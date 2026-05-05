@@ -2,6 +2,6 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "echo STAGE_START && pwd && ls && echo STAGE_ALEMBIC && alembic upgrade head && echo STAGE_SEED && python -u -m scripts.seed_questions; echo SEED_EXIT=$? && echo STAGE_BOT && exec python -u -m pylevelup"
+startCommand = "bash start.sh"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
