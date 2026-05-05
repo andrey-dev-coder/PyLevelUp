@@ -31,6 +31,7 @@ class StudyCard:
     explanation: str | None
     position: int
     total: int
+    option_explanations: list[str] | None = None
 
 
 class StudyService:
@@ -114,6 +115,7 @@ class StudyService:
             explanation=first.explanation,
             position=1,
             total=len(state.queue),
+            option_explanations=list(first.option_explanations) if first.option_explanations else None,
         )
 
     async def start_mistakes(self, telegram_user) -> StudyCard | None:
@@ -195,4 +197,5 @@ class StudyService:
             explanation=question.explanation,
             position=state.current_index + 1,
             total=len(state.queue),
+            option_explanations=list(question.option_explanations) if question.option_explanations else None,
         )

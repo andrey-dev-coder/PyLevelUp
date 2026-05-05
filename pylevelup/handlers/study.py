@@ -38,6 +38,16 @@ def _format_card(card: StudyCard, category_key: str) -> str:
     for index, option in enumerate(card.options):
         marker = "✅" if index == card.correct_index else "▫️"
         parts.append(f"{marker} {escape(clean_text(option))}")
+    option_explanations = getattr(card, "option_explanations", None)
+    if option_explanations:
+        parts.append("")
+        parts.append("<b>По вариантам</b>")
+        for index, explanation in enumerate(option_explanations):
+            if not explanation or index == card.correct_index:
+                continue
+            parts.append(
+                f"{index + 1}. {escape(clean_text(explanation))}"
+            )
     if card.explanation:
         parts.append("")
         parts.append("<b>Пояснение</b>")

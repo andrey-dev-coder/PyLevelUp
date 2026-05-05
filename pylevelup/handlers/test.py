@@ -21,7 +21,7 @@ from pylevelup.keyboards import (
     build_mode_keyboard,
     build_purpose_keyboard,
 )
-from pylevelup.repositories import BookmarkRepository, UserRepository
+from pylevelup.repositories import BookmarkRepository, QuestionRepository, UserRepository
 from pylevelup.services.test_session_service import TestSessionService
 from pylevelup.states import TestStates
 from pylevelup.utils.text import clean_text, format_question_text
@@ -352,11 +352,25 @@ async def handle_answer(
     is_correct = chosen == correct_index
     correct_option_text = clean_text(options[correct_index])
     feedback_prefix = "Верно" if is_correct else "Неверно"
-    feedback = (
-        f"<b>{feedback_prefix}.</b>\nПравильный ответ: <b>{correct_index + 1}</b>. "
-        f"{escape(correct_option_text)}"
-    )
-    await callback.message.answer(feedback)
+    feedback_lines = [
+        f"<b>{feedback_prefix}.</b>",
+        f"Правильный ответ: <b>{correct_index + 1}</b>. {escape(correct_option_text)}",
+    ]
+    if not is_correct:
+        async with session_service.session_factory() as db:
+            question_obj = await QuestionRepository(db).get_by_id(question_id)
+        explanations = (
+            question_obj.option_explanations if question_obj is not None else None
+        )
+        if explanations and 0 <= chosen < len(explanations):
+            wrong_explanation = explanations[chosen]
+            if wrong_explanation:
+                feedback_lines.append("")
+                feedback_lines.append(
+                    f"<i>Почему вариант {chosen + 1} неверен:</i> "
+                    f"{escape(clean_text(wrong_explanation))}"
+                )
+    await callback.message.answer("\n".join(feedback_lines))
     await callback.answer()
 
     if not cache_state.is_unlimited and cache_state.remaining() == 0:
