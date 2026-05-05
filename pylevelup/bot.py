@@ -24,6 +24,7 @@ BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand(command="start", description="Главное меню"),
     BotCommand(command="test", description="Начать тест по выбранной категории"),
     BotCommand(command="daily", description="Челлендж дня"),
+    BotCommand(command="mock", description="Mock-собеседование"),
     BotCommand(command="algorithms", description="Тренировка алгоритмов"),
     BotCommand(command="mistakes", description="Работа над ошибками"),
     BotCommand(command="bookmarks", description="Закладки"),

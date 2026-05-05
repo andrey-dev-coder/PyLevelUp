@@ -7,6 +7,7 @@ from pylevelup.handlers import (
     daily,
     hints,
     info,
+    mock,
     start,
     stats,
     study,
@@ -27,6 +28,7 @@ def build_root_router() -> Router:
         bookmarks.router,
         hints.router,
         daily.router,
+        mock.router,
     )
     return router
 

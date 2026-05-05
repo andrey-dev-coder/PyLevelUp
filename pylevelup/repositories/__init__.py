@@ -1,6 +1,7 @@
 from pylevelup.repositories.attempt_repo import AttemptRepository
 from pylevelup.repositories.bookmark_repo import BookmarkRepository
 from pylevelup.repositories.daily_challenge_repo import DailyChallengeRepository
+from pylevelup.repositories.mock_repo import MockSessionRepository
 from pylevelup.repositories.progress_repo import ProgressRepository
 from pylevelup.repositories.question_repo import QuestionRepository
 from pylevelup.repositories.session_repo import DailySessionRepository
@@ -13,6 +14,7 @@ __all__ = [
     "BookmarkRepository",
     "DailyChallengeRepository",
     "DailySessionRepository",
+    "MockSessionRepository",
     "ProgressRepository",
     "QuestionRepository",
     "SettingsRepository",
