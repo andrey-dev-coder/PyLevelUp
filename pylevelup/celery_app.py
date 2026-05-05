@@ -9,7 +9,11 @@ celery_app = Celery(
     "pylevelup",
     broker=_settings.celery_broker_url,
     backend=_settings.celery_result_backend,
-    include=["pylevelup.tasks.reminders", "pylevelup.tasks.ranking"],
+    include=[
+        "pylevelup.tasks.reminders",
+        "pylevelup.tasks.ranking",
+        "pylevelup.tasks.digest",
+    ],
 )
 
 celery_app.conf.update(
@@ -30,5 +34,9 @@ celery_app.conf.beat_schedule = {
     "refresh_ranking": {
         "task": "pylevelup.tasks.ranking.refresh_ranking",
         "schedule": crontab(minute=f"*/{_settings.ranking_refresh_minutes}"),
+    },
+    "weekly_digest": {
+        "task": "pylevelup.tasks.digest.send_weekly_digest",
+        "schedule": crontab(minute=0, hour=19, day_of_week="sun"),
     },
 }
