@@ -9980,5 +9980,1405 @@
     ],
     "correct_index": 0,
     "explanation": "В Postgres: INCLUDE; в MySQL: добавление столбцов в индекс. Index-only scan быстрее."
+  },
+  {
+    "external_key": "xdba-001",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое MVCC?",
+    "options": [
+      "Multi-Version Concurrency Control - каждая транзакция видит свой снимок данных",
+      "Multi-Vendor Caching",
+      "Memory Vector Cluster",
+      "Mutable Vault Concurrency"
+    ],
+    "correct_index": 0,
+    "explanation": "MVCC хранит несколько версий строки; читатели не блокируют писателей. Используется в Postgres, Oracle, InnoDB."
+  },
+  {
+    "external_key": "xdba-002",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Зачем нужен VACUUM в Postgres?",
+    "options": [
+      "Удаляет dead tuples (старые версии MVCC), освобождает место и обновляет статистику",
+      "Перестраивает индексы",
+      "Дефрагментирует диск",
+      "Бэкап"
+    ],
+    "correct_index": 0,
+    "explanation": "MVCC оставляет старые версии после UPDATE/DELETE. VACUUM освобождает их; AUTOVACUUM делает это автоматически."
+  },
+  {
+    "external_key": "xdba-003",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое sharding?",
+    "options": [
+      "Горизонтальное разбиение данных по нескольким серверам (по shard key)",
+      "Бэкап",
+      "Репликация",
+      "Кэширование"
+    ],
+    "correct_index": 0,
+    "explanation": "Sharding делит данные по hash/range/directory от shard key (user_id, region). Решает scale-out."
+  },
+  {
+    "external_key": "xdba-004",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое репликация master-replica?",
+    "options": [
+      "Копирование изменений с master на replica для распределения чтения и отказоустойчивости",
+      "Шардинг",
+      "Партиционирование",
+      "Транзакционные логи"
+    ],
+    "correct_index": 0,
+    "explanation": "Master принимает запись, replicas - читают. Sync/async вариант определяет lag и надёжность."
+  },
+  {
+    "external_key": "xdba-005",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Чем отличается синхронная репликация от асинхронной?",
+    "options": [
+      "Sync: master ждёт ack от replica перед commit. Async: master сразу commit, replica догоняет",
+      "Sync быстрее",
+      "Async неконсистентна",
+      "Это синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "Sync - меньший лаг, но дороже по latency и зависит от replica. Async - быстрее, но возможна потеря данных при сбое master."
+  },
+  {
+    "external_key": "xdba-006",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое connection pooling?",
+    "options": [
+      "Переиспользование TCP-соединений с БД для уменьшения latency и лимитов connections",
+      "Кэш запросов",
+      "Sharding",
+      "Replication"
+    ],
+    "correct_index": 0,
+    "explanation": "Pool (PgBouncer, SQLAlchemy pool) держит N открытых соединений; снижает накладные расходы на TLS и handshake."
+  },
+  {
+    "external_key": "xdba-007",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое partitioning?",
+    "options": [
+      "Деление одной таблицы на несколько физических секций (по диапазону, хешу, списку)",
+      "Sharding",
+      "Кэширование",
+      "Индексирование"
+    ],
+    "correct_index": 0,
+    "explanation": "Partitioning хранит данные секциями. Запросы могут проходить только нужные partition (partition pruning)."
+  },
+  {
+    "external_key": "xdba-008",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Чем sharding отличается от partitioning?",
+    "options": [
+      "Partitioning - в одной БД; Sharding - данные на разных серверах",
+      "Это одно и то же",
+      "Sharding не работает в Postgres",
+      "Partitioning только в Oracle"
+    ],
+    "correct_index": 0,
+    "explanation": "Partitioning - физическое разделение в одной БД (postgres-native). Sharding - распределение по разным серверам/кластерам."
+  },
+  {
+    "external_key": "xdba-009",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое two-phase commit (2PC)?",
+    "options": [
+      "Распределённый протокол: prepare фаза + commit/abort фаза для атомарности нескольких узлов",
+      "Атомарная фиксация",
+      "Тип репликации",
+      "Бэкап"
+    ],
+    "correct_index": 0,
+    "explanation": "2PC обеспечивает atomic commit на распределённой транзакции. Имеет проблему blocking при сбое coordinator'а."
+  },
+  {
+    "external_key": "xdba-010",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое CAP-теорема?",
+    "options": [
+      "Распределённая БД не может одновременно дать Consistency, Availability, Partition tolerance",
+      "Caching, Authentication, Partitioning",
+      "Connection-Aware Pooling",
+      "Capacity Allocation Plan"
+    ],
+    "correct_index": 0,
+    "explanation": "При network partition нужно выбрать: либо доступность (AP), либо консистентность (CP). Постгрес обычно CP, Cassandra AP."
+  },
+  {
+    "external_key": "xdba-011",
+    "topic": "db_advanced",
+    "difficulty": 2,
+    "text": "Что такое eventual consistency?",
+    "options": [
+      "Все реплики придут к одному состоянию, но не сразу (лаг)",
+      "Постоянная согласованность",
+      "Strong consistency",
+      "Изолированность"
+    ],
+    "correct_index": 0,
+    "explanation": "Eventual consistency типично для AP-систем (DynamoDB, Cassandra) и async-репликации."
+  },
+  {
+    "external_key": "xdba-012",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое isolation level READ COMMITTED?",
+    "options": [
+      "Транзакция видит только закоммиченные изменения, но snapshot обновляется на каждый SELECT",
+      "Polностью изолированная транзакция",
+      "Грязное чтение",
+      "Default в SERIALIZABLE"
+    ],
+    "correct_index": 0,
+    "explanation": "READ COMMITTED исключает грязные чтения, но допускает non-repeatable read (тот же SELECT в одной транзакции вернёт разное)."
+  },
+  {
+    "external_key": "xdba-013",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое REPEATABLE READ?",
+    "options": [
+      "Snapshot фиксируется в начале транзакции; повторные SELECT видят то же",
+      "Не допускает фантомов",
+      "Самый высокий уровень изоляции",
+      "Не блокирует записи"
+    ],
+    "correct_index": 0,
+    "explanation": "В Postgres REPEATABLE READ использует MVCC snapshot. Возможны phantom inserts (в стандарте), но в Postgres - нет."
+  },
+  {
+    "external_key": "xdba-014",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое SERIALIZABLE isolation?",
+    "options": [
+      "Транзакции выглядят, как будто выполнялись последовательно",
+      "Транзакции работают параллельно без проверок",
+      "Без изоляции",
+      "Высочайшая производительность"
+    ],
+    "correct_index": 0,
+    "explanation": "SERIALIZABLE - максимальный уровень. В Postgres реализован через SSI с обнаружением конфликтов."
+  },
+  {
+    "external_key": "xdba-015",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое hot и cold backup?",
+    "options": [
+      "Hot - бэкап работающей БД; Cold - бэкап остановленной",
+      "Hot - быстрый, Cold - медленный",
+      "Это синонимы",
+      "Cold - в облаке, Hot - локально"
+    ],
+    "correct_index": 0,
+    "explanation": "Hot backup делается без остановки БД (через pg_basebackup, MySQL hot snapshot). Cold - shutdown + copy files."
+  },
+  {
+    "external_key": "xdba-016",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое PITR (Point-in-Time Recovery)?",
+    "options": [
+      "Восстановление БД до конкретного момента времени с помощью WAL/binlog",
+      "Просто бэкап",
+      "Снимок RAM",
+      "Hot standby"
+    ],
+    "correct_index": 0,
+    "explanation": "PITR использует базовый бэкап + WAL-логи; можно восстановить состояние на любой timestamp."
+  },
+  {
+    "external_key": "xdba-017",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое write amplification?",
+    "options": [
+      "Запись одного байта данных приводит к записи нескольких на диск (WAL, индексы, redo)",
+      "Дубликат записи",
+      "Размножение реплик",
+      "Сжатие записи"
+    ],
+    "correct_index": 0,
+    "explanation": "Из-за WAL, индексов, MVCC одна логическая запись приводит к нескольким физическим. Важно для SSD ресурса."
+  },
+  {
+    "external_key": "xdba-018",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое connection storm и как с ним бороться?",
+    "options": [
+      "Много соединений одновременно перегружают БД; решается connection pooler (PgBouncer)",
+      "DDoS",
+      "Тип кэша",
+      "Потеря TCP-соединений"
+    ],
+    "correct_index": 0,
+    "explanation": "PgBouncer мультиплексирует приложения на ограниченный пул real connections."
+  },
+  {
+    "external_key": "xdba-019",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое covering index в Postgres?",
+    "options": [
+      "B-tree с INCLUDE (extra columns), позволяет index-only scan",
+      "Просто составной индекс",
+      "Hash-индекс",
+      "BRIN-индекс"
+    ],
+    "correct_index": 0,
+    "explanation": "INCLUDE-столбцы хранятся в индексе для покрытия SELECT-листа без обращения к heap."
+  },
+  {
+    "external_key": "xdba-020",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое BRIN-индекс?",
+    "options": [
+      "Block Range INdex - метаданные блоков (min/max) для очень больших, естественно отсортированных таблиц",
+      "Binary Random INdex",
+      "Backup Range INdex",
+      "Bidirectional Reindex"
+    ],
+    "correct_index": 0,
+    "explanation": "BRIN маленький по размеру; эффективен для time-series и больших отсортированных таблиц."
+  },
+  {
+    "external_key": "xdba-021",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое GIN/GIST индекс?",
+    "options": [
+      "Generalized Inverted/Search Tree - для полнотекстового, JSONB, массивов",
+      "Просто B-tree",
+      "Hash-индекс",
+      "Custom индексы Oracle"
+    ],
+    "correct_index": 0,
+    "explanation": "GIN - inverted index (быстрый поиск, медленная вставка). GIST - дерево (поиск по геопространственному, ranges)."
+  },
+  {
+    "external_key": "xdba-022",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое full-text search в Postgres?",
+    "options": [
+      "to_tsvector + to_tsquery + GIN-индекс по tsvector",
+      "Просто LIKE %abc%",
+      "Регулярки",
+      "Только через Elasticsearch"
+    ],
+    "correct_index": 0,
+    "explanation": "Postgres FTS поддерживает русский, английский, dictionaries, ranking. Для больших данных рассматривают Elasticsearch."
+  },
+  {
+    "external_key": "xdba-023",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое JSONB и чем отличается от JSON в Postgres?",
+    "options": [
+      "JSONB - бинарный, индексируемый, чуть медленнее на вставке но быстрее на чтении/индексировании",
+      "JSONB только в массивах",
+      "JSON быстрее",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "JSON хранит как текст; JSONB - в decomposed binary формате с индексами через GIN."
+  },
+  {
+    "external_key": "xdba-024",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое explain plan operator 'Bitmap Heap Scan'?",
+    "options": [
+      "Postgres сначала строит bitmap из индексов, потом читает страницы из heap по bitmap",
+      "Полный скан таблицы",
+      "Сортировка",
+      "Hash-агрегация"
+    ],
+    "correct_index": 0,
+    "explanation": "Эффективен, когда нужно много, но не все строки; лучше Index Scan при больших объёмах."
+  },
+  {
+    "external_key": "xdba-025",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое hot rows / contended rows?",
+    "options": [
+      "Часто обновляемые строки, на которых конкурируют транзакции (lock contention)",
+      "Самые читаемые",
+      "Холодные данные",
+      "Старые версии"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается перепроектированием (счётчики через увеличение incrementally в отдельной табличке) или distributed counter."
+  },
+  {
+    "external_key": "xdba-026",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое deadlock и как его решает СУБД?",
+    "options": [
+      "Циклическая блокировка двух транзакций; СУБД определяет цикл и откатывает одну",
+      "Никак, надо рестартить БД",
+      "Переходит в SERIALIZABLE",
+      "Игнорирует"
+    ],
+    "correct_index": 0,
+    "explanation": "Postgres detects deadlocks ~ каждую секунду и aborts одну из транзакций с error 40P01."
+  },
+  {
+    "external_key": "xdba-027",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое 'logical replication' в Postgres?",
+    "options": [
+      "Репликация на основе логических операций (INSERT/UPDATE/DELETE), а не на physical WAL",
+      "Просто синхронная репликация",
+      "Кэш",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "Logical replication позволяет реплицировать отдельные таблицы или разные версии Postgres; основа для CDC (Debezium)."
+  },
+  {
+    "external_key": "xdba-028",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое CDC (Change Data Capture)?",
+    "options": [
+      "Поток изменений из БД (Debezium, logical decoding) для синхронизации с другими системами",
+      "Тип бэкапа",
+      "Sharding",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "CDC позволяет реактивно обновлять кэш, search-индексы (Elasticsearch) при изменениях в БД."
+  },
+  {
+    "external_key": "xdba-029",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое 'query planner' и 'statistics'?",
+    "options": [
+      "Оптимизатор использует статистику (распределение значений) для выбора плана",
+      "Планировщик резервного копирования",
+      "Crawler",
+      "Auto-vacuum"
+    ],
+    "correct_index": 0,
+    "explanation": "ANALYZE обновляет статистику. Плохая статистика = плохой план. autovacuum обычно делает это автоматически."
+  },
+  {
+    "external_key": "xdba-030",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое read-after-write consistency и как его обеспечить с replicas?",
+    "options": [
+      "После записи на master читать с master (sticky session) или с подтверждённой sync replica",
+      "Просто читать с replica",
+      "Никак",
+      "Только через cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Async replicas могут быть позади master. Решения: route reads to master, sync replica, или read-your-writes session pinning."
+  },
+  {
+    "external_key": "xdba-031",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое 'split brain' в распределённых БД?",
+    "options": [
+      "После network partition обе стороны считают себя master и принимают записи; конфликты данных",
+      "Тип индекса",
+      "Сжатие",
+      "Cache miss"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается quorum (Raft, Paxos), STONITH, fence tokens."
+  },
+  {
+    "external_key": "xdba-032",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое quorum в распределённых системах?",
+    "options": [
+      "Подмножество узлов, чьего согласия достаточно для решения (например, majority)",
+      "Полная согласованность",
+      "Атомарный commit",
+      "Тип бэкапа"
+    ],
+    "correct_index": 0,
+    "explanation": "Если W+R > N (write quorum + read quorum > nodes), система обеспечивает strong consistency."
+  },
+  {
+    "external_key": "xdba-033",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое Raft / Paxos?",
+    "options": [
+      "Алгоритмы консенсуса для координации в распределённой системе",
+      "Алгоритмы шифрования",
+      "Стандарты репликации",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "Raft проще для понимания и реализации; используется в etcd, Consul, Kafka KRaft. Paxos более общий."
+  },
+  {
+    "external_key": "xdba-034",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое distributed transaction?",
+    "options": [
+      "Транзакция, охватывающая несколько узлов/сервисов",
+      "Long-running",
+      "Только в Spanner",
+      "Откатываемая транзакция"
+    ],
+    "correct_index": 0,
+    "explanation": "Распределённые транзакции через 2PC дороги; часто заменяются saga pattern или outbox."
+  },
+  {
+    "external_key": "xdba-035",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое saga pattern?",
+    "options": [
+      "Последовательность локальных транзакций с компенсирующими действиями при сбое",
+      "Распределённая транзакция",
+      "Тип кэша",
+      "Очередь"
+    ],
+    "correct_index": 0,
+    "explanation": "Если шаг 3 упал, выполняются compensations 1, 2 (например, refund). Choreography vs orchestration."
+  },
+  {
+    "external_key": "xdba-036",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое outbox pattern?",
+    "options": [
+      "Сохранение события в outbox-таблице в одной транзакции с бизнес-данными; потом publisher отправляет",
+      "Тип очереди",
+      "Кэш",
+      "REST API"
+    ],
+    "correct_index": 0,
+    "explanation": "Outbox решает проблему dual-write: гарантирует at-least-once доставку событий без распределённой транзакции."
+  },
+  {
+    "external_key": "xdba-037",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое write-ahead log (WAL)?",
+    "options": [
+      "Все изменения сначала пишутся в лог на диск, потом в data files; гарантия durability",
+      "Лог запросов",
+      "Кэш",
+      "Тип бэкапа"
+    ],
+    "correct_index": 0,
+    "explanation": "При сбое БД восстанавливает страницы из WAL. Postgres pg_wal, MySQL redo log, SQLite WAL."
+  },
+  {
+    "external_key": "xdba-038",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое OLTP vs OLAP?",
+    "options": [
+      "OLTP: короткие транзакции (онлайн заказы); OLAP: аналитика, агрегации, медленные читалки",
+      "OLAP - хранилище",
+      "Они одинаковы",
+      "OLTP только в Oracle"
+    ],
+    "correct_index": 0,
+    "explanation": "OLTP оптимизирован под INSERT/UPDATE и точечные SELECT. OLAP - под широкие сканы и агрегации (column-store, BigQuery, Redshift)."
+  },
+  {
+    "external_key": "xdba-039",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое column-oriented storage?",
+    "options": [
+      "Данные хранятся по столбцам; быстрый агрегационный SELECT, эффективное сжатие",
+      "По строкам",
+      "По времени",
+      "По узлу"
+    ],
+    "correct_index": 0,
+    "explanation": "ClickHouse, Parquet, Vertica хранят column-wise. Идеально для OLAP-запросов с малым числом столбцов."
+  },
+  {
+    "external_key": "xdba-040",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое NoSQL и какие типы бывают?",
+    "options": [
+      "Document (Mongo), Key-Value (Redis), Wide-column (Cassandra), Graph (Neo4j)",
+      "Только Mongo",
+      "Только Redis",
+      "Это синоним SQL"
+    ],
+    "correct_index": 0,
+    "explanation": "NoSQL - семейство нерациональных БД, оптимизированных под отдельные сценарии."
+  },
+  {
+    "external_key": "xdba-041",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое eventual consistency в DynamoDB/Cassandra?",
+    "options": [
+      "Чтение сразу после записи может вернуть старое значение; через ~ms-s система сходится",
+      "Strong consistency",
+      "Read-after-write",
+      "Только в Postgres"
+    ],
+    "correct_index": 0,
+    "explanation": "AP-системы дают eventual consistency. DynamoDB поддерживает strong consistency опционально (за higher RU)."
+  },
+  {
+    "external_key": "xdba-042",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое idempotent operations?",
+    "options": [
+      "Многократные применения дают тот же результат, что и однократное",
+      "Атомарные",
+      "Уникальные",
+      "Сериализованные"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно для retry: PUT, DELETE идемпотентны; INSERT с RANDOM() - нет."
+  },
+  {
+    "external_key": "xdba-043",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое batch insert и зачем?",
+    "options": [
+      "Один SQL запрос вставляет много строк; быстрее, чем по одной",
+      "Triggered insert",
+      "INSERT через PROCEDURE",
+      "Триггер"
+    ],
+    "correct_index": 0,
+    "explanation": "Batch insert (INSERT ... VALUES (...), (...), ...; или COPY) экономит round-trips и WAL-overhead."
+  },
+  {
+    "external_key": "xdba-044",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое COPY в Postgres?",
+    "options": [
+      "Очень быстрая загрузка/выгрузка CSV/binary в/из таблицы (минуя SQL парсер)",
+      "INSERT с триггером",
+      "Бэкап",
+      "Команда репликации"
+    ],
+    "correct_index": 0,
+    "explanation": "COPY быстрее массового INSERT; используется в pg_dump, ETL."
+  },
+  {
+    "external_key": "xdba-045",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое lock escalation?",
+    "options": [
+      "Когда СУБД заменяет много row-locks на table-lock для экономии памяти",
+      "Снятие блокировки",
+      "Запрет на эскалацию",
+      "Тип fail-over"
+    ],
+    "correct_index": 0,
+    "explanation": "Случается в SQL Server; в Postgres такого нет - блокировки на уровне строк остаются."
+  },
+  {
+    "external_key": "xdba-046",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое row-level security (RLS)?",
+    "options": [
+      "Политики доступа на уровне строк (SELECT/UPDATE по условию текущего user_id)",
+      "Шифрование",
+      "TLS",
+      "Тип PKEY"
+    ],
+    "correct_index": 0,
+    "explanation": "RLS в Postgres CREATE POLICY ... ; используется для multi-tenant приложений."
+  },
+  {
+    "external_key": "xdba-047",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое schema migration и инструменты?",
+    "options": [
+      "Версионирование изменений схемы (Alembic, Flyway, Liquibase)",
+      "Просто SQL-скрипт",
+      "Резервное копирование",
+      "ETL"
+    ],
+    "correct_index": 0,
+    "explanation": "Alembic для SQLAlchemy, Flyway для JVM, Liquibase универсальный. Версии хранятся в служебной таблице."
+  },
+  {
+    "external_key": "xdba-048",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое safe migration (zero-downtime)?",
+    "options": [
+      "Изменения схемы в несколько шагов, совместимых со старым и новым кодом одновременно",
+      "Backup + restore",
+      "Только в выходные",
+      "Простой ALTER"
+    ],
+    "correct_index": 0,
+    "explanation": "Add column nullable -> deploy code -> backfill -> set NOT NULL. Drop column: deploy stop using -> drop позже."
+  },
+  {
+    "external_key": "xdba-049",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое monitoring параметры важные для Postgres?",
+    "options": [
+      "TPS, slow queries, locks, replication lag, autovacuum, cache hit ratio",
+      "Только CPU",
+      "Только размер диска",
+      "Только запросы в секунду"
+    ],
+    "correct_index": 0,
+    "explanation": "Метрики: pg_stat_statements, pg_stat_replication, pg_stat_activity, autovacuum log."
+  },
+  {
+    "external_key": "xdba-050",
+    "topic": "db_advanced",
+    "difficulty": 3,
+    "text": "Что такое 'tuning autovacuum'?",
+    "options": [
+      "Настройка частоты и thresholds для автоматической очистки dead tuples и обновления статистики",
+      "Manual VACUUM",
+      "Только VACUUM FULL",
+      "REINDEX"
+    ],
+    "correct_index": 0,
+    "explanation": "Параметры autovacuum_vacuum_scale_factor, naptime, cost_limit. Важно для активно изменяемых таблиц."
+  },
+  {
+    "external_key": "xhttp-001",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 200?",
+    "options": [
+      "OK - запрос успешен",
+      "Created",
+      "Not Found",
+      "Internal Server Error"
+    ],
+    "correct_index": 0,
+    "explanation": "200 OK - стандартный успешный ответ."
+  },
+  {
+    "external_key": "xhttp-002",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 404?",
+    "options": [
+      "Bad Request",
+      "Unauthorized",
+      "Not Found - ресурс не существует",
+      "Forbidden"
+    ],
+    "correct_index": 2,
+    "explanation": "404 - сервер не нашёл ресурс по URL. Может быть навсегда (используйте 410 Gone)."
+  },
+  {
+    "external_key": "xhttp-003",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 500?",
+    "options": [
+      "OK",
+      "Bad Request",
+      "Internal Server Error",
+      "Service Unavailable"
+    ],
+    "correct_index": 2,
+    "explanation": "500 - на сервере что-то пошло не так. Должно показывать пользователю generic error message."
+  },
+  {
+    "external_key": "xhttp-004",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какой метод HTTP идемпотентен и не должен изменять состояние?",
+    "options": [
+      "GET",
+      "POST",
+      "DELETE",
+      "PATCH"
+    ],
+    "correct_index": 0,
+    "explanation": "GET - safe и idempotent. Не должен изменять состояние сервера."
+  },
+  {
+    "external_key": "xhttp-005",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какой метод предполагается идемпотентным, но не safe?",
+    "options": [
+      "GET",
+      "PUT",
+      "POST",
+      "PATCH"
+    ],
+    "correct_index": 1,
+    "explanation": "PUT идемпотентен (повторный вызов даёт то же состояние), но изменяет состояние."
+  },
+  {
+    "external_key": "xhttp-006",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 401?",
+    "options": [
+      "Unauthorized - требуется аутентификация",
+      "Forbidden",
+      "Not Found",
+      "Bad Request"
+    ],
+    "correct_index": 0,
+    "explanation": "401 - клиент не аутентифицирован. 403 - аутентифицирован, но нет прав."
+  },
+  {
+    "external_key": "xhttp-007",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 403?",
+    "options": [
+      "Forbidden - нет прав на ресурс",
+      "Unauthorized",
+      "Not Found",
+      "Conflict"
+    ],
+    "correct_index": 0,
+    "explanation": "403 - аутентификация прошла, но операция запрещена для текущего user."
+  },
+  {
+    "external_key": "xhttp-008",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какая разница между POST и PUT?",
+    "options": [
+      "POST создаёт ресурс (или общая операция); PUT - заменяет ресурс по полному URL и идемпотентен",
+      "Они синонимы",
+      "POST идемпотентен",
+      "PUT работает только с JSON"
+    ],
+    "correct_index": 0,
+    "explanation": "POST /users создаёт пользователя (id выдаёт сервер). PUT /users/42 - идемпотентно создаёт/заменяет пользователя 42."
+  },
+  {
+    "external_key": "xhttp-009",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CORS?",
+    "options": [
+      "Cross-Origin Resource Sharing - механизм разрешения запросов между origin'ами через заголовки",
+      "Cross-Object Resource Sync",
+      "Common Origin Routing System",
+      "Cipher Output Reuse Standard"
+    ],
+    "correct_index": 0,
+    "explanation": "Браузер ограничивает кросс-доменные запросы; сервер указывает Access-Control-Allow-Origin."
+  },
+  {
+    "external_key": "xhttp-010",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое preflight-запрос (OPTIONS)?",
+    "options": [
+      "Браузер шлёт OPTIONS перед сложным CORS-запросом, чтобы проверить разрешения",
+      "Health-check",
+      "Простая проверка",
+      "Аутентификация"
+    ],
+    "correct_index": 0,
+    "explanation": "Preflight нужен для not-simple запросов (нестандартные методы, headers, content-type)."
+  },
+  {
+    "external_key": "xhttp-011",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTPS и зачем?",
+    "options": [
+      "HTTP поверх TLS - шифрование, integrity и аутентификация сервера",
+      "HTTP/2",
+      "Просто HTTP с авторизацией",
+      "HTTP без cookies"
+    ],
+    "correct_index": 0,
+    "explanation": "TLS защищает от прослушки и MITM. Использует сертификаты для подтверждения identity сервера."
+  },
+  {
+    "external_key": "xhttp-012",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое сертификат TLS?",
+    "options": [
+      "Подписанный CA документ, связывающий публичный ключ с доменом",
+      "Симметричный ключ",
+      "Cookie",
+      "JWT"
+    ],
+    "correct_index": 0,
+    "explanation": "Сертификат подписан Certificate Authority. Браузер проверяет цепочку доверия."
+  },
+  {
+    "external_key": "xhttp-013",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем отличается HTTP/1.1 от HTTP/2?",
+    "options": [
+      "HTTP/2: бинарный формат, мультиплексирование запросов в одном соединении, header compression",
+      "HTTP/2 на UDP",
+      "HTTP/1.1 без TLS",
+      "Они одинаковы"
+    ],
+    "correct_index": 0,
+    "explanation": "HTTP/2 решает head-of-line blocking на уровне приложения через streams."
+  },
+  {
+    "external_key": "xhttp-014",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP/3?",
+    "options": [
+      "HTTP поверх QUIC (UDP); решает head-of-line blocking на транспортном уровне",
+      "Просто новая версия с JSON",
+      "Только для CDN",
+      "HTTP без TLS"
+    ],
+    "correct_index": 0,
+    "explanation": "QUIC использует UDP с собственными streams и встроенным TLS 1.3."
+  },
+  {
+    "external_key": "xhttp-015",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое keep-alive в HTTP/1.1?",
+    "options": [
+      "Переиспользование TCP-соединения для нескольких запросов",
+      "Long-polling",
+      "Постоянное HTTPS",
+      "WebSockets"
+    ],
+    "correct_index": 0,
+    "explanation": "По умолчанию HTTP/1.1 keep-alive активен; экономит TCP/TLS handshake между запросами."
+  },
+  {
+    "external_key": "xhttp-016",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-заголовок Content-Type?",
+    "options": [
+      "Тип содержимого тела (application/json, text/html)",
+      "Размер контента",
+      "Хост",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Content-Type сообщает клиенту/серверу формат данных. Парсеры выбирают сериализатор по нему."
+  },
+  {
+    "external_key": "xhttp-017",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Accept?",
+    "options": [
+      "Клиент сообщает сервером какие типы он принимает (application/json, text/html)",
+      "Аутентификация",
+      "Тип шифрования",
+      "Cache-Control"
+    ],
+    "correct_index": 0,
+    "explanation": "Сервер выбирает представление (content negotiation) на основе Accept."
+  },
+  {
+    "external_key": "xhttp-018",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Cache-Control: no-store?",
+    "options": [
+      "Кэшировать нельзя (даже временно), для чувствительных данных",
+      "Можно кэшировать вечно",
+      "Используется для CDN",
+      "Тип сжатия"
+    ],
+    "correct_index": 0,
+    "explanation": "no-store запрещает любое кэширование. no-cache позволяет кэш, но требует revalidation."
+  },
+  {
+    "external_key": "xhttp-019",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое ETag?",
+    "options": [
+      "Идентификатор версии ресурса, используется с If-None-Match для conditional GET",
+      "Cookie",
+      "Авторизация",
+      "Шифрование"
+    ],
+    "correct_index": 0,
+    "explanation": "Сервер возвращает ETag; клиент шлёт If-None-Match - 304 Not Modified, если не изменилось."
+  },
+  {
+    "external_key": "xhttp-020",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что означает HTTP-код 301 vs 302?",
+    "options": [
+      "301 Moved Permanently (постоянно); 302 Found (временно)",
+      "301 - ошибка, 302 - успех",
+      "Они идентичны",
+      "302 Permanent"
+    ],
+    "correct_index": 0,
+    "explanation": "301 кэшируется и обновляет URL; 302 - временный редирект, клиент должен использовать оригинал в будущем."
+  },
+  {
+    "external_key": "xhttp-021",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое идемпотентность?",
+    "options": [
+      "Многократное применение даёт тот же результат, что и однократное",
+      "Атомарность",
+      "Безопасность",
+      "Уникальность ID"
+    ],
+    "correct_index": 0,
+    "explanation": "Idempotent методы: GET, HEAD, PUT, DELETE. POST не идемпотентен (если без специальных мер)."
+  },
+  {
+    "external_key": "xhttp-022",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое REST?",
+    "options": [
+      "Архитектурный стиль: ресурсы по URI, HTTP-методы, stateless, cacheable",
+      "Протокол",
+      "Только для JSON",
+      "Тип сериализации"
+    ],
+    "correct_index": 0,
+    "explanation": "REST - не протокол, а ограничения. Resources, uniform interface, statelessness, layered system."
+  },
+  {
+    "external_key": "xhttp-023",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем отличается REST от RPC?",
+    "options": [
+      "REST - вокруг ресурсов и стандартных методов; RPC - вокруг функций (callRemote('createUser'))",
+      "REST на UDP",
+      "RPC только в gRPC",
+      "Они синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "REST: GET /users/42. RPC: POST /api { method: 'getUser', id: 42 }. gRPC - современный binary RPC."
+  },
+  {
+    "external_key": "xhttp-024",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое JWT?",
+    "options": [
+      "JSON Web Token - подписанный токен с claims (header.payload.signature)",
+      "Cookie",
+      "OAuth",
+      "TLS-сертификат"
+    ],
+    "correct_index": 0,
+    "explanation": "JWT - три base64url части. Хранит user_id, exp, custom claims; подписывается секретом или приватным ключом."
+  },
+  {
+    "external_key": "xhttp-025",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем отличаются session-cookies от JWT?",
+    "options": [
+      "Session - opaque ID, состояние на сервере; JWT - self-contained, без серверного состояния",
+      "JWT работает только в HTTPS",
+      "Session не имеет expiry",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "Session проще revoke; JWT хорош для микросервисов (без shared session storage), но invalidation сложнее."
+  },
+  {
+    "external_key": "xhttp-026",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое OAuth 2.0?",
+    "options": [
+      "Фреймворк делегированной авторизации (через access token)",
+      "Метод хеширования",
+      "Cookie",
+      "JWT"
+    ],
+    "correct_index": 0,
+    "explanation": "OAuth 2 позволяет предоставлять third-party доступ к ресурсам без выдачи паролей. Flows: authorization code, client credentials, etc."
+  },
+  {
+    "external_key": "xhttp-027",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое OpenID Connect?",
+    "options": [
+      "Расширение OAuth 2 для аутентификации (id_token + claims)",
+      "Просто OAuth",
+      "DNS",
+      "Каждый OAuth - OIDC"
+    ],
+    "correct_index": 0,
+    "explanation": "OIDC добавляет аутентификацию (id_token) поверх OAuth 2 (который только для авторизации)."
+  },
+  {
+    "external_key": "xhttp-028",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CSRF?",
+    "options": [
+      "Cross-Site Request Forgery - атакующий побуждает жертву отправить запрос с её cookies",
+      "Cross-Site Routing Failure",
+      "Common Server Round-Trip",
+      "Cipher Stack Reuse"
+    ],
+    "correct_index": 0,
+    "explanation": "CSRF использует автоматическую отправку cookies. Защита: CSRF-токены, SameSite cookies."
+  },
+  {
+    "external_key": "xhttp-029",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое XSS?",
+    "options": [
+      "Cross-Site Scripting - атакующий вставляет JS в страницу, который запускается в браузере жертвы",
+      "Cookies",
+      "DDoS",
+      "DNS spoofing"
+    ],
+    "correct_index": 0,
+    "explanation": "XSS защита: экранирование/санитизация ввода, CSP, HttpOnly cookies (чтобы JS не читал), templating с auto-escape."
+  },
+  {
+    "external_key": "xhttp-030",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок X-Forwarded-For?",
+    "options": [
+      "Список IP адресов клиента и proxy, через которые прошёл запрос",
+      "URL источника",
+      "Login",
+      "Country code"
+    ],
+    "correct_index": 0,
+    "explanation": "X-Forwarded-For добавляется reverse proxy (Nginx, Cloudflare). Доверять только своему ближайшему прокси, остальное - подделка."
+  },
+  {
+    "external_key": "xhttp-031",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Authorization: Bearer?",
+    "options": [
+      "Передача access token (JWT) в заголовке",
+      "Basic auth",
+      "Cookie",
+      "Шифрование"
+    ],
+    "correct_index": 0,
+    "explanation": "Bearer token - 'предъявитель имеет право'. Безопасность зависит от того, что token не утечёт."
+  },
+  {
+    "external_key": "xhttp-032",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Basic auth?",
+    "options": [
+      "base64(user:password) в заголовке Authorization; всегда поверх HTTPS",
+      "JWT",
+      "OAuth",
+      "Form login"
+    ],
+    "correct_index": 0,
+    "explanation": "Basic auth - простой вариант для service-to-service. base64 - не шифрование, только кодирование."
+  },
+  {
+    "external_key": "xhttp-033",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-код 429?",
+    "options": [
+      "Too Many Requests - rate limit",
+      "Conflict",
+      "Bad Request",
+      "Forbidden"
+    ],
+    "correct_index": 0,
+    "explanation": "429 говорит клиенту замедлиться. Часто с заголовком Retry-After."
+  },
+  {
+    "external_key": "xhttp-034",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-код 503?",
+    "options": [
+      "Service Unavailable - сервер временно перегружен или на maintenance",
+      "Forbidden",
+      "Internal Server Error",
+      "Bad Gateway"
+    ],
+    "correct_index": 0,
+    "explanation": "503 - временный сбой. Часто с Retry-After. 504 - upstream timeout."
+  },
+  {
+    "external_key": "xhttp-035",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Content-Length?",
+    "options": [
+      "Размер тела в байтах",
+      "Количество заголовков",
+      "Длина URL",
+      "ID запроса"
+    ],
+    "correct_index": 0,
+    "explanation": "Content-Length важен для парсинга тела. Альтернатива - Transfer-Encoding: chunked."
+  },
+  {
+    "external_key": "xhttp-036",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Transfer-Encoding: chunked?",
+    "options": [
+      "Тело передаётся по частям (chunks); не нужно знать размер заранее",
+      "Шифрование",
+      "Сжатие",
+      "Разделение на TCP-пакеты"
+    ],
+    "correct_index": 0,
+    "explanation": "Chunked - формат передачи, когда сервер генерирует ответ потоком (streaming)."
+  },
+  {
+    "external_key": "xhttp-037",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое gzip/br/deflate в Accept-Encoding?",
+    "options": [
+      "Сжатие тела для уменьшения трафика",
+      "Шифрование",
+      "Тип авторизации",
+      "Формат данных"
+    ],
+    "correct_index": 0,
+    "explanation": "Клиент сообщает поддерживаемые алгоритмы; сервер выбирает и кладёт Content-Encoding в ответ."
+  },
+  {
+    "external_key": "xhttp-038",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Reverse Proxy?",
+    "options": [
+      "Сервер, проксирующий запросы к backend; load balancing, TLS termination, кэш (Nginx, HAProxy, Cloudflare)",
+      "Forward proxy",
+      "DNS",
+      "VPN"
+    ],
+    "correct_index": 0,
+    "explanation": "Reverse proxy стоит перед backend и обрабатывает запросы клиентов. Часто кеширует, фильтрует, балансирует."
+  },
+  {
+    "external_key": "xhttp-039",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CDN?",
+    "options": [
+      "Content Delivery Network - распределённый кэш статики на edge-серверах",
+      "Database",
+      "Custom Domain Name",
+      "Centralized Data Network"
+    ],
+    "correct_index": 0,
+    "explanation": "CDN (Cloudflare, Akamai, Fastly) кеширует статику ближе к пользователю - снижает latency и нагрузку на origin."
+  },
+  {
+    "external_key": "xhttp-040",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Vary?",
+    "options": [
+      "Указывает, какие заголовки запроса определяют разные версии ответа в кэше (Vary: Accept-Language)",
+      "Тип сжатия",
+      "Авторизация",
+      "Тип JSON"
+    ],
+    "correct_index": 0,
+    "explanation": "Vary говорит CDN: ответ разный для разных значений этого заголовка. Без Vary можно подсунуть не тот ответ."
+  },
+  {
+    "external_key": "xhttp-041",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HSTS?",
+    "options": [
+      "HTTP Strict Transport Security - заголовок, заставляющий браузер всегда использовать HTTPS",
+      "TLS-сертификат",
+      "Cookie",
+      "JWT"
+    ],
+    "correct_index": 0,
+    "explanation": "Strict-Transport-Security: max-age=... ; браузер запоминает и редиректит HTTP на HTTPS даже без сети."
+  },
+  {
+    "external_key": "xhttp-042",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CSP (Content Security Policy)?",
+    "options": [
+      "Заголовок, ограничивающий источники скриптов/стилей/iframe для защиты от XSS",
+      "Ограничение CORS",
+      "TLS",
+      "Авторизация"
+    ],
+    "correct_index": 0,
+    "explanation": "CSP: 'script-src self' - JS только с своего origin. Сильно снижает поверхность атаки XSS."
+  },
+  {
+    "external_key": "xhttp-043",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое webhook?",
+    "options": [
+      "HTTP-запрос от системы A к системе B, инициированный событием (callback URL)",
+      "WebSocket",
+      "Long polling",
+      "GraphQL subscription"
+    ],
+    "correct_index": 0,
+    "explanation": "Webhook - 'вы регистрируете URL, мы шлём запрос когда что-то происходит'. Часто с подписью HMAC."
+  },
+  {
+    "external_key": "xhttp-044",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое WebSocket?",
+    "options": [
+      "Двунаправленное persistent соединение поверх TCP, после HTTP upgrade",
+      "Только серверные события",
+      "REST",
+      "TCP"
+    ],
+    "correct_index": 0,
+    "explanation": "WebSocket подходит для чатов, real-time updates. Установка через HTTP Upgrade header."
+  },
+  {
+    "external_key": "xhttp-045",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Server-Sent Events (SSE)?",
+    "options": [
+      "Однонаправленный поток server -> client поверх HTTP/1.1 keep-alive",
+      "WebSocket",
+      "Long-polling",
+      "WebRTC"
+    ],
+    "correct_index": 0,
+    "explanation": "SSE проще WebSocket; работает поверх обычного HTTP, поддерживает автореконнект."
+  },
+  {
+    "external_key": "xhttp-046",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что означает HTTP-код 409?",
+    "options": [
+      "Conflict - конфликт с текущим состоянием ресурса (дубль или race)",
+      "Not Found",
+      "Forbidden",
+      "Unauthorized"
+    ],
+    "correct_index": 0,
+    "explanation": "409 для бизнес-конфликтов: PUT с устаревшей версией, дубликат уникального поля и т.д."
+  },
+  {
+    "external_key": "xhttp-047",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-код 422?",
+    "options": [
+      "Unprocessable Entity - синтаксис правильный, но семантика невалидна (validation errors)",
+      "Bad Request",
+      "Not Found",
+      "Forbidden"
+    ],
+    "correct_index": 0,
+    "explanation": "Часто используется в REST API для ошибок валидации полей."
+  },
+  {
+    "external_key": "xhttp-048",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Authorization vs Cookie для аутентификации?",
+    "options": [
+      "Cookie автоматически отправляются с запросом (CSRF-уязвимы); Authorization вручную добавляется (XSS-уязвимы)",
+      "Cookie быстрее",
+      "Authorization не работает в браузере",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "HttpOnly cookies защищают от XSS-кражи. Bearer токены, хранимые в localStorage, доступны JS."
+  },
+  {
+    "external_key": "xhttp-049",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок SameSite у cookies?",
+    "options": [
+      "Strict/Lax/None - управление отправкой cookies при cross-site навигации; защита от CSRF",
+      "TTL",
+      "Шифрование",
+      "Origin"
+    ],
+    "correct_index": 0,
+    "explanation": "Strict - не шлём при кросс-сайт переходе. Lax (по умолчанию) - шлём при top-level навигации. None требует Secure."
+  },
+  {
+    "external_key": "xhttp-050",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем GraphQL отличается от REST?",
+    "options": [
+      "Один endpoint, query language; клиент сам выбирает поля и связи; не привязан к ресурсам",
+      "GraphQL быстрее всегда",
+      "REST использует POST",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "GraphQL хорош, когда клиентам нужны разные fields. Минус: harder caching, N+1, сложность."
   }
 ]

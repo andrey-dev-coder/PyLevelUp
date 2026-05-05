@@ -1,0 +1,677 @@
+[
+  {
+    "external_key": "xhttp-001",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 200?",
+    "options": ["OK - запрос успешен", "Created", "Not Found", "Internal Server Error"],
+    "correct_index": 0,
+    "explanation": "200 OK - стандартный успешный ответ."
+  },
+  {
+    "external_key": "xhttp-002",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 404?",
+    "options": ["Bad Request", "Unauthorized", "Not Found - ресурс не существует", "Forbidden"],
+    "correct_index": 2,
+    "explanation": "404 - сервер не нашёл ресурс по URL. Может быть навсегда (используйте 410 Gone)."
+  },
+  {
+    "external_key": "xhttp-003",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 500?",
+    "options": ["OK", "Bad Request", "Internal Server Error", "Service Unavailable"],
+    "correct_index": 2,
+    "explanation": "500 - на сервере что-то пошло не так. Должно показывать пользователю generic error message."
+  },
+  {
+    "external_key": "xhttp-004",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какой метод HTTP идемпотентен и не должен изменять состояние?",
+    "options": ["GET", "POST", "DELETE", "PATCH"],
+    "correct_index": 0,
+    "explanation": "GET - safe и idempotent. Не должен изменять состояние сервера."
+  },
+  {
+    "external_key": "xhttp-005",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какой метод предполагается идемпотентным, но не safe?",
+    "options": ["GET", "PUT", "POST", "PATCH"],
+    "correct_index": 1,
+    "explanation": "PUT идемпотентен (повторный вызов даёт то же состояние), но изменяет состояние."
+  },
+  {
+    "external_key": "xhttp-006",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 401?",
+    "options": [
+      "Unauthorized - требуется аутентификация",
+      "Forbidden",
+      "Not Found",
+      "Bad Request"
+    ],
+    "correct_index": 0,
+    "explanation": "401 - клиент не аутентифицирован. 403 - аутентифицирован, но нет прав."
+  },
+  {
+    "external_key": "xhttp-007",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Что означает HTTP-код 403?",
+    "options": [
+      "Forbidden - нет прав на ресурс",
+      "Unauthorized",
+      "Not Found",
+      "Conflict"
+    ],
+    "correct_index": 0,
+    "explanation": "403 - аутентификация прошла, но операция запрещена для текущего user."
+  },
+  {
+    "external_key": "xhttp-008",
+    "topic": "http",
+    "difficulty": 1,
+    "text": "Какая разница между POST и PUT?",
+    "options": [
+      "POST создаёт ресурс (или общая операция); PUT - заменяет ресурс по полному URL и идемпотентен",
+      "Они синонимы",
+      "POST идемпотентен",
+      "PUT работает только с JSON"
+    ],
+    "correct_index": 0,
+    "explanation": "POST /users создаёт пользователя (id выдаёт сервер). PUT /users/42 - идемпотентно создаёт/заменяет пользователя 42."
+  },
+  {
+    "external_key": "xhttp-009",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CORS?",
+    "options": [
+      "Cross-Origin Resource Sharing - механизм разрешения запросов между origin'ами через заголовки",
+      "Cross-Object Resource Sync",
+      "Common Origin Routing System",
+      "Cipher Output Reuse Standard"
+    ],
+    "correct_index": 0,
+    "explanation": "Браузер ограничивает кросс-доменные запросы; сервер указывает Access-Control-Allow-Origin."
+  },
+  {
+    "external_key": "xhttp-010",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое preflight-запрос (OPTIONS)?",
+    "options": [
+      "Браузер шлёт OPTIONS перед сложным CORS-запросом, чтобы проверить разрешения",
+      "Health-check",
+      "Простая проверка",
+      "Аутентификация"
+    ],
+    "correct_index": 0,
+    "explanation": "Preflight нужен для not-simple запросов (нестандартные методы, headers, content-type)."
+  },
+  {
+    "external_key": "xhttp-011",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTPS и зачем?",
+    "options": [
+      "HTTP поверх TLS - шифрование, integrity и аутентификация сервера",
+      "HTTP/2",
+      "Просто HTTP с авторизацией",
+      "HTTP без cookies"
+    ],
+    "correct_index": 0,
+    "explanation": "TLS защищает от прослушки и MITM. Использует сертификаты для подтверждения identity сервера."
+  },
+  {
+    "external_key": "xhttp-012",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое сертификат TLS?",
+    "options": [
+      "Подписанный CA документ, связывающий публичный ключ с доменом",
+      "Симметричный ключ",
+      "Cookie",
+      "JWT"
+    ],
+    "correct_index": 0,
+    "explanation": "Сертификат подписан Certificate Authority. Браузер проверяет цепочку доверия."
+  },
+  {
+    "external_key": "xhttp-013",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем отличается HTTP/1.1 от HTTP/2?",
+    "options": [
+      "HTTP/2: бинарный формат, мультиплексирование запросов в одном соединении, header compression",
+      "HTTP/2 на UDP",
+      "HTTP/1.1 без TLS",
+      "Они одинаковы"
+    ],
+    "correct_index": 0,
+    "explanation": "HTTP/2 решает head-of-line blocking на уровне приложения через streams."
+  },
+  {
+    "external_key": "xhttp-014",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP/3?",
+    "options": [
+      "HTTP поверх QUIC (UDP); решает head-of-line blocking на транспортном уровне",
+      "Просто новая версия с JSON",
+      "Только для CDN",
+      "HTTP без TLS"
+    ],
+    "correct_index": 0,
+    "explanation": "QUIC использует UDP с собственными streams и встроенным TLS 1.3."
+  },
+  {
+    "external_key": "xhttp-015",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое keep-alive в HTTP/1.1?",
+    "options": [
+      "Переиспользование TCP-соединения для нескольких запросов",
+      "Long-polling",
+      "Постоянное HTTPS",
+      "WebSockets"
+    ],
+    "correct_index": 0,
+    "explanation": "По умолчанию HTTP/1.1 keep-alive активен; экономит TCP/TLS handshake между запросами."
+  },
+  {
+    "external_key": "xhttp-016",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-заголовок Content-Type?",
+    "options": [
+      "Тип содержимого тела (application/json, text/html)",
+      "Размер контента",
+      "Хост",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Content-Type сообщает клиенту/серверу формат данных. Парсеры выбирают сериализатор по нему."
+  },
+  {
+    "external_key": "xhttp-017",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Accept?",
+    "options": [
+      "Клиент сообщает сервером какие типы он принимает (application/json, text/html)",
+      "Аутентификация",
+      "Тип шифрования",
+      "Cache-Control"
+    ],
+    "correct_index": 0,
+    "explanation": "Сервер выбирает представление (content negotiation) на основе Accept."
+  },
+  {
+    "external_key": "xhttp-018",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Cache-Control: no-store?",
+    "options": [
+      "Кэшировать нельзя (даже временно), для чувствительных данных",
+      "Можно кэшировать вечно",
+      "Используется для CDN",
+      "Тип сжатия"
+    ],
+    "correct_index": 0,
+    "explanation": "no-store запрещает любое кэширование. no-cache позволяет кэш, но требует revalidation."
+  },
+  {
+    "external_key": "xhttp-019",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое ETag?",
+    "options": [
+      "Идентификатор версии ресурса, используется с If-None-Match для conditional GET",
+      "Cookie",
+      "Авторизация",
+      "Шифрование"
+    ],
+    "correct_index": 0,
+    "explanation": "Сервер возвращает ETag; клиент шлёт If-None-Match - 304 Not Modified, если не изменилось."
+  },
+  {
+    "external_key": "xhttp-020",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что означает HTTP-код 301 vs 302?",
+    "options": [
+      "301 Moved Permanently (постоянно); 302 Found (временно)",
+      "301 - ошибка, 302 - успех",
+      "Они идентичны",
+      "302 Permanent"
+    ],
+    "correct_index": 0,
+    "explanation": "301 кэшируется и обновляет URL; 302 - временный редирект, клиент должен использовать оригинал в будущем."
+  },
+  {
+    "external_key": "xhttp-021",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое идемпотентность?",
+    "options": [
+      "Многократное применение даёт тот же результат, что и однократное",
+      "Атомарность",
+      "Безопасность",
+      "Уникальность ID"
+    ],
+    "correct_index": 0,
+    "explanation": "Idempotent методы: GET, HEAD, PUT, DELETE. POST не идемпотентен (если без специальных мер)."
+  },
+  {
+    "external_key": "xhttp-022",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое REST?",
+    "options": [
+      "Архитектурный стиль: ресурсы по URI, HTTP-методы, stateless, cacheable",
+      "Протокол",
+      "Только для JSON",
+      "Тип сериализации"
+    ],
+    "correct_index": 0,
+    "explanation": "REST - не протокол, а ограничения. Resources, uniform interface, statelessness, layered system."
+  },
+  {
+    "external_key": "xhttp-023",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем отличается REST от RPC?",
+    "options": [
+      "REST - вокруг ресурсов и стандартных методов; RPC - вокруг функций (callRemote('createUser'))",
+      "REST на UDP",
+      "RPC только в gRPC",
+      "Они синонимы"
+    ],
+    "correct_index": 0,
+    "explanation": "REST: GET /users/42. RPC: POST /api { method: 'getUser', id: 42 }. gRPC - современный binary RPC."
+  },
+  {
+    "external_key": "xhttp-024",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое JWT?",
+    "options": [
+      "JSON Web Token - подписанный токен с claims (header.payload.signature)",
+      "Cookie",
+      "OAuth",
+      "TLS-сертификат"
+    ],
+    "correct_index": 0,
+    "explanation": "JWT - три base64url части. Хранит user_id, exp, custom claims; подписывается секретом или приватным ключом."
+  },
+  {
+    "external_key": "xhttp-025",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем отличаются session-cookies от JWT?",
+    "options": [
+      "Session - opaque ID, состояние на сервере; JWT - self-contained, без серверного состояния",
+      "JWT работает только в HTTPS",
+      "Session не имеет expiry",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "Session проще revoke; JWT хорош для микросервисов (без shared session storage), но invalidation сложнее."
+  },
+  {
+    "external_key": "xhttp-026",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое OAuth 2.0?",
+    "options": [
+      "Фреймворк делегированной авторизации (через access token)",
+      "Метод хеширования",
+      "Cookie",
+      "JWT"
+    ],
+    "correct_index": 0,
+    "explanation": "OAuth 2 позволяет предоставлять third-party доступ к ресурсам без выдачи паролей. Flows: authorization code, client credentials, etc."
+  },
+  {
+    "external_key": "xhttp-027",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое OpenID Connect?",
+    "options": [
+      "Расширение OAuth 2 для аутентификации (id_token + claims)",
+      "Просто OAuth",
+      "DNS",
+      "Каждый OAuth - OIDC"
+    ],
+    "correct_index": 0,
+    "explanation": "OIDC добавляет аутентификацию (id_token) поверх OAuth 2 (который только для авторизации)."
+  },
+  {
+    "external_key": "xhttp-028",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CSRF?",
+    "options": [
+      "Cross-Site Request Forgery - атакующий побуждает жертву отправить запрос с её cookies",
+      "Cross-Site Routing Failure",
+      "Common Server Round-Trip",
+      "Cipher Stack Reuse"
+    ],
+    "correct_index": 0,
+    "explanation": "CSRF использует автоматическую отправку cookies. Защита: CSRF-токены, SameSite cookies."
+  },
+  {
+    "external_key": "xhttp-029",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое XSS?",
+    "options": [
+      "Cross-Site Scripting - атакующий вставляет JS в страницу, который запускается в браузере жертвы",
+      "Cookies",
+      "DDoS",
+      "DNS spoofing"
+    ],
+    "correct_index": 0,
+    "explanation": "XSS защита: экранирование/санитизация ввода, CSP, HttpOnly cookies (чтобы JS не читал), templating с auto-escape."
+  },
+  {
+    "external_key": "xhttp-030",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок X-Forwarded-For?",
+    "options": [
+      "Список IP адресов клиента и proxy, через которые прошёл запрос",
+      "URL источника",
+      "Login",
+      "Country code"
+    ],
+    "correct_index": 0,
+    "explanation": "X-Forwarded-For добавляется reverse proxy (Nginx, Cloudflare). Доверять только своему ближайшему прокси, остальное - подделка."
+  },
+  {
+    "external_key": "xhttp-031",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Authorization: Bearer?",
+    "options": [
+      "Передача access token (JWT) в заголовке",
+      "Basic auth",
+      "Cookie",
+      "Шифрование"
+    ],
+    "correct_index": 0,
+    "explanation": "Bearer token - 'предъявитель имеет право'. Безопасность зависит от того, что token не утечёт."
+  },
+  {
+    "external_key": "xhttp-032",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Basic auth?",
+    "options": [
+      "base64(user:password) в заголовке Authorization; всегда поверх HTTPS",
+      "JWT",
+      "OAuth",
+      "Form login"
+    ],
+    "correct_index": 0,
+    "explanation": "Basic auth - простой вариант для service-to-service. base64 - не шифрование, только кодирование."
+  },
+  {
+    "external_key": "xhttp-033",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-код 429?",
+    "options": [
+      "Too Many Requests - rate limit",
+      "Conflict",
+      "Bad Request",
+      "Forbidden"
+    ],
+    "correct_index": 0,
+    "explanation": "429 говорит клиенту замедлиться. Часто с заголовком Retry-After."
+  },
+  {
+    "external_key": "xhttp-034",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-код 503?",
+    "options": [
+      "Service Unavailable - сервер временно перегружен или на maintenance",
+      "Forbidden",
+      "Internal Server Error",
+      "Bad Gateway"
+    ],
+    "correct_index": 0,
+    "explanation": "503 - временный сбой. Часто с Retry-After. 504 - upstream timeout."
+  },
+  {
+    "external_key": "xhttp-035",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Content-Length?",
+    "options": [
+      "Размер тела в байтах",
+      "Количество заголовков",
+      "Длина URL",
+      "ID запроса"
+    ],
+    "correct_index": 0,
+    "explanation": "Content-Length важен для парсинга тела. Альтернатива - Transfer-Encoding: chunked."
+  },
+  {
+    "external_key": "xhttp-036",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Transfer-Encoding: chunked?",
+    "options": [
+      "Тело передаётся по частям (chunks); не нужно знать размер заранее",
+      "Шифрование",
+      "Сжатие",
+      "Разделение на TCP-пакеты"
+    ],
+    "correct_index": 0,
+    "explanation": "Chunked - формат передачи, когда сервер генерирует ответ потоком (streaming)."
+  },
+  {
+    "external_key": "xhttp-037",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое gzip/br/deflate в Accept-Encoding?",
+    "options": [
+      "Сжатие тела для уменьшения трафика",
+      "Шифрование",
+      "Тип авторизации",
+      "Формат данных"
+    ],
+    "correct_index": 0,
+    "explanation": "Клиент сообщает поддерживаемые алгоритмы; сервер выбирает и кладёт Content-Encoding в ответ."
+  },
+  {
+    "external_key": "xhttp-038",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Reverse Proxy?",
+    "options": [
+      "Сервер, проксирующий запросы к backend; load balancing, TLS termination, кэш (Nginx, HAProxy, Cloudflare)",
+      "Forward proxy",
+      "DNS",
+      "VPN"
+    ],
+    "correct_index": 0,
+    "explanation": "Reverse proxy стоит перед backend и обрабатывает запросы клиентов. Часто кеширует, фильтрует, балансирует."
+  },
+  {
+    "external_key": "xhttp-039",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CDN?",
+    "options": [
+      "Content Delivery Network - распределённый кэш статики на edge-серверах",
+      "Database",
+      "Custom Domain Name",
+      "Centralized Data Network"
+    ],
+    "correct_index": 0,
+    "explanation": "CDN (Cloudflare, Akamai, Fastly) кеширует статику ближе к пользователю - снижает latency и нагрузку на origin."
+  },
+  {
+    "external_key": "xhttp-040",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Vary?",
+    "options": [
+      "Указывает, какие заголовки запроса определяют разные версии ответа в кэше (Vary: Accept-Language)",
+      "Тип сжатия",
+      "Авторизация",
+      "Тип JSON"
+    ],
+    "correct_index": 0,
+    "explanation": "Vary говорит CDN: ответ разный для разных значений этого заголовка. Без Vary можно подсунуть не тот ответ."
+  },
+  {
+    "external_key": "xhttp-041",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HSTS?",
+    "options": [
+      "HTTP Strict Transport Security - заголовок, заставляющий браузер всегда использовать HTTPS",
+      "TLS-сертификат",
+      "Cookie",
+      "JWT"
+    ],
+    "correct_index": 0,
+    "explanation": "Strict-Transport-Security: max-age=... ; браузер запоминает и редиректит HTTP на HTTPS даже без сети."
+  },
+  {
+    "external_key": "xhttp-042",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое CSP (Content Security Policy)?",
+    "options": [
+      "Заголовок, ограничивающий источники скриптов/стилей/iframe для защиты от XSS",
+      "Ограничение CORS",
+      "TLS",
+      "Авторизация"
+    ],
+    "correct_index": 0,
+    "explanation": "CSP: 'script-src self' - JS только с своего origin. Сильно снижает поверхность атаки XSS."
+  },
+  {
+    "external_key": "xhttp-043",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое webhook?",
+    "options": [
+      "HTTP-запрос от системы A к системе B, инициированный событием (callback URL)",
+      "WebSocket",
+      "Long polling",
+      "GraphQL subscription"
+    ],
+    "correct_index": 0,
+    "explanation": "Webhook - 'вы регистрируете URL, мы шлём запрос когда что-то происходит'. Часто с подписью HMAC."
+  },
+  {
+    "external_key": "xhttp-044",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое WebSocket?",
+    "options": [
+      "Двунаправленное persistent соединение поверх TCP, после HTTP upgrade",
+      "Только серверные события",
+      "REST",
+      "TCP"
+    ],
+    "correct_index": 0,
+    "explanation": "WebSocket подходит для чатов, real-time updates. Установка через HTTP Upgrade header."
+  },
+  {
+    "external_key": "xhttp-045",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое Server-Sent Events (SSE)?",
+    "options": [
+      "Однонаправленный поток server -> client поверх HTTP/1.1 keep-alive",
+      "WebSocket",
+      "Long-polling",
+      "WebRTC"
+    ],
+    "correct_index": 0,
+    "explanation": "SSE проще WebSocket; работает поверх обычного HTTP, поддерживает автореконнект."
+  },
+  {
+    "external_key": "xhttp-046",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что означает HTTP-код 409?",
+    "options": [
+      "Conflict - конфликт с текущим состоянием ресурса (дубль или race)",
+      "Not Found",
+      "Forbidden",
+      "Unauthorized"
+    ],
+    "correct_index": 0,
+    "explanation": "409 для бизнес-конфликтов: PUT с устаревшей версией, дубликат уникального поля и т.д."
+  },
+  {
+    "external_key": "xhttp-047",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое HTTP-код 422?",
+    "options": [
+      "Unprocessable Entity - синтаксис правильный, но семантика невалидна (validation errors)",
+      "Bad Request",
+      "Not Found",
+      "Forbidden"
+    ],
+    "correct_index": 0,
+    "explanation": "Часто используется в REST API для ошибок валидации полей."
+  },
+  {
+    "external_key": "xhttp-048",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок Authorization vs Cookie для аутентификации?",
+    "options": [
+      "Cookie автоматически отправляются с запросом (CSRF-уязвимы); Authorization вручную добавляется (XSS-уязвимы)",
+      "Cookie быстрее",
+      "Authorization не работает в браузере",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "HttpOnly cookies защищают от XSS-кражи. Bearer токены, хранимые в localStorage, доступны JS."
+  },
+  {
+    "external_key": "xhttp-049",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Что такое заголовок SameSite у cookies?",
+    "options": [
+      "Strict/Lax/None - управление отправкой cookies при cross-site навигации; защита от CSRF",
+      "TTL",
+      "Шифрование",
+      "Origin"
+    ],
+    "correct_index": 0,
+    "explanation": "Strict - не шлём при кросс-сайт переходе. Lax (по умолчанию) - шлём при top-level навигации. None требует Secure."
+  },
+  {
+    "external_key": "xhttp-050",
+    "topic": "http",
+    "difficulty": 2,
+    "text": "Чем GraphQL отличается от REST?",
+    "options": [
+      "Один endpoint, query language; клиент сам выбирает поля и связи; не привязан к ресурсам",
+      "GraphQL быстрее всегда",
+      "REST использует POST",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "GraphQL хорош, когда клиентам нужны разные fields. Минус: harder caching, N+1, сложность."
+  }
+]
