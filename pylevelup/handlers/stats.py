@@ -9,6 +9,7 @@ from pylevelup.categories import display_name
 from pylevelup.keyboards import build_profile_keyboard
 from pylevelup.repositories import UserRepository
 from pylevelup.services import StatsService, UserStats
+from pylevelup.services.mastery import compute_level, next_level
 
 router = Router(name="pylevelup_stats")
 
@@ -23,9 +24,23 @@ def _format_topics(stats: UserStats) -> str:
     lines = []
     for ts in stats.topics:
         name = display_name(ts.topic)
-        lines.append(
-            f"- <b>{escape(name)}</b>: {ts.correct}/{ts.answered} ({ts.accuracy_percent}%)"
+        level = compute_level(ts.answered, ts.accuracy_percent)
+        upcoming = next_level(ts.answered, ts.accuracy_percent)
+        line = (
+            f"{level.icon} <b>{escape(name)}</b> [{level.label}]: "
+            f"{ts.correct}/{ts.answered} ({ts.accuracy_percent}%)"
         )
+        if upcoming is not None:
+            need_answers = max(0, upcoming.min_answered - ts.answered)
+            need_acc = max(0.0, upcoming.min_accuracy - ts.accuracy_percent)
+            hints: list[str] = []
+            if need_answers > 0:
+                hints.append(f"+{need_answers} ответов")
+            if need_acc > 0:
+                hints.append(f"точность +{need_acc:.0f}%")
+            if hints:
+                line += f" - до {upcoming.label}: {', '.join(hints)}"
+        lines.append(line)
     return "\n".join(lines)
 
 
