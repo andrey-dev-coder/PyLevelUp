@@ -15,7 +15,7 @@ from pylevelup.keyboards import (
     build_main_menu,
     build_study_card_keyboard,
 )
-from pylevelup.repositories import UserRepository
+from pylevelup.repositories import BookmarkRepository, UserRepository
 from pylevelup.services.study_service import StudyCard, StudyService
 from pylevelup.utils.text import clean_text
 
@@ -53,6 +53,31 @@ async def _user_id(study_service: StudyService, telegram_id: int) -> int | None:
         return user.id
 
 
+async def _is_bookmarked(study_service: StudyService, user_id: int, question_id: int) -> bool:
+    async with study_service.session_factory() as db:
+        return await BookmarkRepository(db).is_bookmarked(user_id, question_id)
+
+
+async def _send_card(
+    target,
+    study_service: StudyService,
+    telegram_id: int,
+    card: StudyCard,
+    category_key: str,
+) -> None:
+    user_id = await _user_id(study_service, telegram_id)
+    bookmarked = False
+    if user_id is not None:
+        bookmarked = await _is_bookmarked(study_service, user_id, card.question_id)
+    await target.answer(
+        _format_card(card, category_key),
+        reply_markup=build_study_card_keyboard(
+            question_id=card.question_id,
+            bookmarked=bookmarked,
+        ),
+    )
+
+
 @router.callback_query(F.data.startswith("pur:study:"))
 async def handle_purpose_study(
     callback: CallbackQuery,
@@ -81,7 +106,7 @@ async def handle_purpose_study(
         return
     await state.clear()
     await state.update_data(study_category=category_key)
-    await callback.message.answer(_format_card(card, category_key), reply_markup=build_study_card_keyboard())
+    await _send_card(callback.message, study_service, callback.from_user.id, card, category_key)
 
 
 async def _start_mistakes_session(
@@ -100,10 +125,7 @@ async def _start_mistakes_session(
         return
     await state.clear()
     await state.update_data(study_category=MISTAKES_KEY)
-    await target.answer(
-        _format_card(card, MISTAKES_KEY),
-        reply_markup=build_study_card_keyboard(),
-    )
+    await _send_card(target, study_service, telegram_user.id, card, MISTAKES_KEY)
 
 
 @router.callback_query(F.data == "mistakes:start")
@@ -154,7 +176,7 @@ async def handle_study_next(
     data = await state.get_data()
     category_key = data.get("study_category", ALL_CATEGORY_KEY)
     await callback.answer()
-    await callback.message.answer(_format_card(card, category_key), reply_markup=build_study_card_keyboard())
+    await _send_card(callback.message, study_service, callback.from_user.id, card, category_key)
 
 
 @router.callback_query(F.data == "study:stop")

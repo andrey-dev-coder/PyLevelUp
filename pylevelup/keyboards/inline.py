@@ -4,16 +4,43 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from pylevelup.categories import ALL_CATEGORY_KEY, CATEGORIES, SESSION_MODES
 
 
-def build_answer_keyboard(question_id: int, options_count: int) -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
+def build_answer_keyboard(
+    question_id: int,
+    options_count: int,
+    bookmarked: bool = False,
+    hint_available: bool = True,
+) -> InlineKeyboardMarkup:
+    rows: list[InlineKeyboardButton] = []
     for option_index in range(options_count):
-        builder.button(
-            text=f"{option_index + 1}",
-            callback_data=f"ans:{question_id}:{option_index}",
+        rows.append(
+            InlineKeyboardButton(
+                text=f"{option_index + 1}",
+                callback_data=f"ans:{question_id}:{option_index}",
+            )
         )
-    builder.button(text="Завершить тест", callback_data="test:stop")
-    builder.adjust(min(options_count, 3), 3, 1)
-    return builder.as_markup()
+    star = "★" if bookmarked else "☆"
+    extras: list[InlineKeyboardButton] = [
+        InlineKeyboardButton(
+            text=f"{star} В закладки",
+            callback_data=f"bm:toggle:{question_id}",
+        )
+    ]
+    if hint_available:
+        extras.append(
+            InlineKeyboardButton(
+                text="Подсказка 50/50",
+                callback_data=f"hint:5050:{question_id}",
+            )
+        )
+    stop_btn = InlineKeyboardButton(text="Завершить тест", callback_data="test:stop")
+
+    keyboard: list[list[InlineKeyboardButton]] = []
+    chunk = 3
+    for i in range(0, len(rows), chunk):
+        keyboard.append(rows[i : i + chunk])
+    keyboard.append(extras)
+    keyboard.append([stop_btn])
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 
 def build_finish_keyboard() -> InlineKeyboardMarkup:
@@ -30,6 +57,7 @@ def build_main_menu() -> InlineKeyboardMarkup:
     keyboard.button(text="Начать тест", callback_data="menu:test")
     keyboard.button(text="Алгоритмы", callback_data="cat:algorithms")
     keyboard.button(text="Работа над ошибками", callback_data="mistakes:start")
+    keyboard.button(text="Закладки", callback_data="bookmarks:show")
     keyboard.button(text="Мой профиль", callback_data="stats:show")
     keyboard.button(text="О проекте", callback_data="info:show")
     keyboard.adjust(1)
@@ -75,8 +103,17 @@ def build_purpose_keyboard(category_key: str) -> InlineKeyboardMarkup:
     return keyboard.as_markup()
 
 
-def build_study_card_keyboard() -> InlineKeyboardMarkup:
+def build_study_card_keyboard(
+    question_id: int | None = None,
+    bookmarked: bool = False,
+) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
+    if question_id is not None:
+        star = "★" if bookmarked else "☆"
+        keyboard.button(
+            text=f"{star} В закладки",
+            callback_data=f"bm:toggle:{question_id}",
+        )
     keyboard.button(text="Дальше", callback_data="study:next")
     keyboard.button(text="Завершить изучение", callback_data="study:stop")
     keyboard.adjust(1)

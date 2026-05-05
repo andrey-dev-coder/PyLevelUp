@@ -21,7 +21,7 @@ from pylevelup.keyboards import (
     build_mode_keyboard,
     build_purpose_keyboard,
 )
-from pylevelup.repositories import UserRepository
+from pylevelup.repositories import BookmarkRepository, UserRepository
 from pylevelup.services.test_session_service import TestSessionService
 from pylevelup.states import TestStates
 from pylevelup.utils.text import clean_text, format_question_text
@@ -37,6 +37,13 @@ async def _user_id(session_service: TestSessionService, telegram_id: int) -> int
         if user is None:
             raise RuntimeError("user not found")
         return user.id
+
+
+async def _is_bookmarked(
+    session_service: TestSessionService, user_id: int, question_id: int
+) -> bool:
+    async with session_service.session_factory() as db:
+        return await BookmarkRepository(db).is_bookmarked(user_id, question_id)
 
 
 async def _send_current_question(
@@ -77,9 +84,15 @@ async def _send_current_question(
     rendered = f"<i>{progress_label}</i>\n\n" + rendered
     cache_state.last_question_sent_at = datetime.now(UTC)
     await session_service.cache.save(cache_state)
+    bookmarked = await _is_bookmarked(session_service, cache_state.user_id, question_id)
     await message.answer(
         rendered,
-        reply_markup=build_answer_keyboard(question_id, len(options)),
+        reply_markup=build_answer_keyboard(
+            question_id,
+            len(options),
+            bookmarked=bookmarked,
+            hint_available=False,
+        ),
     )
 
 
