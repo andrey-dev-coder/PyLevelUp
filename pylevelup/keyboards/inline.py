@@ -55,6 +55,7 @@ def build_finish_keyboard() -> InlineKeyboardMarkup:
 def build_main_menu() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.button(text="Начать тест", callback_data="menu:test")
+    keyboard.button(text="Челлендж дня", callback_data="daily:show")
     keyboard.button(text="Алгоритмы", callback_data="cat:algorithms")
     keyboard.button(text="Работа над ошибками", callback_data="mistakes:start")
     keyboard.button(text="Закладки", callback_data="bookmarks:show")
