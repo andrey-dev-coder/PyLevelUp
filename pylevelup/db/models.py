@@ -244,4 +244,18 @@ class MockSession(Base, TimestampMixin):
     correct_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     duration_seconds: Mapped[int | None] = mapped_column(Integer, nullable=True)
     breakdown: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
-    passed: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+
+
+class QuestionReport(Base, TimestampMixin):
+    __tablename__ = "question_reports"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    question_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("questions.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="open", index=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

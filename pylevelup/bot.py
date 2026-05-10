@@ -43,6 +43,7 @@ OWNER_COMMANDS: tuple[BotCommand, ...] = BOT_COMMANDS + (
     BotCommand(command="ban", description="Забанить пользователя"),
     BotCommand(command="unban", description="Разбанить пользователя"),
     BotCommand(command="users", description="Список пользователей"),
+    BotCommand(command="reports", description="Открытые жалобы на вопросы"),
 )
 
 

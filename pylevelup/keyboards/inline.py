@@ -32,6 +32,9 @@ def build_answer_keyboard(
                 callback_data=f"hint:5050:{question_id}",
             )
         )
+    report_btn = InlineKeyboardButton(
+        text="🚩 Ошибка в вопросе", callback_data=f"report:open:{question_id}"
+    )
     stop_btn = InlineKeyboardButton(text="Завершить тест", callback_data="test:stop")
 
     keyboard: list[list[InlineKeyboardButton]] = []
@@ -39,6 +42,7 @@ def build_answer_keyboard(
     for i in range(0, len(rows), chunk):
         keyboard.append(rows[i : i + chunk])
     keyboard.append(extras)
+    keyboard.append([report_btn])
     keyboard.append([stop_btn])
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
@@ -118,6 +122,10 @@ def build_study_card_keyboard(
         keyboard.button(
             text=f"{star} В закладки",
             callback_data=f"bm:toggle:{question_id}",
+        )
+        keyboard.button(
+            text="🚩 Ошибка в вопросе",
+            callback_data=f"report:open:{question_id}",
         )
     keyboard.button(text="Дальше", callback_data="study:next")
     keyboard.button(text="Завершить изучение", callback_data="study:stop")
