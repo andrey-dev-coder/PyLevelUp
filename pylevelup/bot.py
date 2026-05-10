@@ -29,6 +29,7 @@ BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand(command="mistakes", description="Работа над ошибками"),
     BotCommand(command="bookmarks", description="Закладки"),
     BotCommand(command="open", description="Открытые вопросы (как на собесе)"),
+    BotCommand(command="ask", description="Спросить ИИ про Python и собесы"),
     BotCommand(command="cheatsheet", description="Шпаргалки по темам"),
     BotCommand(command="search", description="Поиск по вопросам"),
     BotCommand(command="achievements", description="Мои ачивки"),

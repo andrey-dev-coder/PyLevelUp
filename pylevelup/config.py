@@ -57,6 +57,13 @@ class Settings(BaseSettings):
 
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
 
+    gemini_api_key: str | None = Field(default=None, alias="GEMINI_API_KEY")
+    gemini_model: str = Field(default="gemini-2.0-flash", alias="GEMINI_MODEL")
+    deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
+    deepseek_model: str = Field(default="deepseek-chat", alias="DEEPSEEK_MODEL")
+    ai_daily_limit_per_user: int = Field(default=20, alias="AI_DAILY_LIMIT_PER_USER")
+    ai_request_timeout_seconds: float = Field(default=25.0, alias="AI_REQUEST_TIMEOUT_SECONDS")
+
     @model_validator(mode="after")
     def _normalize_urls(self) -> "Settings":
         self.database_url = _to_async_pg(self.database_url)
