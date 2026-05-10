@@ -11380,5 +11380,1405 @@
     ],
     "correct_index": 0,
     "explanation": "GraphQL хорош, когда клиентам нужны разные fields. Минус: harder caching, N+1, сложность."
+  },
+  {
+    "external_key": "xdj-001",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Что такое Django ORM?",
+    "options": [
+      "Object-Relational Mapper - доступ к БД через Python-классы (Model)",
+      "Шаблонизатор",
+      "Web-сервер",
+      "Просто SQL-builder"
+    ],
+    "correct_index": 0,
+    "explanation": "ORM позволяет работать с БД через объектную модель. Под капотом - SQL."
+  },
+  {
+    "external_key": "xdj-002",
+    "topic": "django",
+    "difficulty": 1,
+    "text": "Что такое QuerySet?",
+    "options": [
+      "Ленивая коллекция объектов БД, выполняется при итерации/материализации",
+      "Список объектов",
+      "Кэш",
+      "Транзакция"
+    ],
+    "correct_index": 0,
+    "explanation": "QuerySet строит SQL только при .all(), list(), iter, slicing с конкретным значением."
+  },
+  {
+    "external_key": "xdj-003",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Чем отличаются select_related от prefetch_related?",
+    "options": [
+      "select_related делает JOIN (FK, OneToOne); prefetch_related отдельный SELECT с IN (M2M, reverse FK)",
+      "select_related быстрее всегда",
+      "prefetch только для M2M",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "select_related - 1 запрос с JOIN. prefetch_related - 2 запроса (объекты + связанные через IN)."
+  },
+  {
+    "external_key": "xdj-004",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Зачем нужны migrations?",
+    "options": [
+      "Версионирование изменений схемы БД, синхронно с кодом",
+      "Бэкап",
+      "Семинар",
+      "Тип запроса"
+    ],
+    "correct_index": 0,
+    "explanation": "makemigrations создаёт миграции, migrate применяет. Изменения отслеживаются в django_migrations."
+  },
+  {
+    "external_key": "xdj-005",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django middleware?",
+    "options": [
+      "Слой, который оборачивает request/response (auth, sessions, CSRF, gzip)",
+      "Тип view",
+      "Шаблонный тег",
+      "Декоратор"
+    ],
+    "correct_index": 0,
+    "explanation": "Middleware - функция/класс, выполняемая до и после view. Конфигурируется в settings.MIDDLEWARE."
+  },
+  {
+    "external_key": "xdj-006",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое сигналы (signals) в Django?",
+    "options": [
+      "Механизм publish-subscribe для реакции на события (post_save, pre_delete)",
+      "Тип view",
+      "Cron-задача",
+      "Тип миграции"
+    ],
+    "correct_index": 0,
+    "explanation": "Сигналы помогают, но злоупотребление усложняет код. Альтернатива - явные методы/события."
+  },
+  {
+    "external_key": "xdj-007",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django REST Framework?",
+    "options": [
+      "Библиотека для построения REST API на Django (serializers, viewsets, routers)",
+      "Сам Django",
+      "Async-фреймворк",
+      "Тестовый фреймворк"
+    ],
+    "correct_index": 0,
+    "explanation": "DRF предоставляет serializers, generic views, permissions, throttling, browsable API."
+  },
+  {
+    "external_key": "xdj-008",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое serializer в DRF?",
+    "options": [
+      "Класс, преобразующий model/instance в primitive (dict/JSON) и обратно с валидацией",
+      "Шаблон",
+      "Декоратор",
+      "Тип view"
+    ],
+    "correct_index": 0,
+    "explanation": "ModelSerializer автоматически генерирует поля из модели. Поддерживает валидацию, nested objects."
+  },
+  {
+    "external_key": "xdj-009",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Class-Based View?",
+    "options": [
+      "View в виде класса (DetailView, ListView, ...) с методом get/post",
+      "Только синхронный view",
+      "Только для REST",
+      "Это синоним function-based"
+    ],
+    "correct_index": 0,
+    "explanation": "CBV даёт mixin'ы, наследование, переиспользование. FBV проще для маленьких задач."
+  },
+  {
+    "external_key": "xdj-010",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает .annotate() в QuerySet?",
+    "options": [
+      "Добавляет вычисляемое поле (Count, Sum, F-expression) к каждому объекту",
+      "Сортирует",
+      "Фильтрует",
+      "Группирует"
+    ],
+    "correct_index": 0,
+    "explanation": "Например: User.objects.annotate(post_count=Count('posts')) - каждый user получит атрибут post_count."
+  },
+  {
+    "external_key": "xdj-011",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает .aggregate()?",
+    "options": [
+      "Сворачивает QuerySet в один dict с агрегатами (sum, avg, count)",
+      "Группирует объекты",
+      "Возвращает QuerySet",
+      "Возвращает list"
+    ],
+    "correct_index": 0,
+    "explanation": "Например: User.objects.aggregate(total=Sum('balance')) -> {'total': 12345.67}."
+  },
+  {
+    "external_key": "xdj-012",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое F() expression?",
+    "options": [
+      "Ссылка на поле БД для атомарных update в SQL без python round-trip",
+      "Хеш-функция",
+      "Тип индекса",
+      "Тип шаблона"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, User.objects.update(balance=F('balance') + 10) - атомарно увеличит на 10 в SQL."
+  },
+  {
+    "external_key": "xdj-013",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Q() object?",
+    "options": [
+      "Объект для сложных условий WHERE (OR, NOT) в filter()",
+      "Тип запроса",
+      "Хеш",
+      "Сериализатор"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, filter(Q(is_active=True) | Q(role='admin'))."
+  },
+  {
+    "external_key": "xdj-014",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Чем отличается get_or_create от update_or_create?",
+    "options": [
+      "get_or_create возвращает существующий или создаёт; update_or_create обновляет defaults если есть",
+      "Они идентичны",
+      "update_or_create только в DRF",
+      "get_or_create нельзя без PK"
+    ],
+    "correct_index": 0,
+    "explanation": "Оба возвращают (obj, created). update_or_create также обновит defaults на existing instance."
+  },
+  {
+    "external_key": "xdj-015",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое CSRF middleware в Django?",
+    "options": [
+      "Защита от cross-site request forgery: проверяет csrftoken в форме/заголовке",
+      "Тип кэша",
+      "Аутентификация",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "POST-формы и AJAX должны передавать CSRF-токен. JSON API часто исключают через @csrf_exempt или используют SessionAuthentication+CSRF."
+  },
+  {
+    "external_key": "xdj-016",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django apps?",
+    "options": [
+      "Логические единицы кода с моделями, view, миграциями (users, posts, billing)",
+      "Тип view",
+      "Сервис",
+      "Микросервис"
+    ],
+    "correct_index": 0,
+    "explanation": "Apps регистрируются в INSTALLED_APPS. Помогает структурировать большие проекты."
+  },
+  {
+    "external_key": "xdj-017",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое manage.py?",
+    "options": [
+      "CLI для запуска команд: runserver, migrate, makemigrations, shell, createsuperuser",
+      "WSGI-приложение",
+      "Тестовый раннер",
+      "Конфиг"
+    ],
+    "correct_index": 0,
+    "explanation": "manage.py - точка входа для админских команд. Можно создавать кастомные через management/commands."
+  },
+  {
+    "external_key": "xdj-018",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое ASGI и как Django его использует?",
+    "options": [
+      "Async server interface; Django поддерживает async views, middleware с 3.0+",
+      "Только синхронно",
+      "Тип шаблона",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "ASGI - аналог WSGI для async. Запускается через Daphne, Uvicorn. Поддерживает WebSockets."
+  },
+  {
+    "external_key": "xdj-019",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django Channels?",
+    "options": [
+      "Расширение для WebSocket, long-polling, background workers поверх ASGI",
+      "Async DB",
+      "ORM",
+      "Тип view"
+    ],
+    "correct_index": 0,
+    "explanation": "Channels поддерживает каналы (Group), Redis backend, consumers для WebSocket-логики."
+  },
+  {
+    "external_key": "xdj-020",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Чем отличаются TextField от CharField?",
+    "options": [
+      "CharField требует max_length, TextField - неограниченная длина",
+      "TextField быстрее",
+      "CharField индексируется",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "В Postgres оба становятся VARCHAR/TEXT. В MySQL могут различаться по производительности и индексации."
+  },
+  {
+    "external_key": "xdj-021",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое UniqueConstraint в Django?",
+    "options": [
+      "Декларация уникальности на уровне БД (поля или их комбинации)",
+      "Validator",
+      "Index",
+      "Серверный лог"
+    ],
+    "correct_index": 0,
+    "explanation": "Meta.constraints = [UniqueConstraint(fields=[...], name='...')] - предпочтительнее unique_together."
+  },
+  {
+    "external_key": "xdj-022",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django admin?",
+    "options": [
+      "Встроенная панель администрирования: CRUD над моделями + permissions",
+      "Сторонний пакет",
+      "DRF",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "ModelAdmin регистрирует модели; auto-CRUD, фильтры, search, actions."
+  },
+  {
+    "external_key": "xdj-023",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DEBUG=True в production?",
+    "options": [
+      "Опасно: показывает stacktrace, sensitive data в ошибках",
+      "Ускоряет",
+      "Включает SSL",
+      "Оптимизация"
+    ],
+    "correct_index": 0,
+    "explanation": "В проде DEBUG=False, ALLOWED_HOSTS строго заданы, секреты в env, sentry/logger для ошибок."
+  },
+  {
+    "external_key": "xdj-024",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Meta-класс в Django Model?",
+    "options": [
+      "Конфигурация модели: ordering, db_table, verbose_name, indexes, constraints",
+      "Метакласс Python",
+      "Сигнал",
+      "Шаблонный фильтр"
+    ],
+    "correct_index": 0,
+    "explanation": "Meta - inner class модели; описывает поведение и метаданные."
+  },
+  {
+    "external_key": "xdj-025",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает on_delete=models.CASCADE в FK?",
+    "options": [
+      "При удалении родителя удаляются связанные дочерние объекты",
+      "Возвращает NULL",
+      "Запрещает удаление",
+      "Создаёт дубликат"
+    ],
+    "correct_index": 0,
+    "explanation": "Альтернативы: SET_NULL, PROTECT, RESTRICT, SET_DEFAULT, DO_NOTHING."
+  },
+  {
+    "external_key": "xdj-026",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое OneToOneField?",
+    "options": [
+      "ForeignKey с unique=True; одно-к-одному отношение",
+      "M2M",
+      "Псевдоним FK",
+      "Просто PK"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно для расширения модели (User -> Profile) без наследования."
+  },
+  {
+    "external_key": "xdj-027",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое M2M в Django?",
+    "options": [
+      "ManyToManyField - связь many-to-many через промежуточную таблицу (auto или through)",
+      "FK",
+      "Только в Postgres",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Можно указать through=Custom для дополнительных полей в join-таблице."
+  },
+  {
+    "external_key": "xdj-028",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает ATOMIC_REQUESTS=True?",
+    "options": [
+      "Каждый view оборачивается в транзакцию, откат на исключении",
+      "Все запросы синхронные",
+      "Все запросы async",
+      "Только GET в транзакции"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для CRUD, но может удерживать соединения дольше. Альтернатива - явный transaction.atomic()."
+  },
+  {
+    "external_key": "xdj-029",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое transaction.atomic()?",
+    "options": [
+      "Контекстный менеджер, оборачивающий блок в транзакцию",
+      "Декоратор сигнала",
+      "Lock",
+      "Тип view"
+    ],
+    "correct_index": 0,
+    "explanation": "atomic() гарантирует commit/rollback. Может быть nested через savepoints."
+  },
+  {
+    "external_key": "xdj-030",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое select_for_update?",
+    "options": [
+      "Блокирует выбранные строки до конца транзакции (FOR UPDATE)",
+      "Просто SELECT",
+      "Update",
+      "Optimistic lock"
+    ],
+    "correct_index": 0,
+    "explanation": "Pessimistic locking: select_for_update() надо вызывать внутри transaction.atomic()."
+  },
+  {
+    "external_key": "xdj-031",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF permissions?",
+    "options": [
+      "Классы (IsAuthenticated, IsOwner) для контроля доступа к view/objects",
+      "Auth backend",
+      "Middleware",
+      "Validator"
+    ],
+    "correct_index": 0,
+    "explanation": "permission_classes объявляются на ViewSet/View. Можно писать кастомные через has_permission/has_object_permission."
+  },
+  {
+    "external_key": "xdj-032",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF throttling?",
+    "options": [
+      "Rate limiting запросов (anon/user/scope)",
+      "Тип сериализатора",
+      "Тип view",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "AnonRateThrottle, UserRateThrottle, ScopedRateThrottle. Лимиты в DEFAULT_THROTTLE_RATES."
+  },
+  {
+    "external_key": "xdj-033",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django settings и как их структурировать?",
+    "options": [
+      "settings.py разделяют на base/dev/prod через окружения; секреты в env",
+      "Только один файл",
+      "В моделях",
+      "В URLs"
+    ],
+    "correct_index": 0,
+    "explanation": "Тип паттерн: settings/base.py + dev.py/prod.py. Секреты через django-environ или os.getenv."
+  },
+  {
+    "external_key": "xdj-034",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое cache framework в Django?",
+    "options": [
+      "Backends: locmem, redis, memcached + декоратор @cache_page и low-level cache.set/get",
+      "Только in-memory",
+      "Только Redis",
+      "Только page cache"
+    ],
+    "correct_index": 0,
+    "explanation": "django.core.cache даёт унифицированный API. Можно кешировать страницы, fragments, любые данные."
+  },
+  {
+    "external_key": "xdj-035",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django ORM .raw()?",
+    "options": [
+      "Выполнение raw SQL с маппингом в Model objects",
+      "Только text",
+      "Транзакция",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Model.objects.raw('SELECT ...') возвращает RawQuerySet. Поля должны соответствовать модели."
+  },
+  {
+    "external_key": "xdj-036",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает iterator() у QuerySet?",
+    "options": [
+      "Возвращает итератор без кэширования всего queryset (для больших выборок)",
+      "Просто list",
+      "Уменьшает SQL",
+      "Только для FK"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно при обработке миллионов строк, чтобы не держать всё в памяти."
+  },
+  {
+    "external_key": "xdj-037",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое .only() и .defer()?",
+    "options": [
+      ".only выбирает указанные поля; .defer пропускает указанные при загрузке",
+      "Только PK",
+      "Только COUNT",
+      "Только M2M"
+    ],
+    "correct_index": 0,
+    "explanation": "Помогают сократить выборку колонок. Доступ к defer-полю вызовет дополнительный SELECT."
+  },
+  {
+    "external_key": "xdj-038",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает values() и values_list()?",
+    "options": [
+      "Возвращают dict / tuple вместо Model instance",
+      "Только PK",
+      "Только в админке",
+      "Только COUNT"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно для эффективности и сериализации, когда не нужны методы модели."
+  },
+  {
+    "external_key": "xdj-039",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое bulk_create?",
+    "options": [
+      "Массовая вставка одним SQL (не вызывает signals по умолчанию)",
+      "Просто INSERT",
+      "TRUNCATE",
+      "UPSERT"
+    ],
+    "correct_index": 0,
+    "explanation": "Объёмные вставки через bulk_create экономят round-trips. По умолчанию pre_save/post_save не срабатывают."
+  },
+  {
+    "external_key": "xdj-040",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое prefetch_related с Prefetch object?",
+    "options": [
+      "Кастомизация подзапроса: фильтрация, сортировка, аннотация связанных объектов",
+      "Только COUNT",
+      "Только M2M",
+      "Только синхронно"
+    ],
+    "correct_index": 0,
+    "explanation": "Prefetch('comments', queryset=Comment.objects.filter(approved=True)) - управляет внутренним запросом."
+  },
+  {
+    "external_key": "xdj-041",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF generic views?",
+    "options": [
+      "ListAPIView, RetrieveAPIView, etc. - готовые CBV для REST CRUD",
+      "FBV",
+      "Тип шаблона",
+      "Сериализатор"
+    ],
+    "correct_index": 0,
+    "explanation": "Generic views принимают queryset, serializer_class, permission_classes - меньше boilerplate."
+  },
+  {
+    "external_key": "xdj-042",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF ViewSets и Routers?",
+    "options": [
+      "ViewSet объединяет list/retrieve/create/update/destroy; Router генерирует URL автоматически",
+      "Тип шаблона",
+      "Кэш",
+      "Auth"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для стандартного REST API. Custom actions через @action."
+  },
+  {
+    "external_key": "xdj-043",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django form и ModelForm?",
+    "options": [
+      "Form: валидация полей; ModelForm: автогенерация формы из Model",
+      "Только form-data",
+      "Только админка",
+      "Сериализатор"
+    ],
+    "correct_index": 0,
+    "explanation": "Forms - старая школа Django UI. Для API чаще DRF Serializer."
+  },
+  {
+    "external_key": "xdj-044",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что делает clean_<field> в Django Form?",
+    "options": [
+      "Кастомная валидация конкретного поля",
+      "Очищает БД",
+      "Удаляет form",
+      "Сбрасывает session"
+    ],
+    "correct_index": 0,
+    "explanation": "form.clean_email() возвращает очищенное значение или поднимает ValidationError."
+  },
+  {
+    "external_key": "xdj-045",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF nested serializer?",
+    "options": [
+      "Serializer как поле другого serializer для вложенных объектов",
+      "Только M2M",
+      "Только список",
+      "Каскадирование"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, PostSerializer с author = UserSerializer(). Для записи нужен кастомный create/update."
+  },
+  {
+    "external_key": "xdj-046",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое JWT в Django?",
+    "options": [
+      "Через packages djangorestframework-simplejwt: аутентификация без сессий",
+      "Встроено в core",
+      "Только cookie",
+      "Заменяет CSRF"
+    ],
+    "correct_index": 0,
+    "explanation": "simplejwt даёт TokenObtainPairView, TokenRefreshView; токены: access + refresh."
+  },
+  {
+    "external_key": "xdj-047",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Celery с Django?",
+    "options": [
+      "Очередь фоновых задач (отправка email, отчёты, периодические jobs)",
+      "Часть Django",
+      "Тестовый фреймворк",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Celery + Redis/RabbitMQ: @shared_task, .delay()/.apply_async, beat для расписания."
+  },
+  {
+    "external_key": "xdj-048",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое DRF generic exception handler?",
+    "options": [
+      "Глобальная функция, которая обрабатывает исключения и возвращает корректный response",
+      "Только 500",
+      "Только 404",
+      "Тип view"
+    ],
+    "correct_index": 0,
+    "explanation": "EXCEPTION_HANDLER в settings; default обрабатывает APIException, Http404, PermissionDenied."
+  },
+  {
+    "external_key": "xdj-049",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое Django management command?",
+    "options": [
+      "Класс в app/management/commands/<name>.py с handle(); запускается через manage.py <name>",
+      "Тип view",
+      "Декоратор",
+      "Сигнал"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для cron-задач, миграций данных, импорта."
+  },
+  {
+    "external_key": "xdj-050",
+    "topic": "django",
+    "difficulty": 2,
+    "text": "Что такое test client в Django?",
+    "options": [
+      "Имитация HTTP-клиента для тестов: client.get/post с проверкой response",
+      "Тип view",
+      "Mock",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "django.test.Client - in-process клиент. Можно тестировать формы, API, перенаправления."
+  },
+  {
+    "external_key": "xfapi-001",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое FastAPI?",
+    "options": [
+      "Async-фреймворк на основе Starlette и Pydantic с авто-документацией OpenAPI",
+      "Только sync",
+      "Только REST",
+      "Шаблонизатор"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI использует type hints, генерирует Swagger/Redoc и валидирует через Pydantic."
+  },
+  {
+    "external_key": "xfapi-002",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Что такое Pydantic?",
+    "options": [
+      "Библиотека валидации данных через Python type hints",
+      "ORM",
+      "Web-фреймворк",
+      "Шаблонизатор"
+    ],
+    "correct_index": 0,
+    "explanation": "Pydantic парсит и валидирует данные из dict/JSON в типизированные модели."
+  },
+  {
+    "external_key": "xfapi-003",
+    "topic": "fastapi",
+    "difficulty": 1,
+    "text": "Какой декоратор регистрирует POST endpoint в FastAPI?",
+    "options": [
+      "@app.get",
+      "@app.post",
+      "@app.api_route(\"POST\")",
+      "@app.create"
+    ],
+    "correct_index": 1,
+    "explanation": "@app.post('/path') - создаёт POST endpoint. Также есть get, put, patch, delete."
+  },
+  {
+    "external_key": "xfapi-004",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Depends в FastAPI?",
+    "options": [
+      "Механизм dependency injection: функция вычисляет значение и передаёт в endpoint",
+      "Тип валидации",
+      "Middleware",
+      "Async-функция"
+    ],
+    "correct_index": 0,
+    "explanation": "Depends используется для DI: db sessions, auth, общие параметры. Может быть кэшировано в одном request."
+  },
+  {
+    "external_key": "xfapi-005",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что делает Pydantic BaseModel?",
+    "options": [
+      "Базовый класс для моделей с валидацией, сериализацией и .dict()/.json()",
+      "Класс для БД",
+      "Тип view",
+      "Просто dataclass"
+    ],
+    "correct_index": 0,
+    "explanation": "BaseModel валидирует данные при инициализации, поддерживает alias, validators, Config."
+  },
+  {
+    "external_key": "xfapi-006",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Чем response_model отличается от обычного return?",
+    "options": [
+      "response_model фильтрует поля и валидирует ответ; полезно для скрытия внутренних полей",
+      "Это синонимы",
+      "response_model только для POST",
+      "Не работает с list"
+    ],
+    "correct_index": 0,
+    "explanation": "Установка response_model: serialize только описанные поля; защищает от утечки секретов."
+  },
+  {
+    "external_key": "xfapi-007",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Path parameter в FastAPI?",
+    "options": [
+      "Параметр в URL: @app.get('/users/{user_id}'), достаётся через type hint user_id: int",
+      "Query string",
+      "Body",
+      "Header"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI автоматически валидирует тип; конвертирует строку в int/float."
+  },
+  {
+    "external_key": "xfapi-008",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Query parameter?",
+    "options": [
+      "Параметр в URL после ?: ?limit=10. Объявляется как обычный аргумент функции",
+      "Path",
+      "Body",
+      "Cookie"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI различает path vs query по совпадению имени с {} в роуте."
+  },
+  {
+    "external_key": "xfapi-009",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Body parameter?",
+    "options": [
+      "JSON в теле запроса; объявляется как Pydantic-модель в аргументе",
+      "URL-параметр",
+      "Header",
+      "Cookie"
+    ],
+    "correct_index": 0,
+    "explanation": "@app.post async def create(item: ItemModel): - FastAPI парсит JSON в ItemModel."
+  },
+  {
+    "external_key": "xfapi-010",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что вернёт FastAPI при ошибке валидации Pydantic?",
+    "options": [
+      "422 Unprocessable Entity со списком ошибок",
+      "500",
+      "400 Bad Request",
+      "404"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI автоматически возвращает 422 с локациями и сообщениями ошибок."
+  },
+  {
+    "external_key": "xfapi-011",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое HTTPException?",
+    "options": [
+      "Исключение для возврата HTTP-ошибки: raise HTTPException(status_code=404, detail='...')",
+      "Только 500",
+      "Просто dict",
+      "Тип response"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI ловит HTTPException и формирует JSON-ответ с указанным status."
+  },
+  {
+    "external_key": "xfapi-012",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Background tasks в FastAPI?",
+    "options": [
+      "Запуск задачи после возврата response в текущем процессе",
+      "Очередь типа Celery",
+      "Только async",
+      "Не существует"
+    ],
+    "correct_index": 0,
+    "explanation": "BackgroundTasks - для коротких задач (отправить email). Для долгих - Celery/RQ."
+  },
+  {
+    "external_key": "xfapi-013",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Какой ASGI-сервер обычно используют с FastAPI?",
+    "options": [
+      "Gunicorn standalone",
+      "Uvicorn",
+      "Apache",
+      "PHP-FPM"
+    ],
+    "correct_index": 1,
+    "explanation": "Uvicorn (или hypercorn) запускает ASGI-приложение. Часто Gunicorn + UvicornWorker."
+  },
+  {
+    "external_key": "xfapi-014",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что делает APIRouter?",
+    "options": [
+      "Группировка endpoints по prefix и tags для модульной архитектуры",
+      "Тип middleware",
+      "URL-резолвер",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "router = APIRouter(prefix='/users', tags=['users']); app.include_router(router)."
+  },
+  {
+    "external_key": "xfapi-015",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое CORS middleware в FastAPI?",
+    "options": [
+      "Класс CORSMiddleware из starlette: настройка allowed_origins, headers, methods",
+      "Внутренняя функция",
+      "Только опция",
+      "Депендс"
+    ],
+    "correct_index": 0,
+    "explanation": "app.add_middleware(CORSMiddleware, allow_origins=['*']) - стандартная настройка CORS."
+  },
+  {
+    "external_key": "xfapi-016",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Чем sync def отличается от async def в FastAPI?",
+    "options": [
+      "Sync функции запускаются в threadpool, async - в event loop",
+      "Sync быстрее",
+      "Async только для тестов",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI обернёт sync endpoint в run_in_threadpool, чтобы не блокировать event loop."
+  },
+  {
+    "external_key": "xfapi-017",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что произойдёт, если в async endpoint вызвать blocking I/O?",
+    "options": [
+      "Заблокирует event loop и весь сервер",
+      "Автоматически уйдёт в threadpool",
+      "Ошибка",
+      "Замедлится только этот endpoint"
+    ],
+    "correct_index": 0,
+    "explanation": "Async endpoint должен использовать async-библиотеки (httpx, asyncpg). Иначе - threadpool через run_in_threadpool."
+  },
+  {
+    "external_key": "xfapi-018",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое OAuth2PasswordBearer в FastAPI?",
+    "options": [
+      "Утилита для извлечения Bearer-токена из заголовка Authorization",
+      "Полноценная OAuth-реализация",
+      "JWT-генератор",
+      "Тип Depends только для GET"
+    ],
+    "correct_index": 0,
+    "explanation": "OAuth2PasswordBearer возвращает строку токена. Затем декодируем JWT и проверяем."
+  },
+  {
+    "external_key": "xfapi-019",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое lifespan event?",
+    "options": [
+      "Async context manager для startup/shutdown логики",
+      "Middleware",
+      "Тип view",
+      "Конфигурация"
+    ],
+    "correct_index": 0,
+    "explanation": "В FastAPI 0.93+ через @asynccontextmanager: открыть пул, закрыть пул при завершении."
+  },
+  {
+    "external_key": "xfapi-020",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое response_class?",
+    "options": [
+      "Тип response: HTMLResponse, PlainTextResponse, JSONResponse, StreamingResponse",
+      "Только JSON",
+      "Pydantic-модель",
+      "Сериализатор"
+    ],
+    "correct_index": 0,
+    "explanation": "Явное response_class позволяет вернуть HTML, файлы, потоки."
+  },
+  {
+    "external_key": "xfapi-021",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое StreamingResponse?",
+    "options": [
+      "Возврат потока (генератор/итератор) - удобно для больших файлов и SSE",
+      "Только JSON",
+      "Только sync",
+      "Тип формы"
+    ],
+    "correct_index": 0,
+    "explanation": "Используется для streaming больших данных без буферизации в памяти."
+  },
+  {
+    "external_key": "xfapi-022",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое FileResponse?",
+    "options": [
+      "Возврат файла из файловой системы с правильными заголовками",
+      "Upload",
+      "JSON",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "FileResponse('path.pdf', media_type='application/pdf') - удобно для скачивания."
+  },
+  {
+    "external_key": "xfapi-023",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое UploadFile?",
+    "options": [
+      "Файл из multipart/form-data; даёт async read/write/seek",
+      "Просто bytes",
+      "Только PDF",
+      "Тип response"
+    ],
+    "correct_index": 0,
+    "explanation": "UploadFile хранится во временном файле, не загружая всё в память."
+  },
+  {
+    "external_key": "xfapi-024",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что делает Form() в FastAPI?",
+    "options": [
+      "Объявляет параметр как поле x-www-form-urlencoded формы",
+      "JSON",
+      "Header",
+      "Cookie"
+    ],
+    "correct_index": 0,
+    "explanation": "Form: username = Form(...) - стандартное поле HTML-формы."
+  },
+  {
+    "external_key": "xfapi-025",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое dependency_overrides?",
+    "options": [
+      "Подмена Depends в тестах: app.dependency_overrides[get_db] = mock_db",
+      "Кэш",
+      "Conditional import",
+      "Только для async"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для замены dep на mock без monkey-patching."
+  },
+  {
+    "external_key": "xfapi-026",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое sub-dependency?",
+    "options": [
+      "Зависимость, которая зависит от другой зависимости",
+      "Это middleware",
+      "Только async",
+      "Невозможно"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, get_user(token: str = Depends(oauth2_scheme)) - get_user зависит от oauth2."
+  },
+  {
+    "external_key": "xfapi-027",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое 'yield' в Depends?",
+    "options": [
+      "Setup-teardown паттерн: код до yield - setup, после - cleanup (закрытие сессии)",
+      "Только sync",
+      "Просто generator",
+      "Не поддерживается"
+    ],
+    "correct_index": 0,
+    "explanation": "def get_db(): db = Session(); try: yield db; finally: db.close()."
+  },
+  {
+    "external_key": "xfapi-028",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое event handler @app.exception_handler?",
+    "options": [
+      "Кастомная обработка определённых exception типов",
+      "Middleware",
+      "Тип view",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, @app.exception_handler(NotFoundError) - превращает в 404 с кастомным телом."
+  },
+  {
+    "external_key": "xfapi-029",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Pydantic Field()?",
+    "options": [
+      "Метаданные поля: default, ge/le, min/max_length, alias, description",
+      "Тип view",
+      "Декоратор",
+      "Только для FK"
+    ],
+    "correct_index": 0,
+    "explanation": "Field используется для валидации и документации полей: age: int = Field(ge=0)."
+  },
+  {
+    "external_key": "xfapi-030",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Pydantic validator?",
+    "options": [
+      "@field_validator/@validator - кастомная функция-валидатор для поля",
+      "Тип view",
+      "Тип Depends",
+      "Тип Form"
+    ],
+    "correct_index": 0,
+    "explanation": "Pydantic v2: @field_validator('email'). v1: @validator('email')."
+  },
+  {
+    "external_key": "xfapi-031",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое model_config / Config в Pydantic?",
+    "options": [
+      "Настройка поведения модели: orm_mode/from_attributes, alias, populate_by_name",
+      "Тип view",
+      "Кэш",
+      "Глобальная конфигурация"
+    ],
+    "correct_index": 0,
+    "explanation": "Pydantic v2: model_config = ConfigDict(from_attributes=True). v1: class Config: orm_mode = True."
+  },
+  {
+    "external_key": "xfapi-032",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое orm_mode/from_attributes?",
+    "options": [
+      "Режим загрузки данных не из dict, а из ORM-объекта (атрибутов)",
+      "Только для Django",
+      "Кэш",
+      "Тип валидации"
+    ],
+    "correct_index": 0,
+    "explanation": "Включает преобразование ORM-объекта в Pydantic-модель."
+  },
+  {
+    "external_key": "xfapi-033",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое HEAD endpoint в FastAPI?",
+    "options": [
+      "@app.head - возвращает заголовки без тела",
+      "Только GET",
+      "Не существует",
+      "Тип Body"
+    ],
+    "correct_index": 0,
+    "explanation": "HEAD используется для проверки существования ресурса и заголовков (Content-Length)."
+  },
+  {
+    "external_key": "xfapi-034",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое OpenAPI в FastAPI?",
+    "options": [
+      "Авто-сгенерированная спецификация (JSON Schema), доступная через /openapi.json + UI /docs",
+      "Тип кэша",
+      "Middleware",
+      "Тип Depends"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI генерирует OpenAPI 3 из type hints и Pydantic-моделей. Swagger UI автоматически."
+  },
+  {
+    "external_key": "xfapi-035",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Какой URL для авто-доки Swagger?",
+    "options": [
+      "/docs",
+      "/swagger",
+      "/api",
+      "/openapi"
+    ],
+    "correct_index": 0,
+    "explanation": "По умолчанию Swagger UI на /docs, ReDoc на /redoc, raw spec на /openapi.json."
+  },
+  {
+    "external_key": "xfapi-036",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое status_code в декораторе?",
+    "options": [
+      "@app.post('/items', status_code=201) - явный default-status",
+      "Middleware",
+      "Тип response",
+      "Не существует"
+    ],
+    "correct_index": 0,
+    "explanation": "По умолчанию 200; для POST часто 201 Created."
+  },
+  {
+    "external_key": "xfapi-037",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое tags в endpoint?",
+    "options": [
+      "Группировка endpoints в Swagger по тематикам",
+      "Cache key",
+      "Auth scope",
+      "Тип response"
+    ],
+    "correct_index": 0,
+    "explanation": "tags=['users'] - группа в Swagger UI; полезно для навигации."
+  },
+  {
+    "external_key": "xfapi-038",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое include_in_schema?",
+    "options": [
+      "Скрыть endpoint из OpenAPI/Swagger (внутренние/админские)",
+      "Type hint",
+      "Сериализация",
+      "Только в DEBUG"
+    ],
+    "correct_index": 0,
+    "explanation": "include_in_schema=False - endpoint работает, но не показывается в /docs."
+  },
+  {
+    "external_key": "xfapi-039",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое TestClient в FastAPI?",
+    "options": [
+      "In-process клиент на основе httpx для тестирования endpoints",
+      "Mock",
+      "Реальный сервер",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "from fastapi.testclient import TestClient; client.get('/users')."
+  },
+  {
+    "external_key": "xfapi-040",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое app.middleware('http')?",
+    "options": [
+      "Кастомный middleware: функция, обрабатывающая request и response",
+      "Только встроенные",
+      "Кэш",
+      "Тип Depends"
+    ],
+    "correct_index": 0,
+    "explanation": "Декоратор для написания middleware на лету. Альтернатива - app.add_middleware(MiddlewareClass)."
+  },
+  {
+    "external_key": "xfapi-041",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Pydantic Settings (BaseSettings)?",
+    "options": [
+      "Загрузка конфигов из env с типизацией",
+      "Только из YAML",
+      "Только в DEBUG",
+      "Кэш конфигов"
+    ],
+    "correct_index": 0,
+    "explanation": "pydantic-settings: class Settings(BaseSettings): db_url: str. Читает из env, .env."
+  },
+  {
+    "external_key": "xfapi-042",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое 'app factory' pattern?",
+    "options": [
+      "Функция create_app(), создающая FastAPI-инстанс - удобно для тестов и конфигов",
+      "Singleton",
+      "Декоратор",
+      "Только в Django"
+    ],
+    "correct_index": 0,
+    "explanation": "Позволяет создавать app по-разному в зависимости от окружения и легко мокать в тестах."
+  },
+  {
+    "external_key": "xfapi-043",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое async def get_db() с yield для FastAPI + SQLAlchemy?",
+    "options": [
+      "Async-зависимость, которая отдаёт сессию и закрывает её после endpoint",
+      "Только sync",
+      "Просто generator",
+      "Без cleanup"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандарт для async-FastAPI: async with AsyncSession() as session: yield session."
+  },
+  {
+    "external_key": "xfapi-044",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое X-Request-ID и как реализовать?",
+    "options": [
+      "Уникальный ID запроса для трейсинга; добавляется middleware",
+      "Только из браузера",
+      "Не нужен",
+      "Только в DEBUG"
+    ],
+    "correct_index": 0,
+    "explanation": "Middleware генерирует UUID, кладёт в response и contextvars для логов."
+  },
+  {
+    "external_key": "xfapi-045",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое response_model_exclude_unset?",
+    "options": [
+      "В response исключаются поля, не установленные явно (для PATCH)",
+      "Только для GET",
+      "Кэш",
+      "Тип авторизации"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно для частичных обновлений: возвращаем только переданные поля, а не все default'ы."
+  },
+  {
+    "external_key": "xfapi-046",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Pydantic v2 vs v1?",
+    "options": [
+      "v2 переписан на Rust, в 5-50 раз быстрее; изменён API (model_validator, field_validator)",
+      "v2 медленнее",
+      "v2 без валидации",
+      "Они идентичны"
+    ],
+    "correct_index": 0,
+    "explanation": "FastAPI 0.100+ использует Pydantic v2. Mig: validator -> field_validator, dict() -> model_dump()."
+  },
+  {
+    "external_key": "xfapi-047",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое HTTPS в Uvicorn?",
+    "options": [
+      "Через --ssl-keyfile / --ssl-certfile, но в проде обычно reverse proxy (nginx) делает TLS",
+      "Только sync",
+      "Невозможно",
+      "Только из коробки"
+    ],
+    "correct_index": 0,
+    "explanation": "Лучше делать TLS termination на reverse proxy (Nginx, Traefik) - проще и безопаснее."
+  },
+  {
+    "external_key": "xfapi-048",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Какой паттерн для разделения слоёв в FastAPI-проекте?",
+    "options": [
+      "router/handlers -> services/use cases -> repositories -> models",
+      "Все в одном файле",
+      "Только один слой",
+      "Только классы"
+    ],
+    "correct_index": 0,
+    "explanation": "Слои дают тестируемость и независимость от FastAPI: бизнес-логика не должна знать про request/response."
+  },
+  {
+    "external_key": "xfapi-049",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое Annotated[X, ...] в FastAPI?",
+    "options": [
+      "Объединение типа и метаданных: user: Annotated[User, Depends(get_user)]",
+      "Только в Pydantic",
+      "Тип валидации",
+      "Не нужен"
+    ],
+    "correct_index": 0,
+    "explanation": "PEP 593. Современный стиль FastAPI: Annotated вместо default-значений, чище реюз."
+  },
+  {
+    "external_key": "xfapi-050",
+    "topic": "fastapi",
+    "difficulty": 2,
+    "text": "Что такое pydantic-settings + dependency для конфига?",
+    "options": [
+      "@lru_cache get_settings() возвращает синглтон Settings; используется в Depends",
+      "Только глобальная переменная",
+      "Только в pytest",
+      "Не нужно"
+    ],
+    "correct_index": 0,
+    "explanation": "Depends(get_settings) делает мокание в тестах простым через dependency_overrides."
   }
 ]
