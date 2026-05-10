@@ -7,6 +7,7 @@ from pylevelup.handlers import (
     broadcast,
     cheatsheet,
     daily,
+    dashboard,
     hints,
     info,
     mock,
@@ -23,6 +24,7 @@ def build_root_router() -> Router:
     router = Router(name="pylevelup_root")
     router.include_routers(
         admin.router,
+        dashboard.router,
         broadcast.router,
         start.router,
         test.router,
