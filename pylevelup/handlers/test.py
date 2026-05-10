@@ -27,7 +27,7 @@ from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.services.test_session_service import TestSessionService
 from pylevelup.states import TestStates
 from pylevelup.utils.edit import edit_or_send, safe_edit_text
-from pylevelup.utils.text import clean_text, format_question_text
+from pylevelup.utils.text import clean_text, format_question_text, render_with_code
 
 router = Router(name="pylevelup_test")
 
@@ -358,16 +358,15 @@ async def handle_answer(
     )
 
     is_correct = chosen == correct_index
-    correct_option_text = clean_text(options[correct_index])
     feedback_prefix = "Верно" if is_correct else "Неверно"
-    chosen_option_text = clean_text(options[chosen]) if 0 <= chosen < len(options) else ""
+    chosen_option = options[chosen] if 0 <= chosen < len(options) else ""
 
     original_text = callback.message.html_text or callback.message.text or ""
     feedback_block = [
         "",
         f"<b>{feedback_prefix}.</b>",
-        f"Твой ответ: <b>{chosen + 1}</b>. {escape(chosen_option_text)}",
-        f"Правильный ответ: <b>{correct_index + 1}</b>. {escape(correct_option_text)}",
+        f"Твой ответ: <b>{chosen + 1}</b>. {render_with_code(chosen_option)}",
+        f"Правильный ответ: <b>{correct_index + 1}</b>. {render_with_code(options[correct_index])}",
     ]
     if not is_correct:
         async with session_service.session_factory() as db:

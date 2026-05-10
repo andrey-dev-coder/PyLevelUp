@@ -28,7 +28,7 @@ from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.states import MockStates
 from pylevelup.utils.edit import edit_or_send, safe_edit_text
-from pylevelup.utils.text import clean_text
+from pylevelup.utils.text import render_with_code
 
 router = Router(name="pylevelup_mock")
 
@@ -114,11 +114,11 @@ def _format_question(question: Question, position: int, total: int, deadline: da
     parts: list[str] = [
         f"<i>Mock-собес #{position} из {total} (осталось {minutes:02d}:{seconds:02d})</i>",
         "",
-        f"<b>{escape(clean_text(question.text))}</b>",
+        f"<b>{render_with_code(question.text)}</b>",
         "",
     ]
     for index, option in enumerate(question.options):
-        parts.append(f"{index + 1}. {escape(clean_text(option))}")
+        parts.append(f"{index + 1}. {render_with_code(option)}")
     return "\n".join(parts)
 
 
@@ -493,18 +493,17 @@ async def handle_mock_answer(
     next_index = index + 1
     await state.update_data(mock_answers=answers, mock_index=next_index)
 
-    chosen_text = clean_text(question.options[chosen]) if 0 <= chosen < len(question.options) else ""
-    correct_text = clean_text(question.options[question.correct_index])
+    chosen_option = question.options[chosen] if 0 <= chosen < len(question.options) else ""
     original_text = call.message.html_text or call.message.text or ""
     feedback_lines = [
         original_text,
         "",
         f"<b>{'Верно' if is_correct else 'Неверно'}.</b>",
-        f"Твой ответ: <b>{chosen + 1}</b>. {escape(chosen_text)}",
+        f"Твой ответ: <b>{chosen + 1}</b>. {render_with_code(chosen_option)}",
     ]
     if not is_correct:
         feedback_lines.append(
-            f"Правильный ответ: <b>{question.correct_index + 1}</b>. {escape(correct_text)}"
+            f"Правильный ответ: <b>{question.correct_index + 1}</b>. {render_with_code(question.options[question.correct_index])}"
         )
     await call.answer("Верно" if is_correct else "Неверно")
     await safe_edit_text(call.message, "\n".join(feedback_lines), reply_markup=None)

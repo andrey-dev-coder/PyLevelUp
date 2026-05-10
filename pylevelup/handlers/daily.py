@@ -20,7 +20,7 @@ from pylevelup.repositories import (
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.utils.edit import safe_edit_text
-from pylevelup.utils.text import clean_text
+from pylevelup.utils.text import clean_text, render_with_code
 
 router = Router(name="pylevelup_daily")
 
@@ -31,10 +31,10 @@ def _today() -> date:
 
 def _format_question(question: Question, today: date) -> str:
     parts: list[str] = [f"<b>Челлендж дня - {today.isoformat()}</b>", ""]
-    parts.append(f"<b>{escape(clean_text(question.text))}</b>")
+    parts.append(f"<b>{render_with_code(question.text)}</b>")
     parts.append("")
     for index, option in enumerate(question.options):
-        parts.append(f"{index + 1}. {escape(clean_text(option))}")
+        parts.append(f"{index + 1}. {render_with_code(option)}")
     return "\n".join(parts)
 
 
@@ -133,12 +133,11 @@ async def _result_content(
         total, correct = await repo.stats(today)
     if attempt is None:
         return "Челлендж ещё не пройден.", _build_result_keyboard()
-    correct_text = clean_text(question.options[question.correct_index])
     parts: list[str] = [f"<b>Челлендж дня - {today.isoformat()}</b>", ""]
-    parts.append(f"<b>{escape(clean_text(question.text))}</b>")
+    parts.append(f"<b>{render_with_code(question.text)}</b>")
     parts.append("")
     parts.append(
-        f"Правильный ответ: <b>{question.correct_index + 1}</b>. {escape(correct_text)}"
+        f"Правильный ответ: <b>{question.correct_index + 1}</b>. {render_with_code(question.options[question.correct_index])}"
     )
     parts.append("")
     if attempt.is_correct:

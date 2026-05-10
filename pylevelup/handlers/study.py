@@ -18,7 +18,7 @@ from pylevelup.keyboards import (
 from pylevelup.repositories import BookmarkRepository, UserRepository
 from pylevelup.services.study_service import StudyCard, StudyService
 from pylevelup.utils.edit import safe_edit_text
-from pylevelup.utils.text import clean_text
+from pylevelup.utils.text import clean_text, render_with_code
 
 router = Router(name="pylevelup_study")
 
@@ -34,11 +34,11 @@ def _format_card(card: StudyCard, category_key: str) -> str:
         header = f"<i>Изучение - {escape(display_name(category_key))}, карточка #{card.position}</i>"
     parts.append(header)
     parts.append("")
-    parts.append(f"<b>{escape(clean_text(card.text))}</b>")
+    parts.append(f"<b>{render_with_code(card.text)}</b>")
     parts.append("")
     for index, option in enumerate(card.options):
         marker = "✅" if index == card.correct_index else "▫️"
-        parts.append(f"{marker} {escape(clean_text(option))}")
+        parts.append(f"{marker} {render_with_code(option)}")
     option_explanations = getattr(card, "option_explanations", None)
     if option_explanations:
         parts.append("")
