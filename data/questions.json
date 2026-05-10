@@ -15580,5 +15580,705 @@
     ],
     "correct_index": 0,
     "explanation": "ulimit -n показывает лимит fd. На серверах часто увеличивают до 65535."
+  },
+  {
+    "external_key": "xsd-001",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое vertical scaling?",
+    "options": [
+      "Добавление мощности (CPU/RAM) одной машине",
+      "Больше машин",
+      "Кэш",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "Vertical (scale up) проще, но имеет потолок. Horizontal (scale out) - больше машин."
+  },
+  {
+    "external_key": "xsd-002",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое horizontal scaling?",
+    "options": [
+      "Добавление новых инстансов и распределение нагрузки",
+      "Только CPU",
+      "Только RAM",
+      "Sharding только в БД"
+    ],
+    "correct_index": 0,
+    "explanation": "Требует stateless сервисов или внешнего хранилища; масштабируется в облаке."
+  },
+  {
+    "external_key": "xsd-003",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое CAP theorem?",
+    "options": [
+      "При network partition нужно выбрать между consistency и availability",
+      "Только about latency",
+      "Только about replication",
+      "Только about caching"
+    ],
+    "correct_index": 0,
+    "explanation": "CP-системы (etcd, Zookeeper) предпочитают consistency; AP (DynamoDB, Cassandra) - availability."
+  },
+  {
+    "external_key": "xsd-004",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое PACELC?",
+    "options": [
+      "Расширение CAP: при разделении - C/A; иначе - latency vs consistency",
+      "Только latency",
+      "Только в k8s",
+      "Тип кэша"
+    ],
+    "correct_index": 0,
+    "explanation": "PACELC учитывает trade-off в нормальной работе, не только при partition."
+  },
+  {
+    "external_key": "xsd-005",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое load balancer?",
+    "options": [
+      "Распределение запросов между несколькими backend-инстансами",
+      "Только HTTPS",
+      "Только cache",
+      "Только DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "Алгоритмы: round-robin, least connections, IP hash. L4 (TCP) или L7 (HTTP)."
+  },
+  {
+    "external_key": "xsd-006",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое sticky session?",
+    "options": [
+      "Балансировщик отправляет запросы одного клиента на тот же backend (cookie/IP)",
+      "Random",
+      "Только round-robin",
+      "Только HTTPS"
+    ],
+    "correct_index": 0,
+    "explanation": "Нужно если бэкенд хранит session in-memory; лучше избегать через external session store."
+  },
+  {
+    "external_key": "xsd-007",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое CDN?",
+    "options": [
+      "Сеть edge-узлов, кеширующих статику ближе к пользователю",
+      "Только origin",
+      "Только в облаке",
+      "Mock"
+    ],
+    "correct_index": 0,
+    "explanation": "Cloudflare, Fastly, CloudFront. Уменьшают latency и нагрузку на origin."
+  },
+  {
+    "external_key": "xsd-008",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое read replica?",
+    "options": [
+      "Реплика БД для чтения; снижает нагрузку на master",
+      "Sharding",
+      "Backup",
+      "Только в Postgres"
+    ],
+    "correct_index": 0,
+    "explanation": "Trade-off: реплики имеют отставание (replication lag); read-after-write неконсистентен."
+  },
+  {
+    "external_key": "xsd-009",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое sharding?",
+    "options": [
+      "Разделение БД по ключу на несколько серверов",
+      "Только репликация",
+      "Cache",
+      "Backup"
+    ],
+    "correct_index": 0,
+    "explanation": "Шардирование по user_id, region. Усложняет кросс-шард запросы и транзакции."
+  },
+  {
+    "external_key": "xsd-010",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое consistent hashing для шардов?",
+    "options": [
+      "Алгоритм минимизирует rebalance при добавлении/удалении узлов",
+      "Простой modulo",
+      "Random",
+      "Hash table"
+    ],
+    "correct_index": 0,
+    "explanation": "Используется в DynamoDB, Cassandra, Memcached client-side."
+  },
+  {
+    "external_key": "xsd-011",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое eventual consistency?",
+    "options": [
+      "Записи постепенно распространяются; чтения могут видеть устаревшие данные",
+      "Strong consistency",
+      "Только sync",
+      "Linearizability"
+    ],
+    "correct_index": 0,
+    "explanation": "Высокая availability, но клиент может прочитать устаревшее значение."
+  },
+  {
+    "external_key": "xsd-012",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое idempotency?",
+    "options": [
+      "Многократное выполнение операции даёт тот же результат, что один раз",
+      "Только sync",
+      "Только async",
+      "Тип кэша"
+    ],
+    "correct_index": 0,
+    "explanation": "Критично при retries: без идемпотентности возможны двойные платежи."
+  },
+  {
+    "external_key": "xsd-013",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое rate limiting?",
+    "options": [
+      "Ограничение количества запросов от клиента за интервал времени",
+      "Cache",
+      "Sharding",
+      "Backup"
+    ],
+    "correct_index": 0,
+    "explanation": "Алгоритмы: token bucket, leaky bucket, sliding window. Часто реализуется в API Gateway."
+  },
+  {
+    "external_key": "xsd-014",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое token bucket алгоритм?",
+    "options": [
+      "Бакет наполняется токенами с определённой rate; запрос потребляет токен",
+      "Только sync",
+      "Hash",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Token bucket позволяет всплески (burst), пока есть токены. Простой и эффективный."
+  },
+  {
+    "external_key": "xsd-015",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое queue-based load levelling?",
+    "options": [
+      "Очередь между producer и consumer выравнивает скачки нагрузки",
+      "Кэш",
+      "Sync replication",
+      "Только REST"
+    ],
+    "correct_index": 0,
+    "explanation": "Producer пишет быстро, consumer обрабатывает в своём темпе. Защита от перегрузки."
+  },
+  {
+    "external_key": "xsd-016",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое pub/sub vs queue?",
+    "options": [
+      "Pub/Sub - один publisher, много subscribers; queue - один consumer на сообщение",
+      "Они идентичны",
+      "Pub/Sub только sync",
+      "Queue только async"
+    ],
+    "correct_index": 0,
+    "explanation": "Kafka сочетает: consumer group - очередь, разные группы - pub/sub."
+  },
+  {
+    "external_key": "xsd-017",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое quorum в распределённой системе?",
+    "options": [
+      "Минимальное число узлов, согласившихся на операцию (часто (N/2)+1)",
+      "Только все узлы",
+      "Только один",
+      "Random"
+    ],
+    "correct_index": 0,
+    "explanation": "Кворум обеспечивает consistency без блокировки всей системы."
+  },
+  {
+    "external_key": "xsd-018",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое Raft?",
+    "options": [
+      "Алгоритм consensus с лидером (etcd, Consul)",
+      "Только Paxos",
+      "Sharding",
+      "Backup"
+    ],
+    "correct_index": 0,
+    "explanation": "Raft проще понимать, чем Paxos. Лидер обрабатывает запись, реплицирует через append entries."
+  },
+  {
+    "external_key": "xsd-019",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое CRDT?",
+    "options": [
+      "Conflict-free Replicated Data Type - структура с автоматическим merge при конфликтах",
+      "Only sync replication",
+      "Hash",
+      "Index"
+    ],
+    "correct_index": 0,
+    "explanation": "CRDT (G-counter, OR-set) идеальны для оффлайн-first приложений и P2P (Yjs, Automerge)."
+  },
+  {
+    "external_key": "xsd-020",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое write-ahead log (WAL)?",
+    "options": [
+      "Последовательный лог изменений до их применения; используется для recovery",
+      "Только cache",
+      "Backup",
+      "Async only"
+    ],
+    "correct_index": 0,
+    "explanation": "Postgres, ZooKeeper, Kafka - WAL основа надёжности."
+  },
+  {
+    "external_key": "xsd-021",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое bloom filter?",
+    "options": [
+      "Probabilistic структура: есть ли элемент в множестве (false positives возможны)",
+      "Hashtable",
+      "Tree",
+      "List"
+    ],
+    "correct_index": 0,
+    "explanation": "Использование: BigTable/Cassandra проверяют bloom перед read disk; экономит I/O."
+  },
+  {
+    "external_key": "xsd-022",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое HyperLogLog?",
+    "options": [
+      "Probabilistic структура для оценки кардинальности (уникальных значений)",
+      "Точный counter",
+      "Hash",
+      "Sort"
+    ],
+    "correct_index": 0,
+    "explanation": "Используется в Redis (PFADD/PFCOUNT) для подсчёта уникальных пользователей с минимумом памяти."
+  },
+  {
+    "external_key": "xsd-023",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое URL shortener высокоуровневая архитектура?",
+    "options": [
+      "Hash или counter -> base62 -> хранение в KV; редирект 301/302",
+      "Только в БД",
+      "Только в Redis",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Шардируется хорошо. Redis для горячих ссылок, persistent KV (DynamoDB) для остального."
+  },
+  {
+    "external_key": "xsd-024",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое feed/timeline (push vs pull)?",
+    "options": [
+      "Push (fanout-on-write) - копируем пост в feed подписчиков; pull - формируем при чтении",
+      "Только push",
+      "Только pull",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "Гибрид: для звёзд (миллионы подписчиков) - pull; обычные пользователи - push."
+  },
+  {
+    "external_key": "xsd-025",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое search engine architecture?",
+    "options": [
+      "Crawler + indexer (inverted index) + query processor (Elasticsearch, Lucene)",
+      "Только в БД",
+      "Только в Redis",
+      "Cache only"
+    ],
+    "correct_index": 0,
+    "explanation": "Inverted index: term -> [docId, ...]. Шардируется и реплицируется."
+  },
+  {
+    "external_key": "xsd-026",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design rate limiter?",
+    "options": [
+      "Чаще всего token/leaky bucket в распределённом виде через Redis",
+      "Только локальный",
+      "Только sync",
+      "Без хранилища"
+    ],
+    "correct_index": 0,
+    "explanation": "Проблемы: clock skew, race condition. Решается атомарными INCR в Redis."
+  },
+  {
+    "external_key": "xsd-027",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design chat system?",
+    "options": [
+      "WebSocket + persistent storage сообщений + presence + push notifications",
+      "Только REST polling",
+      "Только Redis",
+      "Без хранения"
+    ],
+    "correct_index": 0,
+    "explanation": "Каналы шардируются по chat_id. Read receipts, typing indicators - часто через pub/sub."
+  },
+  {
+    "external_key": "xsd-028",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design Notification system?",
+    "options": [
+      "Producer -> queue -> workers по каналам (push/email/sms) с retry и DLQ",
+      "Только sync",
+      "Только email",
+      "Без очередей"
+    ],
+    "correct_index": 0,
+    "explanation": "Шаблоны хранятся отдельно; персонализация через templating."
+  },
+  {
+    "external_key": "xsd-029",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design web crawler?",
+    "options": [
+      "URL frontier (queue) + downloader + parser + storage; politeness и dedup",
+      "Только requests",
+      "Только Redis",
+      "Без queue"
+    ],
+    "correct_index": 0,
+    "explanation": "Bloom filter для URL dedup. robots.txt, rate limit per domain."
+  },
+  {
+    "external_key": "xsd-030",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое CAP при выборе БД?",
+    "options": [
+      "Postgres - CP, Cassandra - AP, MongoDB - настраиваемая",
+      "Все CA",
+      "Все AP",
+      "Все CP"
+    ],
+    "correct_index": 0,
+    "explanation": "Зависит от настроек. Cassandra с QUORUM ближе к CP."
+  },
+  {
+    "external_key": "xsd-031",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое write-heavy vs read-heavy системы?",
+    "options": [
+      "Разное соотношение записей/чтений; влияет на выбор хранилища, кэша, индексов",
+      "Они одинаковы",
+      "Без разницы",
+      "Только в облаке"
+    ],
+    "correct_index": 0,
+    "explanation": "Read-heavy: добавляем кэш и read replica. Write-heavy: шардирование, async."
+  },
+  {
+    "external_key": "xsd-032",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое hot partition / hot key?",
+    "options": [
+      "Один шард/ключ получает непропорциональную долю запросов",
+      "Hash collision",
+      "Cache miss",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается лучшим выбором ключа шардирования, salting, локальным кэшем."
+  },
+  {
+    "external_key": "xsd-033",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое back pressure?",
+    "options": [
+      "Сигнализация upstream-у замедлиться, когда downstream не успевает",
+      "DDoS",
+      "Кэш",
+      "Только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Reactive Streams, gRPC flow control. Без back pressure возможны OOM."
+  },
+  {
+    "external_key": "xsd-034",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое долгие операции (long-running tasks)?",
+    "options": [
+      "Запускаются асинхронно: возврат task_id, статус по запросу или webhook",
+      "Sync only",
+      "Только sync HTTP",
+      "Не нужны"
+    ],
+    "correct_index": 0,
+    "explanation": "REST: 202 Accepted + Location: /tasks/{id}. Polling или callback."
+  },
+  {
+    "external_key": "xsd-035",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое geographic replication?",
+    "options": [
+      "Реплики в разных регионах для latency и disaster recovery",
+      "Sharding",
+      "Cache",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Multi-region active-active или active-passive. Сложно с conflict resolution."
+  },
+  {
+    "external_key": "xsd-036",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое CDN cache key?",
+    "options": [
+      "URL + Vary headers; определяет уникальность кэшируемого ответа",
+      "Только URL",
+      "Только cookie",
+      "Случайный"
+    ],
+    "correct_index": 0,
+    "explanation": "Vary: Accept-Encoding - отдельный кэш для gzip/br. Внимание к кардинальности cookie."
+  },
+  {
+    "external_key": "xsd-037",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое graceful degradation?",
+    "options": [
+      "Система продолжает работать с урезанной функциональностью при сбоях зависимостей",
+      "Полный отказ",
+      "Только в k8s",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Например, рекомендации недоступны - показываем общий список вместо ошибки."
+  },
+  {
+    "external_key": "xsd-038",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое feature toggling?",
+    "options": [
+      "Переключение фич без релиза - быстрый kill switch при сбое",
+      "Только маркетинг",
+      "Только в DEV",
+      "Mock"
+    ],
+    "correct_index": 0,
+    "explanation": "Уменьшает риск релиза; помогает A/B тестировать."
+  },
+  {
+    "external_key": "xsd-039",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design URL ratelimiter с распределённой памятью?",
+    "options": [
+      "Redis INCR + EXPIRE per (user, window); требует атомарности",
+      "В памяти каждого инстанса",
+      "Только в БД",
+      "Только локально"
+    ],
+    "correct_index": 0,
+    "explanation": "Ключ: rl:user_id:window. После INCR проверяем счётчик, превысили - 429."
+  },
+  {
+    "external_key": "xsd-040",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design payment system?",
+    "options": [
+      "Идемпотентные операции, double-entry bookkeeping, audit log, fraud check",
+      "Sync only",
+      "Без audit",
+      "Только cash"
+    ],
+    "correct_index": 0,
+    "explanation": "Финансы требуют ACID, идемпотентности, отчётности. Saga для распределённых платежей."
+  },
+  {
+    "external_key": "xsd-041",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design ride-sharing system?",
+    "options": [
+      "Geo-индекс (R-tree, geohash), matching, real-time updates через WebSocket",
+      "Только REST",
+      "Только Redis",
+      "Sync"
+    ],
+    "correct_index": 0,
+    "explanation": "S2 cells / geohash для эффективного поиска ближайших водителей."
+  },
+  {
+    "external_key": "xsd-042",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design distributed file storage?",
+    "options": [
+      "Метаданные в БД, чанки на object storage, репликация и erasure coding",
+      "Только локально",
+      "Cache only",
+      "Без backup"
+    ],
+    "correct_index": 0,
+    "explanation": "S3, GFS, HDFS. Erasure coding эффективнее по объёму, чем 3x repl."
+  },
+  {
+    "external_key": "xsd-043",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое back-of-the-envelope estimation?",
+    "options": [
+      "Грубая оценка ёмкости, QPS, storage перед детальным дизайном",
+      "Только UI",
+      "Только в облаке",
+      "Random"
+    ],
+    "correct_index": 0,
+    "explanation": "Например: 100M users * 10 actions/day -> 1B events/day -> ~12k EPS."
+  },
+  {
+    "external_key": "xsd-044",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое CRUD vs event sourcing?",
+    "options": [
+      "CRUD: state. Event sourcing: log событий, state - производный",
+      "Они идентичны",
+      "Event sourcing - только sync",
+      "CRUD - только async"
+    ],
+    "correct_index": 0,
+    "explanation": "Event sourcing даёт аудит и time-travel; сложнее в реализации."
+  },
+  {
+    "external_key": "xsd-045",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design typeahead/autocomplete?",
+    "options": [
+      "Trie-структура или prefix-индекс с ранжированием по популярности",
+      "Только полный поиск",
+      "Только Redis",
+      "Только grep"
+    ],
+    "correct_index": 0,
+    "explanation": "Хранится в RAM, обновляется по аналитике. ES completion suggester тоже популярен."
+  },
+  {
+    "external_key": "xsd-046",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design photo storage (Instagram-like)?",
+    "options": [
+      "Object storage для бинарей + CDN + relational/NoSQL для метаданных + поисковый индекс",
+      "Только в Postgres",
+      "Только в Redis",
+      "Mock only"
+    ],
+    "correct_index": 0,
+    "explanation": "Изображения транскодируются в несколько разрешений (resize at upload или on-fly)."
+  },
+  {
+    "external_key": "xsd-047",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design metrics / monitoring?",
+    "options": [
+      "Pull (Prometheus) или push (StatsD/InfluxDB) с retention и алертами",
+      "Только логи",
+      "Только trace",
+      "Manual только"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандартные метрики: RED/USE - request rate, errors, duration / utilization, saturation, errors."
+  },
+  {
+    "external_key": "xsd-048",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design distributed cache (Memcached/Redis Cluster)?",
+    "options": [
+      "Consistent hashing + replication + TTL + eviction + client-side smart routing",
+      "Только локальный",
+      "Без репликации",
+      "Sync only"
+    ],
+    "correct_index": 0,
+    "explanation": "Балансировка нагрузки и устойчивость к выпадению узлов критичны."
+  },
+  {
+    "external_key": "xsd-049",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design API for high concurrency?",
+    "options": [
+      "Async I/O, connection pooling, CDN/cache, rate limit, queue для долгих задач",
+      "Только sync",
+      "Без кэша",
+      "Без очередей"
+    ],
+    "correct_index": 0,
+    "explanation": "Хороший дизайн снижает latency и предотвращает каскадные сбои."
+  },
+  {
+    "external_key": "xsd-050",
+    "topic": "system_design",
+    "difficulty": 2,
+    "text": "Что такое design online judge / quiz system?",
+    "options": [
+      "Очередь задач, sandboxed runners, лидерборды (Redis ZSET), CDN для статики",
+      "Только sync",
+      "Только в БД",
+      "Только REST"
+    ],
+    "correct_index": 0,
+    "explanation": "Sandbox через Docker/firecracker. Лидерборды на ZSET с score = время+результат."
   }
 ]
