@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 EXTRA_DIR = ROOT / "data" / "extra"
 TARGET = ROOT / "data" / "questions.json"

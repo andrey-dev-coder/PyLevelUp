@@ -11,6 +11,7 @@ from pylevelup.handlers import (
     hints,
     info,
     mock,
+    open_questions,
     reports,
     search,
     start,
@@ -39,6 +40,7 @@ def build_root_router() -> Router:
         cheatsheet.router,
         search.router,
         reports.router,
+        open_questions.router,
     )
     return router
 

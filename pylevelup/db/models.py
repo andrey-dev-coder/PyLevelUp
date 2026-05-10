@@ -259,3 +259,16 @@ class QuestionReport(Base, TimestampMixin):
     reason: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(String(16), nullable=False, default="open", index=True)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class OpenQuestion(Base, TimestampMixin):
+    __tablename__ = "open_questions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    external_key: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
+    topic: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    difficulty: Mapped[int] = mapped_column(Integer, nullable=False, default=2)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    ideal_answer: Mapped[str] = mapped_column(Text, nullable=False)
+    checklist: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
