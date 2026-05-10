@@ -34,9 +34,7 @@ def upgrade() -> None:
             nullable=False,
         ),
     )
-    op.create_index("ix_open_questions_topic", "open_questions", ["topic"])
 
 
 def downgrade() -> None:
-    op.drop_index("ix_open_questions_topic", table_name="open_questions")
     op.drop_table("open_questions")
