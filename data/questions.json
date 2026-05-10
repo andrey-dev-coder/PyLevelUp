@@ -14180,5 +14180,1405 @@
     ],
     "correct_index": 0,
     "explanation": "Помогает дебажить почему тесты не находятся или фильтр не работает."
+  },
+  {
+    "external_key": "xms-001",
+    "topic": "microservices",
+    "difficulty": 1,
+    "text": "Что такое микросервисная архитектура?",
+    "options": [
+      "Приложение разбито на маленькие независимые сервисы, общающиеся по сети",
+      "Один большой бинарь",
+      "Только функция",
+      "Только клиент"
+    ],
+    "correct_index": 0,
+    "explanation": "Каждый микросервис автономен, имеет свою БД, может разрабатываться/деплоиться независимо."
+  },
+  {
+    "external_key": "xms-002",
+    "topic": "microservices",
+    "difficulty": 1,
+    "text": "Чем монолит отличается от микросервисов?",
+    "options": [
+      "Монолит - одно приложение, микросервисы - множество отдельных",
+      "Они одинаковы",
+      "Монолит только на Java",
+      "Микросервисы только в облаке"
+    ],
+    "correct_index": 0,
+    "explanation": "Монолит проще запускать; микросервисы дают независимое масштабирование и деплой."
+  },
+  {
+    "external_key": "xms-003",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое service discovery?",
+    "options": [
+      "Механизм нахождения сетевого адреса нужного сервиса (Consul, etcd, k8s DNS)",
+      "Тип кэша",
+      "Логирование",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "В динамической среде сервисы запускаются на разных хостах/портах; нужен registry."
+  },
+  {
+    "external_key": "xms-004",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое API Gateway?",
+    "options": [
+      "Единая точка входа для клиентов: маршрутизация, auth, rate limit, агрегация",
+      "ORM",
+      "DNS",
+      "Только балансировщик"
+    ],
+    "correct_index": 0,
+    "explanation": "Kong, Tyk, Envoy - API Gateway скрывают топологию и решают cross-cutting concerns."
+  },
+  {
+    "external_key": "xms-005",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое circuit breaker?",
+    "options": [
+      "Паттерн отказа: при ошибках от downstream-сервиса временно перестаём звать его",
+      "Только retry",
+      "Кэш",
+      "Очередь"
+    ],
+    "correct_index": 0,
+    "explanation": "Состояния: closed/open/half-open. Защищает от каскадных сбоев."
+  },
+  {
+    "external_key": "xms-006",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое retry с backoff?",
+    "options": [
+      "Повтор запроса с экспоненциально растущей паузой между попытками",
+      "Без задержки",
+      "С фиксированной задержкой",
+      "Только 1 раз"
+    ],
+    "correct_index": 0,
+    "explanation": "Exponential backoff + jitter не топит сервер, который восстанавливается."
+  },
+  {
+    "external_key": "xms-007",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое bulkhead pattern?",
+    "options": [
+      "Изоляция ресурсов (пул соединений на каждый downstream); сбой одного не валит остальных",
+      "Только кэш",
+      "Только лог",
+      "Replica"
+    ],
+    "correct_index": 0,
+    "explanation": "Если одна интеграция тормозит, не должна занять все ресурсы своего сервиса."
+  },
+  {
+    "external_key": "xms-008",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое distributed tracing?",
+    "options": [
+      "Прослеживание одного запроса через множество сервисов (trace_id, span_id)",
+      "Просто логи",
+      "Только метрики",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "OpenTelemetry, Jaeger, Tempo. Без трейсинга отладка распределённой системы - кошмар."
+  },
+  {
+    "external_key": "xms-009",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое correlation_id / request_id?",
+    "options": [
+      "Уникальный ID запроса, передающийся через все сервисы для группировки логов",
+      "Тип JWT",
+      "Только в БД",
+      "Только локально"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандартно через заголовок X-Request-ID; ставится gateway и логируется везде."
+  },
+  {
+    "external_key": "xms-010",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое event-driven architecture?",
+    "options": [
+      "Сервисы общаются через события (Kafka/RabbitMQ), декаплятся",
+      "Только REST",
+      "Только gRPC",
+      "Только GraphQL"
+    ],
+    "correct_index": 0,
+    "explanation": "Plus: гибкость, асинхронность. Minus: сложнее отлаживать, нужны event schema."
+  },
+  {
+    "external_key": "xms-011",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Kafka?",
+    "options": [
+      "Распределённая платформа потоковой передачи и хранения событий",
+      "Реляционная БД",
+      "Кэш",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Topic + partitions; consumer groups; высокая пропускная способность; long retention."
+  },
+  {
+    "external_key": "xms-012",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое RabbitMQ?",
+    "options": [
+      "Брокер очередей с поддержкой AMQP, гибкая маршрутизация",
+      "БД",
+      "Кэш",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Exchanges (direct, topic, fanout), queues, bindings. Хорош для классических очередей."
+  },
+  {
+    "external_key": "xms-013",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Чем Kafka отличается от RabbitMQ?",
+    "options": [
+      "Kafka - log-based, события сохраняются; RabbitMQ - очередь с удалением после ack",
+      "Они идентичны",
+      "Kafka только в облаке",
+      "RabbitMQ только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Kafka хорош для event sourcing; RabbitMQ для work queues и RPC."
+  },
+  {
+    "external_key": "xms-014",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое idempotent consumer?",
+    "options": [
+      "Обработчик, способный безопасно обработать одно и то же сообщение несколько раз",
+      "Sync только",
+      "Только AT-most-once",
+      "Без ack"
+    ],
+    "correct_index": 0,
+    "explanation": "В at-least-once delivery дубли неизбежны; идемпотентность нужна для корректности."
+  },
+  {
+    "external_key": "xms-015",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое transactional outbox pattern?",
+    "options": [
+      "Запись бизнес-данных и события в одну транзакцию БД, отдельный publisher отправляет в брокер",
+      "Просто publish",
+      "Sync only",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Решает проблему двух сторон: БД и брокер не атомарны. Outbox делает их согласованными."
+  },
+  {
+    "external_key": "xms-016",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое saga pattern?",
+    "options": [
+      "Распределённая транзакция через цепочку локальных транзакций с компенсациями",
+      "2PC",
+      "Только sync",
+      "Только async"
+    ],
+    "correct_index": 0,
+    "explanation": "Choreography (события) или Orchestration (координатор). Compensating actions откатывают."
+  },
+  {
+    "external_key": "xms-017",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое CQRS?",
+    "options": [
+      "Command Query Responsibility Segregation: разные модели для записи и чтения",
+      "Только GraphQL",
+      "Только REST",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Read-модель оптимизирована для запросов; write-модель для транзакций."
+  },
+  {
+    "external_key": "xms-018",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое event sourcing?",
+    "options": [
+      "Хранение последовательности событий вместо текущего состояния; state восстанавливается реплеем",
+      "Просто log",
+      "Backup",
+      "ETL"
+    ],
+    "correct_index": 0,
+    "explanation": "Полный аудит, time-travel; но сложнее, чем CRUD."
+  },
+  {
+    "external_key": "xms-019",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое eventual consistency?",
+    "options": [
+      "Данные станут согласованными со временем; временно могут расходиться",
+      "Strong consistency всегда",
+      "Только sync",
+      "Только в монолите"
+    ],
+    "correct_index": 0,
+    "explanation": "Распространено в распределённых системах; компромисс из CAP."
+  },
+  {
+    "external_key": "xms-020",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое database per service?",
+    "options": [
+      "Каждый микросервис владеет своей БД и общается через API",
+      "Общая БД",
+      "Просто схема",
+      "Только в Postgres"
+    ],
+    "correct_index": 0,
+    "explanation": "Гарантирует loose coupling. Запрещает прямой SELECT из чужой БД."
+  },
+  {
+    "external_key": "xms-021",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое gRPC?",
+    "options": [
+      "RPC-фреймворк на HTTP/2 с Protobuf - быстрый и типизированный",
+      "REST",
+      "GraphQL",
+      "SOAP"
+    ],
+    "correct_index": 0,
+    "explanation": "Подходит для inter-service. Поддерживает streaming. Браузеры - через gRPC-web."
+  },
+  {
+    "external_key": "xms-022",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое REST vs gRPC?",
+    "options": [
+      "REST: HTTP+JSON, удобен для людей. gRPC: HTTP/2+Protobuf, быстрее и строже",
+      "Они идентичны",
+      "REST быстрее",
+      "gRPC только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "REST для public API; gRPC для inter-service где важна производительность."
+  },
+  {
+    "external_key": "xms-023",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое sidecar pattern?",
+    "options": [
+      "Отдельный контейнер рядом с приложением (proxy, log shipper, secret loader)",
+      "Просто replica",
+      "Sharding",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Envoy в Istio - sidecar для service mesh. Sidecar разгружает приложение от cross-cutting задач."
+  },
+  {
+    "external_key": "xms-024",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое service mesh?",
+    "options": [
+      "Инфраструктурный слой для коммуникации сервисов: mTLS, traffic management, retries",
+      "Просто Kubernetes",
+      "Только REST",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "Istio, Linkerd, Consul. Sidecar-прокси перехватывает трафик и применяет политики."
+  },
+  {
+    "external_key": "xms-025",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Kubernetes?",
+    "options": [
+      "Платформа оркестрации контейнеров: deployment, scaling, networking",
+      "Только Docker",
+      "ORM",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "k8s управляет Pod, Deployment, Service, Ingress; де-факто стандарт для микросервисов."
+  },
+  {
+    "external_key": "xms-026",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое pod в Kubernetes?",
+    "options": [
+      "Минимальная единица деплоя: один или несколько контейнеров с общей сетью/тома",
+      "Только машина",
+      "Replica set",
+      "Service"
+    ],
+    "correct_index": 0,
+    "explanation": "Под выглядит как один логический хост. Часто 1 контейнер + sidecar."
+  },
+  {
+    "external_key": "xms-027",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Deployment в Kubernetes?",
+    "options": [
+      "Объект с replica count и rolling updates для управления Pod'ами",
+      "Только service",
+      "Только pod",
+      "Только cluster"
+    ],
+    "correct_index": 0,
+    "explanation": "kubectl set image - запускает rolling update без downtime."
+  },
+  {
+    "external_key": "xms-028",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Service в Kubernetes?",
+    "options": [
+      "Стабильная сетевая сущность с DNS-именем для группы Pod'ов",
+      "Pod",
+      "Cluster",
+      "Volume"
+    ],
+    "correct_index": 0,
+    "explanation": "ClusterIP, NodePort, LoadBalancer - типы Service для разных сценариев."
+  },
+  {
+    "external_key": "xms-029",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Ingress?",
+    "options": [
+      "Объект k8s для HTTP-маршрутизации входящих запросов в сервисы (через ingress controller)",
+      "Pod",
+      "Volume",
+      "Sidecar"
+    ],
+    "correct_index": 0,
+    "explanation": "nginx-ingress, Traefik. Конфигурируется через YAML и поддерживает TLS."
+  },
+  {
+    "external_key": "xms-030",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое health check (liveness/readiness)?",
+    "options": [
+      "Liveness - жив ли процесс; readiness - готов ли принимать трафик",
+      "Только TCP",
+      "Только HTTP",
+      "Только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Если liveness fail - k8s перезапускает; readiness fail - убирает из балансировки."
+  },
+  {
+    "external_key": "xms-031",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое 12 Factor App?",
+    "options": [
+      "Методология для cloud-native приложений (config in env, stateless, logs as stream)",
+      "Тип языка",
+      "Стандарт REST",
+      "Книга по Java"
+    ],
+    "correct_index": 0,
+    "explanation": "12factor.net - принципы, упрощающие деплой и масштабирование."
+  },
+  {
+    "external_key": "xms-032",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое stateless service?",
+    "options": [
+      "Сервис не хранит состояние между запросами; легко масштабируется горизонтально",
+      "Только кэш",
+      "Только sync",
+      "Только в облаке"
+    ],
+    "correct_index": 0,
+    "explanation": "Состояние в БД/кэше; сервис можно убить и поднять снова без потерь."
+  },
+  {
+    "external_key": "xms-033",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое graceful shutdown?",
+    "options": [
+      "При SIGTERM сервис заканчивает текущие запросы, не принимает новые, потом выходит",
+      "Только SIGKILL",
+      "Без cleanup",
+      "Только в Linux"
+    ],
+    "correct_index": 0,
+    "explanation": "Без graceful shutdown в момент деплоя теряются in-flight запросы."
+  },
+  {
+    "external_key": "xms-034",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое blue-green deployment?",
+    "options": [
+      "Параллельно работают две версии (blue/green); трафик переключается мгновенно",
+      "Только rolling update",
+      "Только в k8s",
+      "Только canary"
+    ],
+    "correct_index": 0,
+    "explanation": "Быстрый rollback. Минус: 2x ресурсов на время переключения."
+  },
+  {
+    "external_key": "xms-035",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое canary deployment?",
+    "options": [
+      "Постепенный rollout новой версии на часть пользователей с мониторингом метрик",
+      "Только blue-green",
+      "Без метрик",
+      "Только rollback"
+    ],
+    "correct_index": 0,
+    "explanation": "Argo Rollouts, Flagger автоматизируют canary с promotion/abort по SLO."
+  },
+  {
+    "external_key": "xms-036",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое distributed lock?",
+    "options": [
+      "Mutex через внешнее хранилище (Redis SETNX, Zookeeper, etcd)",
+      "Локальный mutex",
+      "Just sync",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Реальный consensus сложен; Redlock - спорный паттерн. Лучше использовать etcd/Zookeeper."
+  },
+  {
+    "external_key": "xms-037",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое API versioning?",
+    "options": [
+      "Поддержка совместимости при изменении контракта (v1, v2 в URL/header)",
+      "Только в OpenAPI",
+      "Не нужно",
+      "Только в gRPC"
+    ],
+    "correct_index": 0,
+    "explanation": "URL: /api/v2/users; Header: Accept: application/vnd.api+json;version=2."
+  },
+  {
+    "external_key": "xms-038",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое backward compatibility в API?",
+    "options": [
+      "Новая версия не должна ломать существующих клиентов",
+      "Только при breaking change",
+      "Не нужна",
+      "Только в gRPC"
+    ],
+    "correct_index": 0,
+    "explanation": "Добавлять поля можно (с дефолтами), удалять - нельзя без deprecation."
+  },
+  {
+    "external_key": "xms-039",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое feature flags?",
+    "options": [
+      "Включение/отключение фич в runtime без релиза кода (LaunchDarkly, Unleash)",
+      "Только если/иначе",
+      "Только в DEV",
+      "Только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Помогают делать canary, A/B тесты, быстрый kill switch при проблемах."
+  },
+  {
+    "external_key": "xms-040",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое A/B тестирование?",
+    "options": [
+      "Сравнение метрик между двумя вариантами фичи на реальных пользователях",
+      "Только в маркетинге",
+      "Только UI",
+      "Только локально"
+    ],
+    "correct_index": 0,
+    "explanation": "Часто реализуется через feature flags + аналитика поведения."
+  },
+  {
+    "external_key": "xms-041",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое observability?",
+    "options": [
+      "Возможность понять состояние системы по логам, метрикам, трейсам ('three pillars')",
+      "Только метрики",
+      "Только логи",
+      "Только трейсы"
+    ],
+    "correct_index": 0,
+    "explanation": "Логи (что случилось), метрики (сколько), трейсы (как прошло через сервисы)."
+  },
+  {
+    "external_key": "xms-042",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Prometheus?",
+    "options": [
+      "Time-series БД и система сбора метрик с pull-моделью",
+      "ORM",
+      "MQ",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Сервисы экспонируют /metrics endpoint, Prometheus сам опрашивает."
+  },
+  {
+    "external_key": "xms-043",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Grafana?",
+    "options": [
+      "Платформа дашбордов и визуализации метрик/логов из разных источников",
+      "MQ",
+      "БД",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Поддерживает Prometheus, Loki, Elasticsearch, и десятки других datasources."
+  },
+  {
+    "external_key": "xms-044",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое ELK / OpenSearch?",
+    "options": [
+      "Elasticsearch + Logstash + Kibana - стек для логов",
+      "БД",
+      "Кэш",
+      "Только метрики"
+    ],
+    "correct_index": 0,
+    "explanation": "Centralized logging: парсинг (Logstash/Fluent Bit), индекс (ES), UI (Kibana)."
+  },
+  {
+    "external_key": "xms-045",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое SLA / SLO / SLI?",
+    "options": [
+      "SLA - контракт; SLO - цель; SLI - индикатор (метрика)",
+      "Они идентичны",
+      "Только в маркетинге",
+      "SLA только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Пример: SLI - error rate; SLO - <0.1%; SLA - <0.5% или возврат денег."
+  },
+  {
+    "external_key": "xms-046",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое error budget?",
+    "options": [
+      "Допустимое количество ошибок в рамках SLO; используется для решений о релизах",
+      "Бюджет команды",
+      "Только в SRE",
+      "Тип метрики"
+    ],
+    "correct_index": 0,
+    "explanation": "Если бюджет ошибок исчерпан - фриз релизов, фокус на стабильности."
+  },
+  {
+    "external_key": "xms-047",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое chaos engineering?",
+    "options": [
+      "Преднамеренное внесение сбоев в систему для проверки устойчивости",
+      "DDoS",
+      "Только нагрузка",
+      "Случайные баги"
+    ],
+    "correct_index": 0,
+    "explanation": "Chaos Monkey, Litmus. Цель: найти слабые места до того, как сломается в проде."
+  },
+  {
+    "external_key": "xms-048",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое two-phase commit (2PC)?",
+    "options": [
+      "Распределённая транзакция: prepare, потом commit (с риском блокировок)",
+      "Это просто commit",
+      "Sync replication",
+      "Saga"
+    ],
+    "correct_index": 0,
+    "explanation": "2PC даёт сильную согласованность, но плохо масштабируется и блокирует при сбоях."
+  },
+  {
+    "external_key": "xms-049",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое dead letter queue (DLQ)?",
+    "options": [
+      "Очередь для сообщений, которые не удалось обработать после N попыток",
+      "Просто backup",
+      "Cache",
+      "Audit"
+    ],
+    "correct_index": 0,
+    "explanation": "DLQ позволяет анализировать проблемы и при необходимости retry вручную."
+  },
+  {
+    "external_key": "xms-050",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое choreography vs orchestration в saga?",
+    "options": [
+      "Choreography: каждый сервис реагирует на события. Orchestration: центральный координатор",
+      "Они идентичны",
+      "Choreography только sync",
+      "Orchestration только async"
+    ],
+    "correct_index": 0,
+    "explanation": "Choreography - проще, но сложнее отслеживать. Orchestration - явный flow, проще debug."
+  },
+  {
+    "external_key": "xosl-001",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое процесс в Linux?",
+    "options": [
+      "Запущенная программа с собственным адресным пространством и PID",
+      "Файл",
+      "Сокет",
+      "Поток"
+    ],
+    "correct_index": 0,
+    "explanation": "Процесс - изолированный исполняющийся экземпляр программы. Имеет PID, PPID, fd-таблицу."
+  },
+  {
+    "external_key": "xosl-002",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое поток (thread) относительно процесса?",
+    "options": [
+      "Лёгкая единица исполнения внутри процесса; разделяет память",
+      "Отдельный процесс",
+      "Файл",
+      "Сокет"
+    ],
+    "correct_index": 0,
+    "explanation": "Threads процесса разделяют heap и fd; имеют свой stack и регистры."
+  },
+  {
+    "external_key": "xosl-003",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое PID?",
+    "options": [
+      "Идентификатор процесса (целое число)",
+      "Идентификатор пользователя",
+      "ID треда",
+      "ID inode"
+    ],
+    "correct_index": 0,
+    "explanation": "Системный вызов getpid() возвращает PID. PID 1 - init/systemd."
+  },
+  {
+    "external_key": "xosl-004",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что показывает команда ps?",
+    "options": [
+      "Список процессов и их статусы",
+      "Файлы в каталоге",
+      "Сетевые соединения",
+      "Использование диска"
+    ],
+    "correct_index": 0,
+    "explanation": "ps aux - список всех процессов; ps -ef - похожий формат BSD vs SysV."
+  },
+  {
+    "external_key": "xosl-005",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что показывает top?",
+    "options": [
+      "Реальный мониторинг процессов: CPU, память, состояние",
+      "Логи",
+      "Сеть",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "Альтернативы: htop с цветным UI, atop с history, glances для удобного обзора."
+  },
+  {
+    "external_key": "xosl-006",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает kill -9 PID?",
+    "options": [
+      "Отправляет SIGKILL - принудительное завершение, не перехватывается",
+      "Просьба завершиться (SIGTERM)",
+      "Просто игнорируется",
+      "Перезапуск"
+    ],
+    "correct_index": 0,
+    "explanation": "SIGKILL не перехватывается процессом; SIGTERM (15) - graceful, можно обработать."
+  },
+  {
+    "external_key": "xosl-007",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое сигнал SIGTERM?",
+    "options": [
+      "Запрос на завершение, который процесс может обработать (cleanup)",
+      "Принудительное убийство",
+      "Hangup",
+      "Continue"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандартный сигнал для graceful shutdown. systemd шлёт SIGTERM, ждёт, потом SIGKILL."
+  },
+  {
+    "external_key": "xosl-008",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое SIGHUP?",
+    "options": [
+      "Сигнал hangup; обычно используется для перечитывания конфига демонами",
+      "Только в shell",
+      "Только для ОС",
+      "Завершение"
+    ],
+    "correct_index": 0,
+    "explanation": "Многие демоны при SIGHUP перечитывают конфиг (nginx, sshd)."
+  },
+  {
+    "external_key": "xosl-009",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое systemd?",
+    "options": [
+      "Система инициализации и менеджер сервисов в Linux",
+      "Командная строка",
+      "Файловая система",
+      "Менеджер пакетов"
+    ],
+    "correct_index": 0,
+    "explanation": "systemd управляет демонами, цепочкой зависимостей, логами (journal). Работает с .service файлами."
+  },
+  {
+    "external_key": "xosl-010",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Какая команда смотрит логи systemd?",
+    "options": [
+      "journalctl -u myservice",
+      "less /var/log/syslog",
+      "tail /etc/passwd",
+      "dmesg only"
+    ],
+    "correct_index": 0,
+    "explanation": "journalctl фильтрует по unit, времени, уровню; -f для tail-следования."
+  },
+  {
+    "external_key": "xosl-011",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cron?",
+    "options": [
+      "Планировщик периодических задач по расписанию (crontab)",
+      "Логгер",
+      "Сетевой инструмент",
+      "ОС"
+    ],
+    "correct_index": 0,
+    "explanation": "Формат crontab: 5 полей времени + команда. systemd timers - современная альтернатива."
+  },
+  {
+    "external_key": "xosl-012",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое stdin/stdout/stderr (file descriptors)?",
+    "options": [
+      "FD 0 - stdin, 1 - stdout, 2 - stderr",
+      "0 - stdout, 1 - stderr",
+      "Только stdout",
+      "Произвольные числа"
+    ],
+    "correct_index": 0,
+    "explanation": "Каждый процесс получает 3 стандартных fd. Можно перенаправлять: 2>&1, > file."
+  },
+  {
+    "external_key": "xosl-013",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое pipe (конвейер) в shell?",
+    "options": [
+      "command1 | command2 - stdout первой команды становится stdin второй",
+      "Только перенаправление в файл",
+      "Только для logs",
+      "Mutex"
+    ],
+    "correct_index": 0,
+    "explanation": "Pipe реализуется через системный вызов pipe(), эффективен для streaming."
+  },
+  {
+    "external_key": "xosl-014",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое environment variables?",
+    "options": [
+      "Переменные окружения процесса (export VAR=val)",
+      "Переменные программы",
+      "Файлы",
+      "Только в shell"
+    ],
+    "correct_index": 0,
+    "explanation": "Дочерние процессы наследуют env родителя. printenv, echo $VAR показывают значения."
+  },
+  {
+    "external_key": "xosl-015",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое chmod?",
+    "options": [
+      "Изменение прав доступа к файлу: rwx для user/group/other",
+      "Изменение владельца",
+      "Архивация",
+      "Удаление"
+    ],
+    "correct_index": 0,
+    "explanation": "chmod 755 file = rwxr-xr-x. Числовое или символическое (u+x, g-w) представление."
+  },
+  {
+    "external_key": "xosl-016",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое chown?",
+    "options": [
+      "Изменение владельца и группы файла",
+      "Прав доступа",
+      "Размер",
+      "Имя файла"
+    ],
+    "correct_index": 0,
+    "explanation": "chown user:group file. Только root может менять владельца на произвольного."
+  },
+  {
+    "external_key": "xosl-017",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает команда ls -la?",
+    "options": [
+      "Подробный список файлов: права, владелец, размер, mtime",
+      "Только имена",
+      "Только размер",
+      "Только разрешения"
+    ],
+    "correct_index": 0,
+    "explanation": "Префикс drwxr-xr-x: d - directory, r/w/x - права для u/g/o."
+  },
+  {
+    "external_key": "xosl-018",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое inode?",
+    "options": [
+      "Структура файловой системы с метаданными файла (права, размер, блоки)",
+      "Имя файла",
+      "Содержимое",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Inode не хранит имя; имя хранится в каталоге как (name, inode_number). Можно иметь много hard links на 1 inode."
+  },
+  {
+    "external_key": "xosl-019",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое hard link vs symlink?",
+    "options": [
+      "Hard link - доп. имя для inode; symlink - указатель на путь",
+      "Они идентичны",
+      "Только symlinks допустимы",
+      "Hard link только для каталогов"
+    ],
+    "correct_index": 0,
+    "explanation": "Symlink можно сломать (target удалён); hard link сохраняется до удаления всех ссылок."
+  },
+  {
+    "external_key": "xosl-020",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое mount?",
+    "options": [
+      "Подключение файловой системы к точке монтирования (директории)",
+      "Запуск процесса",
+      "Открытие файла",
+      "Сетевой share"
+    ],
+    "correct_index": 0,
+    "explanation": "mount /dev/sda1 /mnt/disk. /etc/fstab - конфиг для авто-монтирования при загрузке."
+  },
+  {
+    "external_key": "xosl-021",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое df?",
+    "options": [
+      "Показ используемого места на смонтированных файловых системах",
+      "Список файлов",
+      "Логи",
+      "Сеть"
+    ],
+    "correct_index": 0,
+    "explanation": "df -h - человекочитаемый формат. Полный диск часто причина странных ошибок."
+  },
+  {
+    "external_key": "xosl-022",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое du?",
+    "options": [
+      "Размер каталога/файла рекурсивно (du -sh path)",
+      "Только df",
+      "Сеть",
+      "Логи"
+    ],
+    "correct_index": 0,
+    "explanation": "du -sh * - размер каждого подкаталога. Полезно для поиска 'жирных' данных."
+  },
+  {
+    "external_key": "xosl-023",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое OOM killer?",
+    "options": [
+      "Out-Of-Memory: ядро убивает процесс, чтобы освободить память",
+      "Стандартный сбор мусора",
+      "User-space tool",
+      "Network"
+    ],
+    "correct_index": 0,
+    "explanation": "Выбор жертвы по oom_score. Можно настроить через oom_score_adj."
+  },
+  {
+    "external_key": "xosl-024",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /proc?",
+    "options": [
+      "Виртуальная файловая система ядра с информацией о процессах и системе",
+      "Реальные файлы",
+      "Каталог конфигов",
+      "Логи"
+    ],
+    "correct_index": 0,
+    "explanation": "/proc/cpuinfo, /proc/meminfo, /proc/<PID>/status - живые данные ядра."
+  },
+  {
+    "external_key": "xosl-025",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /etc?",
+    "options": [
+      "Каталог конфигурационных файлов системы",
+      "Логи",
+      "Бинарники",
+      "Юзерские данные"
+    ],
+    "correct_index": 0,
+    "explanation": "/etc/passwd, /etc/hostname, /etc/nginx/. Изменения часто требуют перезапуска сервиса."
+  },
+  {
+    "external_key": "xosl-026",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /var/log?",
+    "options": [
+      "Каталог системных и сервис-логов",
+      "Конфиги",
+      "Бинарники",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "/var/log/syslog, /var/log/nginx/. Управляются logrotate."
+  },
+  {
+    "external_key": "xosl-027",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое logrotate?",
+    "options": [
+      "Утилита для ротации, сжатия и удаления старых лог-файлов",
+      "Архиватор",
+      "Сетевой логгер",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Конфиги в /etc/logrotate.d/ задают политику для каждого лога."
+  },
+  {
+    "external_key": "xosl-028",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое bash скрипт shebang #!/bin/bash?",
+    "options": [
+      "Указывает интерпретатор для запуска скрипта",
+      "Комментарий",
+      "Заголовок shell",
+      "Метка"
+    ],
+    "correct_index": 0,
+    "explanation": "Без shebang скрипт запускается через текущий shell. Альтернативы: #!/usr/bin/env python3."
+  },
+  {
+    "external_key": "xosl-029",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает grep?",
+    "options": [
+      "Поиск строк по регулярному выражению в файлах/потоке",
+      "Сортировка",
+      "Замена",
+      "Только подсчёт строк"
+    ],
+    "correct_index": 0,
+    "explanation": "grep -r 'pattern' . - рекурсивно. -i игнорировать регистр, -v инверсия."
+  },
+  {
+    "external_key": "xosl-030",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает sed?",
+    "options": [
+      "Stream editor: трансформация текста по правилам (s/old/new/)",
+      "Поиск только",
+      "Архиватор",
+      "Сжатие"
+    ],
+    "correct_index": 0,
+    "explanation": "sed -i 's/foo/bar/g' file - заменить везде. Полезно в скриптах."
+  },
+  {
+    "external_key": "xosl-031",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает awk?",
+    "options": [
+      "Программа для обработки текстовых полей и таблиц",
+      "Только grep",
+      "Архиватор",
+      "Только sed"
+    ],
+    "correct_index": 0,
+    "explanation": "awk '{print $2}' - вывести второе поле каждой строки. Поддерживает условия и циклы."
+  },
+  {
+    "external_key": "xosl-032",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает команда netstat / ss?",
+    "options": [
+      "Сетевые соединения, открытые порты, статистику",
+      "Только DNS",
+      "Только iptables",
+      "Только сертификаты"
+    ],
+    "correct_index": 0,
+    "explanation": "ss -tulpn - текущие listening порты с PID. ss быстрее netstat на больших объёмах."
+  },
+  {
+    "external_key": "xosl-033",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое iptables?",
+    "options": [
+      "Утилита для управления Linux firewall (netfilter)",
+      "ORM",
+      "DNS",
+      "MTA"
+    ],
+    "correct_index": 0,
+    "explanation": "Заменено nftables в новых дистрибутивах. ufw - простая обёртка."
+  },
+  {
+    "external_key": "xosl-034",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое sudo?",
+    "options": [
+      "Запуск команды от имени другого пользователя (часто root)",
+      "Только для root",
+      "Без проверки",
+      "Только в shell"
+    ],
+    "correct_index": 0,
+    "explanation": "Конфиг в /etc/sudoers (visudo). visudo проверяет синтаксис перед сохранением."
+  },
+  {
+    "external_key": "xosl-035",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое ssh?",
+    "options": [
+      "Безопасный shell-доступ к удалённому серверу через зашифрованный канал",
+      "Local shell",
+      "FTP",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "ssh user@host. Использует ключи (~/.ssh/id_ed25519) или пароли."
+  },
+  {
+    "external_key": "xosl-036",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое scp / rsync?",
+    "options": [
+      "Утилиты копирования файлов по сети; rsync эффективнее (delta sync)",
+      "Локальный cp",
+      "DNS",
+      "FTP"
+    ],
+    "correct_index": 0,
+    "explanation": "rsync -avz src/ user@host:/dst/ - копирует только изменения, сжимает на лету."
+  },
+  {
+    "external_key": "xosl-037",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cron job выражение */5 * * * *?",
+    "options": [
+      "Каждые 5 минут",
+      "Каждые 5 секунд",
+      "Раз в час",
+      "Раз в день"
+    ],
+    "correct_index": 0,
+    "explanation": "Поля: минута, час, день, месяц, день недели. */N - каждый N-ый шаг."
+  },
+  {
+    "external_key": "xosl-038",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое umask?",
+    "options": [
+      "Маска прав по умолчанию для новых файлов",
+      "Окружение",
+      "Прав chmod",
+      "PID"
+    ],
+    "correct_index": 0,
+    "explanation": "umask 022 - new files: 0666 & ~umask = 0644. Выкорчёвывает 'write' для group/other."
+  },
+  {
+    "external_key": "xosl-039",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое & в конце команды?",
+    "options": [
+      "Запуск процесса в фоне",
+      "Логирование",
+      "Только в systemd",
+      "Pipe"
+    ],
+    "correct_index": 0,
+    "explanation": "command & - возвращает контроль shell сразу. nohup командой -> устойчиво к hangup."
+  },
+  {
+    "external_key": "xosl-040",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает strace?",
+    "options": [
+      "Системные вызовы и сигналы процесса в реальном времени",
+      "Только стек",
+      "Память",
+      "Сеть"
+    ],
+    "correct_index": 0,
+    "explanation": "strace -p PID - подключиться к работающему процессу. Полезно для отладки 'почему висит'."
+  },
+  {
+    "external_key": "xosl-041",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое lsof?",
+    "options": [
+      "Список открытых файлов и сетевых соединений процессов",
+      "Размер файла",
+      "Команды",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "lsof -i :8080 - кто слушает на порту. lsof | grep deleted - файлы, занятые после удаления."
+  },
+  {
+    "external_key": "xosl-042",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое TTY?",
+    "options": [
+      "Терминал; устройство ввода-вывода для интерактивных процессов",
+      "Только X server",
+      "Только SSH",
+      "Сеть"
+    ],
+    "correct_index": 0,
+    "explanation": "tty показывает текущий TTY. ps показывает связь процесса и TTY."
+  },
+  {
+    "external_key": "xosl-043",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое tmux/screen?",
+    "options": [
+      "Менеджеры терминальных сессий (детачится, сохраняет процессы)",
+      "Только desktop",
+      "DNS",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно на ssh: окно можно отсоединить и потом подключиться к той же сессии."
+  },
+  {
+    "external_key": "xosl-044",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cgroups?",
+    "options": [
+      "Control groups - ядро ограничивает CPU/memory/IO для группы процессов",
+      "Только в Docker",
+      "Просто iptables",
+      "Network only"
+    ],
+    "correct_index": 0,
+    "explanation": "Основа Docker и Kubernetes: квотирование ресурсов через cgroups v2."
+  },
+  {
+    "external_key": "xosl-045",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое namespaces в Linux?",
+    "options": [
+      "Изоляция: PID/network/mount/user/UTS - основа контейнеров",
+      "C++ namespace",
+      "Только DNS",
+      "Только Python"
+    ],
+    "correct_index": 0,
+    "explanation": "Контейнер = cgroups + namespaces. PID namespace даёт свой PID 1."
+  },
+  {
+    "external_key": "xosl-046",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое .bashrc vs .bash_profile?",
+    "options": [
+      "bashrc - для интерактивных не-login сессий; bash_profile - login (ssh)",
+      "Они идентичны",
+      "bashrc - только в Mac",
+      "bash_profile - первый по приоритету"
+    ],
+    "correct_index": 0,
+    "explanation": "Часто bash_profile делает 'source ~/.bashrc' для совместимости."
+  },
+  {
+    "external_key": "xosl-047",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Как найти большие файлы?",
+    "options": [
+      "find / -size +100M или du -h --max-depth=1",
+      "ls",
+      "ps",
+      "df -h"
+    ],
+    "correct_index": 0,
+    "explanation": "find /var -type f -size +1G - файлы больше 1 ГБ. Полезно для очистки диска."
+  },
+  {
+    "external_key": "xosl-048",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое exit code в Linux?",
+    "options": [
+      "Целое число от 0 до 255; 0 - успех, !=0 - ошибка",
+      "Только 0/1",
+      "Произвольное",
+      "Только в Python"
+    ],
+    "correct_index": 0,
+    "explanation": "echo $? - последний код. set -e в bash - падать при первой ошибке."
+  },
+  {
+    "external_key": "xosl-049",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое APT / yum?",
+    "options": [
+      "Менеджеры пакетов (Debian/Ubuntu и RHEL/CentOS)",
+      "Сетевые утилиты",
+      "Только GUI",
+      "Шеллы"
+    ],
+    "correct_index": 0,
+    "explanation": "apt install pkg, yum install pkg. Для Python зависимостей лучше pip/poetry/uv."
+  },
+  {
+    "external_key": "xosl-050",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое ulimit?",
+    "options": [
+      "Ограничения ресурсов процесса (file descriptors, stack, processes)",
+      "Сеть",
+      "DNS",
+      "Только память"
+    ],
+    "correct_index": 0,
+    "explanation": "ulimit -n показывает лимит fd. На серверах часто увеличивают до 65535."
   }
 ]

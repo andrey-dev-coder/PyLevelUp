@@ -1,0 +1,702 @@
+[
+  {
+    "external_key": "xms-001",
+    "topic": "microservices",
+    "difficulty": 1,
+    "text": "Что такое микросервисная архитектура?",
+    "options": [
+      "Приложение разбито на маленькие независимые сервисы, общающиеся по сети",
+      "Один большой бинарь",
+      "Только функция",
+      "Только клиент"
+    ],
+    "correct_index": 0,
+    "explanation": "Каждый микросервис автономен, имеет свою БД, может разрабатываться/деплоиться независимо."
+  },
+  {
+    "external_key": "xms-002",
+    "topic": "microservices",
+    "difficulty": 1,
+    "text": "Чем монолит отличается от микросервисов?",
+    "options": [
+      "Монолит - одно приложение, микросервисы - множество отдельных",
+      "Они одинаковы",
+      "Монолит только на Java",
+      "Микросервисы только в облаке"
+    ],
+    "correct_index": 0,
+    "explanation": "Монолит проще запускать; микросервисы дают независимое масштабирование и деплой."
+  },
+  {
+    "external_key": "xms-003",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое service discovery?",
+    "options": [
+      "Механизм нахождения сетевого адреса нужного сервиса (Consul, etcd, k8s DNS)",
+      "Тип кэша",
+      "Логирование",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "В динамической среде сервисы запускаются на разных хостах/портах; нужен registry."
+  },
+  {
+    "external_key": "xms-004",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое API Gateway?",
+    "options": [
+      "Единая точка входа для клиентов: маршрутизация, auth, rate limit, агрегация",
+      "ORM",
+      "DNS",
+      "Только балансировщик"
+    ],
+    "correct_index": 0,
+    "explanation": "Kong, Tyk, Envoy - API Gateway скрывают топологию и решают cross-cutting concerns."
+  },
+  {
+    "external_key": "xms-005",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое circuit breaker?",
+    "options": [
+      "Паттерн отказа: при ошибках от downstream-сервиса временно перестаём звать его",
+      "Только retry",
+      "Кэш",
+      "Очередь"
+    ],
+    "correct_index": 0,
+    "explanation": "Состояния: closed/open/half-open. Защищает от каскадных сбоев."
+  },
+  {
+    "external_key": "xms-006",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое retry с backoff?",
+    "options": [
+      "Повтор запроса с экспоненциально растущей паузой между попытками",
+      "Без задержки",
+      "С фиксированной задержкой",
+      "Только 1 раз"
+    ],
+    "correct_index": 0,
+    "explanation": "Exponential backoff + jitter не топит сервер, который восстанавливается."
+  },
+  {
+    "external_key": "xms-007",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое bulkhead pattern?",
+    "options": [
+      "Изоляция ресурсов (пул соединений на каждый downstream); сбой одного не валит остальных",
+      "Только кэш",
+      "Только лог",
+      "Replica"
+    ],
+    "correct_index": 0,
+    "explanation": "Если одна интеграция тормозит, не должна занять все ресурсы своего сервиса."
+  },
+  {
+    "external_key": "xms-008",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое distributed tracing?",
+    "options": [
+      "Прослеживание одного запроса через множество сервисов (trace_id, span_id)",
+      "Просто логи",
+      "Только метрики",
+      "Sharding"
+    ],
+    "correct_index": 0,
+    "explanation": "OpenTelemetry, Jaeger, Tempo. Без трейсинга отладка распределённой системы - кошмар."
+  },
+  {
+    "external_key": "xms-009",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое correlation_id / request_id?",
+    "options": [
+      "Уникальный ID запроса, передающийся через все сервисы для группировки логов",
+      "Тип JWT",
+      "Только в БД",
+      "Только локально"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандартно через заголовок X-Request-ID; ставится gateway и логируется везде."
+  },
+  {
+    "external_key": "xms-010",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое event-driven architecture?",
+    "options": [
+      "Сервисы общаются через события (Kafka/RabbitMQ), декаплятся",
+      "Только REST",
+      "Только gRPC",
+      "Только GraphQL"
+    ],
+    "correct_index": 0,
+    "explanation": "Plus: гибкость, асинхронность. Minus: сложнее отлаживать, нужны event schema."
+  },
+  {
+    "external_key": "xms-011",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Kafka?",
+    "options": [
+      "Распределённая платформа потоковой передачи и хранения событий",
+      "Реляционная БД",
+      "Кэш",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Topic + partitions; consumer groups; высокая пропускная способность; long retention."
+  },
+  {
+    "external_key": "xms-012",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое RabbitMQ?",
+    "options": [
+      "Брокер очередей с поддержкой AMQP, гибкая маршрутизация",
+      "БД",
+      "Кэш",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Exchanges (direct, topic, fanout), queues, bindings. Хорош для классических очередей."
+  },
+  {
+    "external_key": "xms-013",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Чем Kafka отличается от RabbitMQ?",
+    "options": [
+      "Kafka - log-based, события сохраняются; RabbitMQ - очередь с удалением после ack",
+      "Они идентичны",
+      "Kafka только в облаке",
+      "RabbitMQ только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Kafka хорош для event sourcing; RabbitMQ для work queues и RPC."
+  },
+  {
+    "external_key": "xms-014",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое idempotent consumer?",
+    "options": [
+      "Обработчик, способный безопасно обработать одно и то же сообщение несколько раз",
+      "Sync только",
+      "Только AT-most-once",
+      "Без ack"
+    ],
+    "correct_index": 0,
+    "explanation": "В at-least-once delivery дубли неизбежны; идемпотентность нужна для корректности."
+  },
+  {
+    "external_key": "xms-015",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое transactional outbox pattern?",
+    "options": [
+      "Запись бизнес-данных и события в одну транзакцию БД, отдельный publisher отправляет в брокер",
+      "Просто publish",
+      "Sync only",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Решает проблему двух сторон: БД и брокер не атомарны. Outbox делает их согласованными."
+  },
+  {
+    "external_key": "xms-016",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое saga pattern?",
+    "options": [
+      "Распределённая транзакция через цепочку локальных транзакций с компенсациями",
+      "2PC",
+      "Только sync",
+      "Только async"
+    ],
+    "correct_index": 0,
+    "explanation": "Choreography (события) или Orchestration (координатор). Compensating actions откатывают."
+  },
+  {
+    "external_key": "xms-017",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое CQRS?",
+    "options": [
+      "Command Query Responsibility Segregation: разные модели для записи и чтения",
+      "Только GraphQL",
+      "Только REST",
+      "Только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "Read-модель оптимизирована для запросов; write-модель для транзакций."
+  },
+  {
+    "external_key": "xms-018",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое event sourcing?",
+    "options": [
+      "Хранение последовательности событий вместо текущего состояния; state восстанавливается реплеем",
+      "Просто log",
+      "Backup",
+      "ETL"
+    ],
+    "correct_index": 0,
+    "explanation": "Полный аудит, time-travel; но сложнее, чем CRUD."
+  },
+  {
+    "external_key": "xms-019",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое eventual consistency?",
+    "options": [
+      "Данные станут согласованными со временем; временно могут расходиться",
+      "Strong consistency всегда",
+      "Только sync",
+      "Только в монолите"
+    ],
+    "correct_index": 0,
+    "explanation": "Распространено в распределённых системах; компромисс из CAP."
+  },
+  {
+    "external_key": "xms-020",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое database per service?",
+    "options": [
+      "Каждый микросервис владеет своей БД и общается через API",
+      "Общая БД",
+      "Просто схема",
+      "Только в Postgres"
+    ],
+    "correct_index": 0,
+    "explanation": "Гарантирует loose coupling. Запрещает прямой SELECT из чужой БД."
+  },
+  {
+    "external_key": "xms-021",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое gRPC?",
+    "options": [
+      "RPC-фреймворк на HTTP/2 с Protobuf - быстрый и типизированный",
+      "REST",
+      "GraphQL",
+      "SOAP"
+    ],
+    "correct_index": 0,
+    "explanation": "Подходит для inter-service. Поддерживает streaming. Браузеры - через gRPC-web."
+  },
+  {
+    "external_key": "xms-022",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое REST vs gRPC?",
+    "options": [
+      "REST: HTTP+JSON, удобен для людей. gRPC: HTTP/2+Protobuf, быстрее и строже",
+      "Они идентичны",
+      "REST быстрее",
+      "gRPC только sync"
+    ],
+    "correct_index": 0,
+    "explanation": "REST для public API; gRPC для inter-service где важна производительность."
+  },
+  {
+    "external_key": "xms-023",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое sidecar pattern?",
+    "options": [
+      "Отдельный контейнер рядом с приложением (proxy, log shipper, secret loader)",
+      "Просто replica",
+      "Sharding",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Envoy в Istio - sidecar для service mesh. Sidecar разгружает приложение от cross-cutting задач."
+  },
+  {
+    "external_key": "xms-024",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое service mesh?",
+    "options": [
+      "Инфраструктурный слой для коммуникации сервисов: mTLS, traffic management, retries",
+      "Просто Kubernetes",
+      "Только REST",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "Istio, Linkerd, Consul. Sidecar-прокси перехватывает трафик и применяет политики."
+  },
+  {
+    "external_key": "xms-025",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Kubernetes?",
+    "options": [
+      "Платформа оркестрации контейнеров: deployment, scaling, networking",
+      "Только Docker",
+      "ORM",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "k8s управляет Pod, Deployment, Service, Ingress; де-факто стандарт для микросервисов."
+  },
+  {
+    "external_key": "xms-026",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое pod в Kubernetes?",
+    "options": [
+      "Минимальная единица деплоя: один или несколько контейнеров с общей сетью/тома",
+      "Только машина",
+      "Replica set",
+      "Service"
+    ],
+    "correct_index": 0,
+    "explanation": "Под выглядит как один логический хост. Часто 1 контейнер + sidecar."
+  },
+  {
+    "external_key": "xms-027",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Deployment в Kubernetes?",
+    "options": [
+      "Объект с replica count и rolling updates для управления Pod'ами",
+      "Только service",
+      "Только pod",
+      "Только cluster"
+    ],
+    "correct_index": 0,
+    "explanation": "kubectl set image - запускает rolling update без downtime."
+  },
+  {
+    "external_key": "xms-028",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Service в Kubernetes?",
+    "options": [
+      "Стабильная сетевая сущность с DNS-именем для группы Pod'ов",
+      "Pod",
+      "Cluster",
+      "Volume"
+    ],
+    "correct_index": 0,
+    "explanation": "ClusterIP, NodePort, LoadBalancer - типы Service для разных сценариев."
+  },
+  {
+    "external_key": "xms-029",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Ingress?",
+    "options": [
+      "Объект k8s для HTTP-маршрутизации входящих запросов в сервисы (через ingress controller)",
+      "Pod",
+      "Volume",
+      "Sidecar"
+    ],
+    "correct_index": 0,
+    "explanation": "nginx-ingress, Traefik. Конфигурируется через YAML и поддерживает TLS."
+  },
+  {
+    "external_key": "xms-030",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое health check (liveness/readiness)?",
+    "options": [
+      "Liveness - жив ли процесс; readiness - готов ли принимать трафик",
+      "Только TCP",
+      "Только HTTP",
+      "Только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Если liveness fail - k8s перезапускает; readiness fail - убирает из балансировки."
+  },
+  {
+    "external_key": "xms-031",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое 12 Factor App?",
+    "options": [
+      "Методология для cloud-native приложений (config in env, stateless, logs as stream)",
+      "Тип языка",
+      "Стандарт REST",
+      "Книга по Java"
+    ],
+    "correct_index": 0,
+    "explanation": "12factor.net - принципы, упрощающие деплой и масштабирование."
+  },
+  {
+    "external_key": "xms-032",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое stateless service?",
+    "options": [
+      "Сервис не хранит состояние между запросами; легко масштабируется горизонтально",
+      "Только кэш",
+      "Только sync",
+      "Только в облаке"
+    ],
+    "correct_index": 0,
+    "explanation": "Состояние в БД/кэше; сервис можно убить и поднять снова без потерь."
+  },
+  {
+    "external_key": "xms-033",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое graceful shutdown?",
+    "options": [
+      "При SIGTERM сервис заканчивает текущие запросы, не принимает новые, потом выходит",
+      "Только SIGKILL",
+      "Без cleanup",
+      "Только в Linux"
+    ],
+    "correct_index": 0,
+    "explanation": "Без graceful shutdown в момент деплоя теряются in-flight запросы."
+  },
+  {
+    "external_key": "xms-034",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое blue-green deployment?",
+    "options": [
+      "Параллельно работают две версии (blue/green); трафик переключается мгновенно",
+      "Только rolling update",
+      "Только в k8s",
+      "Только canary"
+    ],
+    "correct_index": 0,
+    "explanation": "Быстрый rollback. Минус: 2x ресурсов на время переключения."
+  },
+  {
+    "external_key": "xms-035",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое canary deployment?",
+    "options": [
+      "Постепенный rollout новой версии на часть пользователей с мониторингом метрик",
+      "Только blue-green",
+      "Без метрик",
+      "Только rollback"
+    ],
+    "correct_index": 0,
+    "explanation": "Argo Rollouts, Flagger автоматизируют canary с promotion/abort по SLO."
+  },
+  {
+    "external_key": "xms-036",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое distributed lock?",
+    "options": [
+      "Mutex через внешнее хранилище (Redis SETNX, Zookeeper, etcd)",
+      "Локальный mutex",
+      "Just sync",
+      "Cache"
+    ],
+    "correct_index": 0,
+    "explanation": "Реальный consensus сложен; Redlock - спорный паттерн. Лучше использовать etcd/Zookeeper."
+  },
+  {
+    "external_key": "xms-037",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое API versioning?",
+    "options": [
+      "Поддержка совместимости при изменении контракта (v1, v2 в URL/header)",
+      "Только в OpenAPI",
+      "Не нужно",
+      "Только в gRPC"
+    ],
+    "correct_index": 0,
+    "explanation": "URL: /api/v2/users; Header: Accept: application/vnd.api+json;version=2."
+  },
+  {
+    "external_key": "xms-038",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое backward compatibility в API?",
+    "options": [
+      "Новая версия не должна ломать существующих клиентов",
+      "Только при breaking change",
+      "Не нужна",
+      "Только в gRPC"
+    ],
+    "correct_index": 0,
+    "explanation": "Добавлять поля можно (с дефолтами), удалять - нельзя без deprecation."
+  },
+  {
+    "external_key": "xms-039",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое feature flags?",
+    "options": [
+      "Включение/отключение фич в runtime без релиза кода (LaunchDarkly, Unleash)",
+      "Только если/иначе",
+      "Только в DEV",
+      "Только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Помогают делать canary, A/B тесты, быстрый kill switch при проблемах."
+  },
+  {
+    "external_key": "xms-040",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое A/B тестирование?",
+    "options": [
+      "Сравнение метрик между двумя вариантами фичи на реальных пользователях",
+      "Только в маркетинге",
+      "Только UI",
+      "Только локально"
+    ],
+    "correct_index": 0,
+    "explanation": "Часто реализуется через feature flags + аналитика поведения."
+  },
+  {
+    "external_key": "xms-041",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое observability?",
+    "options": [
+      "Возможность понять состояние системы по логам, метрикам, трейсам ('three pillars')",
+      "Только метрики",
+      "Только логи",
+      "Только трейсы"
+    ],
+    "correct_index": 0,
+    "explanation": "Логи (что случилось), метрики (сколько), трейсы (как прошло через сервисы)."
+  },
+  {
+    "external_key": "xms-042",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Prometheus?",
+    "options": [
+      "Time-series БД и система сбора метрик с pull-моделью",
+      "ORM",
+      "MQ",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Сервисы экспонируют /metrics endpoint, Prometheus сам опрашивает."
+  },
+  {
+    "external_key": "xms-043",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое Grafana?",
+    "options": [
+      "Платформа дашбордов и визуализации метрик/логов из разных источников",
+      "MQ",
+      "БД",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Поддерживает Prometheus, Loki, Elasticsearch, и десятки других datasources."
+  },
+  {
+    "external_key": "xms-044",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое ELK / OpenSearch?",
+    "options": [
+      "Elasticsearch + Logstash + Kibana - стек для логов",
+      "БД",
+      "Кэш",
+      "Только метрики"
+    ],
+    "correct_index": 0,
+    "explanation": "Centralized logging: парсинг (Logstash/Fluent Bit), индекс (ES), UI (Kibana)."
+  },
+  {
+    "external_key": "xms-045",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое SLA / SLO / SLI?",
+    "options": [
+      "SLA - контракт; SLO - цель; SLI - индикатор (метрика)",
+      "Они идентичны",
+      "Только в маркетинге",
+      "SLA только в k8s"
+    ],
+    "correct_index": 0,
+    "explanation": "Пример: SLI - error rate; SLO - <0.1%; SLA - <0.5% или возврат денег."
+  },
+  {
+    "external_key": "xms-046",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое error budget?",
+    "options": [
+      "Допустимое количество ошибок в рамках SLO; используется для решений о релизах",
+      "Бюджет команды",
+      "Только в SRE",
+      "Тип метрики"
+    ],
+    "correct_index": 0,
+    "explanation": "Если бюджет ошибок исчерпан - фриз релизов, фокус на стабильности."
+  },
+  {
+    "external_key": "xms-047",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое chaos engineering?",
+    "options": [
+      "Преднамеренное внесение сбоев в систему для проверки устойчивости",
+      "DDoS",
+      "Только нагрузка",
+      "Случайные баги"
+    ],
+    "correct_index": 0,
+    "explanation": "Chaos Monkey, Litmus. Цель: найти слабые места до того, как сломается в проде."
+  },
+  {
+    "external_key": "xms-048",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое two-phase commit (2PC)?",
+    "options": [
+      "Распределённая транзакция: prepare, потом commit (с риском блокировок)",
+      "Это просто commit",
+      "Sync replication",
+      "Saga"
+    ],
+    "correct_index": 0,
+    "explanation": "2PC даёт сильную согласованность, но плохо масштабируется и блокирует при сбоях."
+  },
+  {
+    "external_key": "xms-049",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое dead letter queue (DLQ)?",
+    "options": [
+      "Очередь для сообщений, которые не удалось обработать после N попыток",
+      "Просто backup",
+      "Cache",
+      "Audit"
+    ],
+    "correct_index": 0,
+    "explanation": "DLQ позволяет анализировать проблемы и при необходимости retry вручную."
+  },
+  {
+    "external_key": "xms-050",
+    "topic": "microservices",
+    "difficulty": 2,
+    "text": "Что такое choreography vs orchestration в saga?",
+    "options": [
+      "Choreography: каждый сервис реагирует на события. Orchestration: центральный координатор",
+      "Они идентичны",
+      "Choreography только sync",
+      "Orchestration только async"
+    ],
+    "correct_index": 0,
+    "explanation": "Choreography - проще, но сложнее отслеживать. Orchestration - явный flow, проще debug."
+  }
+]

@@ -1,0 +1,697 @@
+[
+  {
+    "external_key": "xosl-001",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое процесс в Linux?",
+    "options": [
+      "Запущенная программа с собственным адресным пространством и PID",
+      "Файл",
+      "Сокет",
+      "Поток"
+    ],
+    "correct_index": 0,
+    "explanation": "Процесс - изолированный исполняющийся экземпляр программы. Имеет PID, PPID, fd-таблицу."
+  },
+  {
+    "external_key": "xosl-002",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое поток (thread) относительно процесса?",
+    "options": [
+      "Лёгкая единица исполнения внутри процесса; разделяет память",
+      "Отдельный процесс",
+      "Файл",
+      "Сокет"
+    ],
+    "correct_index": 0,
+    "explanation": "Threads процесса разделяют heap и fd; имеют свой stack и регистры."
+  },
+  {
+    "external_key": "xosl-003",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что такое PID?",
+    "options": [
+      "Идентификатор процесса (целое число)",
+      "Идентификатор пользователя",
+      "ID треда",
+      "ID inode"
+    ],
+    "correct_index": 0,
+    "explanation": "Системный вызов getpid() возвращает PID. PID 1 - init/systemd."
+  },
+  {
+    "external_key": "xosl-004",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что показывает команда ps?",
+    "options": [
+      "Список процессов и их статусы",
+      "Файлы в каталоге",
+      "Сетевые соединения",
+      "Использование диска"
+    ],
+    "correct_index": 0,
+    "explanation": "ps aux - список всех процессов; ps -ef - похожий формат BSD vs SysV."
+  },
+  {
+    "external_key": "xosl-005",
+    "topic": "os_linux",
+    "difficulty": 1,
+    "text": "Что показывает top?",
+    "options": [
+      "Реальный мониторинг процессов: CPU, память, состояние",
+      "Логи",
+      "Сеть",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "Альтернативы: htop с цветным UI, atop с history, glances для удобного обзора."
+  },
+  {
+    "external_key": "xosl-006",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает kill -9 PID?",
+    "options": [
+      "Отправляет SIGKILL - принудительное завершение, не перехватывается",
+      "Просьба завершиться (SIGTERM)",
+      "Просто игнорируется",
+      "Перезапуск"
+    ],
+    "correct_index": 0,
+    "explanation": "SIGKILL не перехватывается процессом; SIGTERM (15) - graceful, можно обработать."
+  },
+  {
+    "external_key": "xosl-007",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое сигнал SIGTERM?",
+    "options": [
+      "Запрос на завершение, который процесс может обработать (cleanup)",
+      "Принудительное убийство",
+      "Hangup",
+      "Continue"
+    ],
+    "correct_index": 0,
+    "explanation": "Стандартный сигнал для graceful shutdown. systemd шлёт SIGTERM, ждёт, потом SIGKILL."
+  },
+  {
+    "external_key": "xosl-008",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое SIGHUP?",
+    "options": [
+      "Сигнал hangup; обычно используется для перечитывания конфига демонами",
+      "Только в shell",
+      "Только для ОС",
+      "Завершение"
+    ],
+    "correct_index": 0,
+    "explanation": "Многие демоны при SIGHUP перечитывают конфиг (nginx, sshd)."
+  },
+  {
+    "external_key": "xosl-009",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое systemd?",
+    "options": [
+      "Система инициализации и менеджер сервисов в Linux",
+      "Командная строка",
+      "Файловая система",
+      "Менеджер пакетов"
+    ],
+    "correct_index": 0,
+    "explanation": "systemd управляет демонами, цепочкой зависимостей, логами (journal). Работает с .service файлами."
+  },
+  {
+    "external_key": "xosl-010",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Какая команда смотрит логи systemd?",
+    "options": ["journalctl -u myservice", "less /var/log/syslog", "tail /etc/passwd", "dmesg only"],
+    "correct_index": 0,
+    "explanation": "journalctl фильтрует по unit, времени, уровню; -f для tail-следования."
+  },
+  {
+    "external_key": "xosl-011",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cron?",
+    "options": [
+      "Планировщик периодических задач по расписанию (crontab)",
+      "Логгер",
+      "Сетевой инструмент",
+      "ОС"
+    ],
+    "correct_index": 0,
+    "explanation": "Формат crontab: 5 полей времени + команда. systemd timers - современная альтернатива."
+  },
+  {
+    "external_key": "xosl-012",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое stdin/stdout/stderr (file descriptors)?",
+    "options": [
+      "FD 0 - stdin, 1 - stdout, 2 - stderr",
+      "0 - stdout, 1 - stderr",
+      "Только stdout",
+      "Произвольные числа"
+    ],
+    "correct_index": 0,
+    "explanation": "Каждый процесс получает 3 стандартных fd. Можно перенаправлять: 2>&1, > file."
+  },
+  {
+    "external_key": "xosl-013",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое pipe (конвейер) в shell?",
+    "options": [
+      "command1 | command2 - stdout первой команды становится stdin второй",
+      "Только перенаправление в файл",
+      "Только для logs",
+      "Mutex"
+    ],
+    "correct_index": 0,
+    "explanation": "Pipe реализуется через системный вызов pipe(), эффективен для streaming."
+  },
+  {
+    "external_key": "xosl-014",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое environment variables?",
+    "options": [
+      "Переменные окружения процесса (export VAR=val)",
+      "Переменные программы",
+      "Файлы",
+      "Только в shell"
+    ],
+    "correct_index": 0,
+    "explanation": "Дочерние процессы наследуют env родителя. printenv, echo $VAR показывают значения."
+  },
+  {
+    "external_key": "xosl-015",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое chmod?",
+    "options": [
+      "Изменение прав доступа к файлу: rwx для user/group/other",
+      "Изменение владельца",
+      "Архивация",
+      "Удаление"
+    ],
+    "correct_index": 0,
+    "explanation": "chmod 755 file = rwxr-xr-x. Числовое или символическое (u+x, g-w) представление."
+  },
+  {
+    "external_key": "xosl-016",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое chown?",
+    "options": [
+      "Изменение владельца и группы файла",
+      "Прав доступа",
+      "Размер",
+      "Имя файла"
+    ],
+    "correct_index": 0,
+    "explanation": "chown user:group file. Только root может менять владельца на произвольного."
+  },
+  {
+    "external_key": "xosl-017",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает команда ls -la?",
+    "options": [
+      "Подробный список файлов: права, владелец, размер, mtime",
+      "Только имена",
+      "Только размер",
+      "Только разрешения"
+    ],
+    "correct_index": 0,
+    "explanation": "Префикс drwxr-xr-x: d - directory, r/w/x - права для u/g/o."
+  },
+  {
+    "external_key": "xosl-018",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое inode?",
+    "options": [
+      "Структура файловой системы с метаданными файла (права, размер, блоки)",
+      "Имя файла",
+      "Содержимое",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Inode не хранит имя; имя хранится в каталоге как (name, inode_number). Можно иметь много hard links на 1 inode."
+  },
+  {
+    "external_key": "xosl-019",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое hard link vs symlink?",
+    "options": [
+      "Hard link - доп. имя для inode; symlink - указатель на путь",
+      "Они идентичны",
+      "Только symlinks допустимы",
+      "Hard link только для каталогов"
+    ],
+    "correct_index": 0,
+    "explanation": "Symlink можно сломать (target удалён); hard link сохраняется до удаления всех ссылок."
+  },
+  {
+    "external_key": "xosl-020",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое mount?",
+    "options": [
+      "Подключение файловой системы к точке монтирования (директории)",
+      "Запуск процесса",
+      "Открытие файла",
+      "Сетевой share"
+    ],
+    "correct_index": 0,
+    "explanation": "mount /dev/sda1 /mnt/disk. /etc/fstab - конфиг для авто-монтирования при загрузке."
+  },
+  {
+    "external_key": "xosl-021",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое df?",
+    "options": [
+      "Показ используемого места на смонтированных файловых системах",
+      "Список файлов",
+      "Логи",
+      "Сеть"
+    ],
+    "correct_index": 0,
+    "explanation": "df -h - человекочитаемый формат. Полный диск часто причина странных ошибок."
+  },
+  {
+    "external_key": "xosl-022",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое du?",
+    "options": [
+      "Размер каталога/файла рекурсивно (du -sh path)",
+      "Только df",
+      "Сеть",
+      "Логи"
+    ],
+    "correct_index": 0,
+    "explanation": "du -sh * - размер каждого подкаталога. Полезно для поиска 'жирных' данных."
+  },
+  {
+    "external_key": "xosl-023",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое OOM killer?",
+    "options": [
+      "Out-Of-Memory: ядро убивает процесс, чтобы освободить память",
+      "Стандартный сбор мусора",
+      "User-space tool",
+      "Network"
+    ],
+    "correct_index": 0,
+    "explanation": "Выбор жертвы по oom_score. Можно настроить через oom_score_adj."
+  },
+  {
+    "external_key": "xosl-024",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /proc?",
+    "options": [
+      "Виртуальная файловая система ядра с информацией о процессах и системе",
+      "Реальные файлы",
+      "Каталог конфигов",
+      "Логи"
+    ],
+    "correct_index": 0,
+    "explanation": "/proc/cpuinfo, /proc/meminfo, /proc/<PID>/status - живые данные ядра."
+  },
+  {
+    "external_key": "xosl-025",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /etc?",
+    "options": [
+      "Каталог конфигурационных файлов системы",
+      "Логи",
+      "Бинарники",
+      "Юзерские данные"
+    ],
+    "correct_index": 0,
+    "explanation": "/etc/passwd, /etc/hostname, /etc/nginx/. Изменения часто требуют перезапуска сервиса."
+  },
+  {
+    "external_key": "xosl-026",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое /var/log?",
+    "options": [
+      "Каталог системных и сервис-логов",
+      "Конфиги",
+      "Бинарники",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "/var/log/syslog, /var/log/nginx/. Управляются logrotate."
+  },
+  {
+    "external_key": "xosl-027",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое logrotate?",
+    "options": [
+      "Утилита для ротации, сжатия и удаления старых лог-файлов",
+      "Архиватор",
+      "Сетевой логгер",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "Конфиги в /etc/logrotate.d/ задают политику для каждого лога."
+  },
+  {
+    "external_key": "xosl-028",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое bash скрипт shebang #!/bin/bash?",
+    "options": [
+      "Указывает интерпретатор для запуска скрипта",
+      "Комментарий",
+      "Заголовок shell",
+      "Метка"
+    ],
+    "correct_index": 0,
+    "explanation": "Без shebang скрипт запускается через текущий shell. Альтернативы: #!/usr/bin/env python3."
+  },
+  {
+    "external_key": "xosl-029",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает grep?",
+    "options": [
+      "Поиск строк по регулярному выражению в файлах/потоке",
+      "Сортировка",
+      "Замена",
+      "Только подсчёт строк"
+    ],
+    "correct_index": 0,
+    "explanation": "grep -r 'pattern' . - рекурсивно. -i игнорировать регистр, -v инверсия."
+  },
+  {
+    "external_key": "xosl-030",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает sed?",
+    "options": [
+      "Stream editor: трансформация текста по правилам (s/old/new/)",
+      "Поиск только",
+      "Архиватор",
+      "Сжатие"
+    ],
+    "correct_index": 0,
+    "explanation": "sed -i 's/foo/bar/g' file - заменить везде. Полезно в скриптах."
+  },
+  {
+    "external_key": "xosl-031",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что делает awk?",
+    "options": [
+      "Программа для обработки текстовых полей и таблиц",
+      "Только grep",
+      "Архиватор",
+      "Только sed"
+    ],
+    "correct_index": 0,
+    "explanation": "awk '{print $2}' - вывести второе поле каждой строки. Поддерживает условия и циклы."
+  },
+  {
+    "external_key": "xosl-032",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает команда netstat / ss?",
+    "options": [
+      "Сетевые соединения, открытые порты, статистику",
+      "Только DNS",
+      "Только iptables",
+      "Только сертификаты"
+    ],
+    "correct_index": 0,
+    "explanation": "ss -tulpn - текущие listening порты с PID. ss быстрее netstat на больших объёмах."
+  },
+  {
+    "external_key": "xosl-033",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое iptables?",
+    "options": [
+      "Утилита для управления Linux firewall (netfilter)",
+      "ORM",
+      "DNS",
+      "MTA"
+    ],
+    "correct_index": 0,
+    "explanation": "Заменено nftables в новых дистрибутивах. ufw - простая обёртка."
+  },
+  {
+    "external_key": "xosl-034",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое sudo?",
+    "options": [
+      "Запуск команды от имени другого пользователя (часто root)",
+      "Только для root",
+      "Без проверки",
+      "Только в shell"
+    ],
+    "correct_index": 0,
+    "explanation": "Конфиг в /etc/sudoers (visudo). visudo проверяет синтаксис перед сохранением."
+  },
+  {
+    "external_key": "xosl-035",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое ssh?",
+    "options": [
+      "Безопасный shell-доступ к удалённому серверу через зашифрованный канал",
+      "Local shell",
+      "FTP",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "ssh user@host. Использует ключи (~/.ssh/id_ed25519) или пароли."
+  },
+  {
+    "external_key": "xosl-036",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое scp / rsync?",
+    "options": [
+      "Утилиты копирования файлов по сети; rsync эффективнее (delta sync)",
+      "Локальный cp",
+      "DNS",
+      "FTP"
+    ],
+    "correct_index": 0,
+    "explanation": "rsync -avz src/ user@host:/dst/ - копирует только изменения, сжимает на лету."
+  },
+  {
+    "external_key": "xosl-037",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cron job выражение */5 * * * *?",
+    "options": [
+      "Каждые 5 минут",
+      "Каждые 5 секунд",
+      "Раз в час",
+      "Раз в день"
+    ],
+    "correct_index": 0,
+    "explanation": "Поля: минута, час, день, месяц, день недели. */N - каждый N-ый шаг."
+  },
+  {
+    "external_key": "xosl-038",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое umask?",
+    "options": [
+      "Маска прав по умолчанию для новых файлов",
+      "Окружение",
+      "Прав chmod",
+      "PID"
+    ],
+    "correct_index": 0,
+    "explanation": "umask 022 - new files: 0666 & ~umask = 0644. Выкорчёвывает 'write' для group/other."
+  },
+  {
+    "external_key": "xosl-039",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое & в конце команды?",
+    "options": [
+      "Запуск процесса в фоне",
+      "Логирование",
+      "Только в systemd",
+      "Pipe"
+    ],
+    "correct_index": 0,
+    "explanation": "command & - возвращает контроль shell сразу. nohup командой -> устойчиво к hangup."
+  },
+  {
+    "external_key": "xosl-040",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что показывает strace?",
+    "options": [
+      "Системные вызовы и сигналы процесса в реальном времени",
+      "Только стек",
+      "Память",
+      "Сеть"
+    ],
+    "correct_index": 0,
+    "explanation": "strace -p PID - подключиться к работающему процессу. Полезно для отладки 'почему висит'."
+  },
+  {
+    "external_key": "xosl-041",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое lsof?",
+    "options": [
+      "Список открытых файлов и сетевых соединений процессов",
+      "Размер файла",
+      "Команды",
+      "DNS"
+    ],
+    "correct_index": 0,
+    "explanation": "lsof -i :8080 - кто слушает на порту. lsof | grep deleted - файлы, занятые после удаления."
+  },
+  {
+    "external_key": "xosl-042",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое TTY?",
+    "options": [
+      "Терминал; устройство ввода-вывода для интерактивных процессов",
+      "Только X server",
+      "Только SSH",
+      "Сеть"
+    ],
+    "correct_index": 0,
+    "explanation": "tty показывает текущий TTY. ps показывает связь процесса и TTY."
+  },
+  {
+    "external_key": "xosl-043",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое tmux/screen?",
+    "options": [
+      "Менеджеры терминальных сессий (детачится, сохраняет процессы)",
+      "Только desktop",
+      "DNS",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно на ssh: окно можно отсоединить и потом подключиться к той же сессии."
+  },
+  {
+    "external_key": "xosl-044",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое cgroups?",
+    "options": [
+      "Control groups - ядро ограничивает CPU/memory/IO для группы процессов",
+      "Только в Docker",
+      "Просто iptables",
+      "Network only"
+    ],
+    "correct_index": 0,
+    "explanation": "Основа Docker и Kubernetes: квотирование ресурсов через cgroups v2."
+  },
+  {
+    "external_key": "xosl-045",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое namespaces в Linux?",
+    "options": [
+      "Изоляция: PID/network/mount/user/UTS - основа контейнеров",
+      "C++ namespace",
+      "Только DNS",
+      "Только Python"
+    ],
+    "correct_index": 0,
+    "explanation": "Контейнер = cgroups + namespaces. PID namespace даёт свой PID 1."
+  },
+  {
+    "external_key": "xosl-046",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое .bashrc vs .bash_profile?",
+    "options": [
+      "bashrc - для интерактивных не-login сессий; bash_profile - login (ssh)",
+      "Они идентичны",
+      "bashrc - только в Mac",
+      "bash_profile - первый по приоритету"
+    ],
+    "correct_index": 0,
+    "explanation": "Часто bash_profile делает 'source ~/.bashrc' для совместимости."
+  },
+  {
+    "external_key": "xosl-047",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Как найти большие файлы?",
+    "options": [
+      "find / -size +100M или du -h --max-depth=1",
+      "ls",
+      "ps",
+      "df -h"
+    ],
+    "correct_index": 0,
+    "explanation": "find /var -type f -size +1G - файлы больше 1 ГБ. Полезно для очистки диска."
+  },
+  {
+    "external_key": "xosl-048",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое exit code в Linux?",
+    "options": [
+      "Целое число от 0 до 255; 0 - успех, !=0 - ошибка",
+      "Только 0/1",
+      "Произвольное",
+      "Только в Python"
+    ],
+    "correct_index": 0,
+    "explanation": "echo $? - последний код. set -e в bash - падать при первой ошибке."
+  },
+  {
+    "external_key": "xosl-049",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое APT / yum?",
+    "options": [
+      "Менеджеры пакетов (Debian/Ubuntu и RHEL/CentOS)",
+      "Сетевые утилиты",
+      "Только GUI",
+      "Шеллы"
+    ],
+    "correct_index": 0,
+    "explanation": "apt install pkg, yum install pkg. Для Python зависимостей лучше pip/poetry/uv."
+  },
+  {
+    "external_key": "xosl-050",
+    "topic": "os_linux",
+    "difficulty": 2,
+    "text": "Что такое ulimit?",
+    "options": [
+      "Ограничения ресурсов процесса (file descriptors, stack, processes)",
+      "Сеть",
+      "DNS",
+      "Только память"
+    ],
+    "correct_index": 0,
+    "explanation": "ulimit -n показывает лимит fd. На серверах часто увеличивают до 65535."
+  }
+]
