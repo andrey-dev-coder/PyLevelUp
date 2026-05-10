@@ -60,6 +60,8 @@ def build_main_menu() -> InlineKeyboardMarkup:
     keyboard.button(text="Алгоритмы", callback_data="cat:algorithms")
     keyboard.button(text="Работа над ошибками", callback_data="mistakes:start")
     keyboard.button(text="Закладки", callback_data="bookmarks:show")
+    keyboard.button(text="Шпаргалки", callback_data="cheatsheet:show")
+    keyboard.button(text="Поиск", callback_data="search:show")
     keyboard.button(text="Мой профиль", callback_data="stats:show")
     keyboard.button(text="О проекте", callback_data="info:show")
     keyboard.adjust(1)

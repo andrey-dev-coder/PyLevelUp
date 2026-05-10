@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import func, select
+from sqlalchemy import Text, cast, func, or_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -121,4 +121,22 @@ class QuestionRepository:
             stmt = stmt.where(Question.topic.in_(topics))
         if exclude_ids:
             stmt = stmt.where(Question.id.notin_(exclude_ids))
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def search(self, query: str, limit: int = 10) -> list[Question]:
+        if not query.strip():
+            return []
+        pattern = f"%{query.strip()}%"
+        stmt = (
+            select(Question)
+            .where(Question.is_active.is_(True))
+            .where(
+                or_(
+                    Question.text.ilike(pattern),
+                    Question.explanation.ilike(pattern),
+                    cast(Question.options, Text).ilike(pattern),
+                )
+            )
+            .limit(limit)
+        )
         return list((await self.session.execute(stmt)).scalars().all())

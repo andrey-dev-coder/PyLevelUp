@@ -5,10 +5,12 @@ from pylevelup.handlers import (
     admin,
     bookmarks,
     broadcast,
+    cheatsheet,
     daily,
     hints,
     info,
     mock,
+    search,
     start,
     stats,
     study,
@@ -31,6 +33,8 @@ def build_root_router() -> Router:
         daily.router,
         mock.router,
         achievements.router,
+        cheatsheet.router,
+        search.router,
     )
     return router
 
