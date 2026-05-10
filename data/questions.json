@@ -12780,5 +12780,1405 @@
     ],
     "correct_index": 0,
     "explanation": "Depends(get_settings) делает мокание в тестах простым через dependency_overrides."
+  },
+  {
+    "external_key": "xcache-001",
+    "topic": "caching",
+    "difficulty": 1,
+    "text": "Что такое кэширование?",
+    "options": [
+      "Хранение результата дорогих операций для быстрого повторного доступа",
+      "Удаление данных",
+      "Шифрование",
+      "Бэкап"
+    ],
+    "correct_index": 0,
+    "explanation": "Кэш экономит ресурсы (CPU, БД, network), ускоряет ответы."
+  },
+  {
+    "external_key": "xcache-002",
+    "topic": "caching",
+    "difficulty": 1,
+    "text": "Что такое cache hit?",
+    "options": [
+      "Запрос нашёл данные в кэше",
+      "Промах",
+      "Запись в кэш",
+      "Очистка"
+    ],
+    "correct_index": 0,
+    "explanation": "Hit ratio - доля запросов, попавших в кэш. Чем выше, тем лучше."
+  },
+  {
+    "external_key": "xcache-003",
+    "topic": "caching",
+    "difficulty": 1,
+    "text": "Что такое cache miss?",
+    "options": [
+      "Запроса нет в кэше; нужно идти в источник",
+      "Hit",
+      "Eviction",
+      "Истекший TTL"
+    ],
+    "correct_index": 0,
+    "explanation": "Promise: после miss положить значение в кэш, чтобы следующий запрос был hit."
+  },
+  {
+    "external_key": "xcache-004",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое TTL?",
+    "options": [
+      "Time-To-Live - срок жизни записи в кэше; после истечения удаляется",
+      "Тип индекса",
+      "Bandwidth",
+      "Нагрузка"
+    ],
+    "correct_index": 0,
+    "explanation": "TTL определяет максимальное устаревание данных. Без TTL нужна явная инвалидация."
+  },
+  {
+    "external_key": "xcache-005",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache eviction policy LRU?",
+    "options": [
+      "Least Recently Used - удаляется давно не использовавшийся элемент",
+      "Случайный",
+      "По времени",
+      "По размеру ключа"
+    ],
+    "correct_index": 0,
+    "explanation": "LRU - стандартная политика. Также LFU (least frequently used), FIFO."
+  },
+  {
+    "external_key": "xcache-006",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache stampede?",
+    "options": [
+      "Когда после истечения TTL множество запросов одновременно бьют в источник",
+      "DDoS",
+      "Распределённый кэш",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "Решения: lock/lease на пересчёт, probabilistic early expiration, request coalescing."
+  },
+  {
+    "external_key": "xcache-007",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое write-through cache?",
+    "options": [
+      "Запись идёт сразу и в кэш, и в источник",
+      "Только в кэш",
+      "Только в источник",
+      "Случайно"
+    ],
+    "correct_index": 0,
+    "explanation": "Write-through: данные согласованы, но запись медленнее. Альтернатива - write-behind (асинхронно)."
+  },
+  {
+    "external_key": "xcache-008",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое write-back / write-behind cache?",
+    "options": [
+      "Запись только в кэш, в источник асинхронно с задержкой",
+      "Чтение",
+      "Sync репликация",
+      "TTL"
+    ],
+    "correct_index": 0,
+    "explanation": "Быстрее, но риск потери при сбое. Используется в дисковых кэшах ОС."
+  },
+  {
+    "external_key": "xcache-009",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache-aside (lazy loading)?",
+    "options": [
+      "Приложение само читает из кэша; при miss идёт в источник и кладёт в кэш",
+      "Авто-кэш",
+      "Write-through",
+      "Read-only"
+    ],
+    "correct_index": 0,
+    "explanation": "Самый распространённый паттерн. Минус: первый запрос всегда miss."
+  },
+  {
+    "external_key": "xcache-010",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis?",
+    "options": [
+      "In-memory key-value store с поддержкой структур (list, set, hash, sorted set, stream)",
+      "Реляционная БД",
+      "MQ",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Redis - универсальный инструмент: cache, queue, pub/sub, leaderboard, lock."
+  },
+  {
+    "external_key": "xcache-011",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое memcached?",
+    "options": [
+      "Простой in-memory key-value cache (только string), distributed",
+      "Реляционная БД",
+      "MQ",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "Memcached проще Redis, но без структур и persistence. Используется для горизонтально масштабируемого кэша."
+  },
+  {
+    "external_key": "xcache-012",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое функция SETNX в Redis?",
+    "options": [
+      "Атомарно установить ключ только если он отсутствует - используется для distributed lock",
+      "Удалить ключ",
+      "Просто SET",
+      "Increment"
+    ],
+    "correct_index": 0,
+    "explanation": "SET key value NX EX 30 - установит только если нет; основа RedLock и distributed lock."
+  },
+  {
+    "external_key": "xcache-013",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis pub/sub?",
+    "options": [
+      "Publish/Subscribe канал для broadcast сообщений (без persistence)",
+      "Транзакционный лог",
+      "Только cache",
+      "Очередь"
+    ],
+    "correct_index": 0,
+    "explanation": "Подписчики получают сообщения только если подключены. Для надёжной доставки лучше Streams."
+  },
+  {
+    "external_key": "xcache-014",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis Streams?",
+    "options": [
+      "Persistent append-only лог с consumer groups (как Kafka, но проще)",
+      "Просто массив",
+      "Pub/Sub",
+      "Hash"
+    ],
+    "correct_index": 0,
+    "explanation": "Streams поддерживают XADD, XREAD, consumer groups, ack. Хорошо для очередей с гарантией."
+  },
+  {
+    "external_key": "xcache-015",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis sorted set (ZSET)?",
+    "options": [
+      "Множество с score; элементы отсортированы по score",
+      "Просто sorted list",
+      "Hash",
+      "Stream"
+    ],
+    "correct_index": 0,
+    "explanation": "ZADD/ZRANGE: leaderboards, time-based queues, top-N с O(log n)."
+  },
+  {
+    "external_key": "xcache-016",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis hash?",
+    "options": [
+      "Ассоциативный массив (field -> value) под одним ключом",
+      "Hash-функция",
+      "Set",
+      "Bitmap"
+    ],
+    "correct_index": 0,
+    "explanation": "HSET user:42 name 'Bob' age 30. Эффективен для хранения объектов."
+  },
+  {
+    "external_key": "xcache-017",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое INCR в Redis?",
+    "options": [
+      "Атомарный инкремент целого значения",
+      "Удаление",
+      "Set",
+      "Trim"
+    ],
+    "correct_index": 0,
+    "explanation": "INCR/DECR - атомарные счётчики; используются для rate-limiting, лидербордов."
+  },
+  {
+    "external_key": "xcache-018",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое EXPIRE в Redis?",
+    "options": [
+      "Установить TTL для ключа в секундах",
+      "Удалить ключ",
+      "Восстановить ключ",
+      "Тип индекса"
+    ],
+    "correct_index": 0,
+    "explanation": "EXPIRE key 60 - удалится через 60 секунд. Без TTL ключ хранится до OOM-eviction."
+  },
+  {
+    "external_key": "xcache-019",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое eviction в Redis при maxmemory?",
+    "options": [
+      "Политики: noeviction, allkeys-lru, volatile-lru, allkeys-lfu, etc.",
+      "Только удаление старых",
+      "Только manual",
+      "Только LRU"
+    ],
+    "correct_index": 0,
+    "explanation": "При достижении maxmemory Redis применяет выбранную политику для освобождения."
+  },
+  {
+    "external_key": "xcache-020",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache key naming convention?",
+    "options": [
+      "Структурированные имена: namespace:resource:id (user:42:profile)",
+      "Просто числа",
+      "Только UUID",
+      "Не важно"
+    ],
+    "correct_index": 0,
+    "explanation": "Помогает находить и инвалидировать связанные ключи. Например, KEYS user:42:* или SCAN."
+  },
+  {
+    "external_key": "xcache-021",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Какая команда хороша для итерации больших наборов ключей в Redis?",
+    "options": [
+      "SCAN с курсором (не блокирует сервер, в отличие от KEYS *)",
+      "KEYS *",
+      "FLUSHALL",
+      "DEL"
+    ],
+    "correct_index": 0,
+    "explanation": "KEYS * блокирует Redis на больших данных. SCAN итерирует поэтапно."
+  },
+  {
+    "external_key": "xcache-022",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis persistence: RDB vs AOF?",
+    "options": [
+      "RDB - snapshot периодически. AOF - append-only log всех команд",
+      "Они одинаковы",
+      "RDB надёжнее",
+      "AOF быстрее"
+    ],
+    "correct_index": 0,
+    "explanation": "RDB компактнее, AOF надёжнее. Часто включены оба."
+  },
+  {
+    "external_key": "xcache-023",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis Cluster?",
+    "options": [
+      "Шардирование Redis по hash slots между несколькими узлами",
+      "Просто replica",
+      "Sentinel",
+      "Backup"
+    ],
+    "correct_index": 0,
+    "explanation": "Redis Cluster делит keyspace на 16384 slots. Поддерживает горизонтальное масштабирование."
+  },
+  {
+    "external_key": "xcache-024",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Redis Sentinel?",
+    "options": [
+      "Failover-менеджер для master-replica: автоматически промотирует replica при сбое master",
+      "Sharding",
+      "Cache",
+      "Backup"
+    ],
+    "correct_index": 0,
+    "explanation": "Sentinel мониторит и реагирует. Для шардирования - Cluster."
+  },
+  {
+    "external_key": "xcache-025",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое idempotent token cache?",
+    "options": [
+      "Кэш для дедупликации запросов: одинаковый Idempotency-Key даёт тот же результат",
+      "JWT кэш",
+      "Тип сессий",
+      "Сериализатор"
+    ],
+    "correct_index": 0,
+    "explanation": "Используется в платежах: клиент шлёт Idempotency-Key, сервер возвращает кэшированный результат."
+  },
+  {
+    "external_key": "xcache-026",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое CDN edge caching?",
+    "options": [
+      "Кэширование статики на edge-серверах ближе к пользователю",
+      "Только в браузере",
+      "Persistent",
+      "Тип TLS"
+    ],
+    "correct_index": 0,
+    "explanation": "Cloudflare/Fastly кешируют по Cache-Control/Vary; уменьшают latency и нагрузку на origin."
+  },
+  {
+    "external_key": "xcache-027",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое browser cache?",
+    "options": [
+      "Кэш браузера: статика хранится локально по Cache-Control/ETag/Last-Modified",
+      "Server cache",
+      "CDN",
+      "Service worker"
+    ],
+    "correct_index": 0,
+    "explanation": "Заголовки Cache-Control, ETag, Expires управляют кэшированием на стороне браузера."
+  },
+  {
+    "external_key": "xcache-028",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое stale-while-revalidate?",
+    "options": [
+      "Возврат старого значения немедленно, фоновая ревалидация и обновление",
+      "Только новые значения",
+      "Жёсткий TTL",
+      "TTL 0"
+    ],
+    "correct_index": 0,
+    "explanation": "SWR убирает latency пользователя за счёт допустимого устаревания."
+  },
+  {
+    "external_key": "xcache-029",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое distributed cache invalidation?",
+    "options": [
+      "Согласованное удаление ключей на множестве узлов через pub/sub или version key",
+      "Только локальная очистка",
+      "Manual restart",
+      "TTL"
+    ],
+    "correct_index": 0,
+    "explanation": "Hard problem: 'There are only two hard things in CS: cache invalidation and naming things'."
+  },
+  {
+    "external_key": "xcache-030",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое L1/L2 cache hierarchy?",
+    "options": [
+      "Локальный (in-process) + распределённый (Redis); L1 быстрее, L2 общий",
+      "Просто два редиса",
+      "Sync репликация",
+      "Backup"
+    ],
+    "correct_index": 0,
+    "explanation": "Multi-level cache (Caffeine/in-memory + Redis) даёт скорость и согласованность."
+  },
+  {
+    "external_key": "xcache-031",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое thundering herd?",
+    "options": [
+      "Когда кэш истекает и множество клиентов одновременно бьют в источник",
+      "Hash-коллизия",
+      "DDoS",
+      "Тип миграции"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается мьютексом, request coalescing, рандомизацией TTL."
+  },
+  {
+    "external_key": "xcache-032",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое read-through cache?",
+    "options": [
+      "Кэш сам читает из источника при miss - прозрачный для приложения",
+      "Только запись",
+      "Cache-aside",
+      "Async"
+    ],
+    "correct_index": 0,
+    "explanation": "В отличие от cache-aside, read-through - встроенная функция кэш-сервера."
+  },
+  {
+    "external_key": "xcache-033",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое near cache?",
+    "options": [
+      "Локальный кэш в памяти процесса; ближе к коду, минимум latency",
+      "CDN",
+      "Browser cache",
+      "Только в Redis"
+    ],
+    "correct_index": 0,
+    "explanation": "Near cache часто комбинируется с распределённым; нужна инвалидация при изменениях."
+  },
+  {
+    "external_key": "xcache-034",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache hit ratio и какой считается хорошим?",
+    "options": [
+      "Доля запросов, попавших в кэш; >90% обычно хорошо",
+      ">10%",
+      "Любой положительный",
+      "100% всегда"
+    ],
+    "correct_index": 0,
+    "explanation": "Зависит от профиля; для горячих данных 95-99%. Низкий ratio - кэш не помогает."
+  },
+  {
+    "external_key": "xcache-035",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое jitter в TTL?",
+    "options": [
+      "Случайное варьирование TTL для предотвращения одновременного истечения многих ключей",
+      "Шум в данных",
+      "Sharding",
+      "Только в TLS"
+    ],
+    "correct_index": 0,
+    "explanation": "TTL = base_ttl + random(0, base_ttl*0.1) рассеивает истечения и защищает от stampede."
+  },
+  {
+    "external_key": "xcache-036",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое 'negative caching'?",
+    "options": [
+      "Кэширование результата 'не найдено' (с коротким TTL), чтобы не ходить в БД повторно",
+      "Plus cache",
+      "Удаление",
+      "TTL=0"
+    ],
+    "correct_index": 0,
+    "explanation": "Иначе 1000 запросов несуществующего user_id создадут 1000 ударов по БД."
+  },
+  {
+    "external_key": "xcache-037",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache key versioning?",
+    "options": [
+      "Включение версии в ключ (user:42:v2); обновление кода меняет версию -> старый кэш игнорируется",
+      "Просто timestamp",
+      "Хеш",
+      "Только в Redis"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для глобальной инвалидации без удаления ключей: меняешь версию, всё пересчитывается."
+  },
+  {
+    "external_key": "xcache-038",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое consistent hashing?",
+    "options": [
+      "Алгоритм распределения ключей по узлам кэша; при добавлении узла перемещается ~1/N ключей",
+      "Просто hash",
+      "Sharding по диапазонам",
+      "Random"
+    ],
+    "correct_index": 0,
+    "explanation": "Consistent hashing уменьшает rebalance при изменении количества узлов; Memcached, DynamoDB, Cassandra."
+  },
+  {
+    "external_key": "xcache-039",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое hot-key problem?",
+    "options": [
+      "Один ключ получает непропорционально много запросов, перегружая узел",
+      "Hash collision",
+      "Race condition",
+      "Уязвимость"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается локальным кэшем (L1), репликацией ключа на несколько шардов, distributed cache."
+  },
+  {
+    "external_key": "xcache-040",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое 'cache warming'?",
+    "options": [
+      "Предзаполнение кэша после деплоя или рестарта",
+      "TTL=0",
+      "Random load",
+      "Cleanup"
+    ],
+    "correct_index": 0,
+    "explanation": "Без warming холодный кэш даёт всплеск latency и нагрузки на БД."
+  },
+  {
+    "external_key": "xcache-041",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое @lru_cache в Python?",
+    "options": [
+      "Декоратор functools для мемоизации функции в памяти процесса",
+      "Только в asyncio",
+      "Декоратор Django",
+      "Web cache"
+    ],
+    "correct_index": 0,
+    "explanation": "@lru_cache(maxsize=128) - простой in-process кэш по аргументам. Не разделяется между процессами."
+  },
+  {
+    "external_key": "xcache-042",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Какие проблемы у in-process кэша?",
+    "options": [
+      "Не делится между процессами/инстансами; неконсистентность; теряется при рестарте",
+      "Слишком быстрый",
+      "Только sync",
+      "Не работает на Linux"
+    ],
+    "correct_index": 0,
+    "explanation": "В кластере 5 инстансов - 5 разных кэшей. Решается через Redis или гарантию sticky session."
+  },
+  {
+    "external_key": "xcache-043",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое HTTP-кэширование?",
+    "options": [
+      "Cache-Control, ETag, Last-Modified, If-None-Match - механизмы кэширования между клиентом и сервером",
+      "Только в Redis",
+      "Только в CDN",
+      "Не существует"
+    ],
+    "correct_index": 0,
+    "explanation": "Conditional GET с If-None-Match возвращает 304 Not Modified, экономит трафик."
+  },
+  {
+    "external_key": "xcache-044",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Cache-Control: max-age=3600?",
+    "options": [
+      "Браузер/прокси может использовать кэш 1 час без revalidation",
+      "TTL 3600 секунд после генерации",
+      "Любое из перечисленных",
+      "Только sync"
+    ],
+    "correct_index": 2,
+    "explanation": "max-age - сколько секунд кэш считается свежим. Зависит от Date-заголовка response."
+  },
+  {
+    "external_key": "xcache-045",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое s-maxage vs max-age?",
+    "options": [
+      "s-maxage - для shared (CDN/proxy); max-age - для приватного кэша (браузер)",
+      "Они идентичны",
+      "s-maxage только Cloudflare",
+      "max-age для CDN"
+    ],
+    "correct_index": 0,
+    "explanation": "s-maxage позволяет иметь долгий кэш на CDN при коротком в браузере."
+  },
+  {
+    "external_key": "xcache-046",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое purge на CDN?",
+    "options": [
+      "Принудительное удаление ключа из кэша CDN (после деплоя или обновления)",
+      "Только TTL",
+      "Sync",
+      "TLS"
+    ],
+    "correct_index": 0,
+    "explanation": "Cloudflare API позволяет purge by URL или tag после публикации новой версии."
+  },
+  {
+    "external_key": "xcache-047",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое кэш ответа функции в asyncio (async-cache)?",
+    "options": [
+      "Использование async-aware декораторов (aiocache) - не путаем с lru_cache",
+      "lru_cache работает идеально",
+      "Только sync",
+      "Не существует"
+    ],
+    "correct_index": 0,
+    "explanation": "lru_cache мемоизирует объекты coroutine, не их результат. Нужны async-варианты."
+  },
+  {
+    "external_key": "xcache-048",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое serialization overhead в Redis?",
+    "options": [
+      "Время на сериализацию объекта (pickle/json/msgpack) перед записью",
+      "TLS handshake",
+      "Сжатие диска",
+      "Не имеет значения"
+    ],
+    "correct_index": 0,
+    "explanation": "Бенчмарки: msgpack/orjson быстрее json. Pickle опасен при unpickle untrusted данных."
+  },
+  {
+    "external_key": "xcache-049",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое cache aside vs database trigger для invalidation?",
+    "options": [
+      "Cache-aside: код инвалидирует. Trigger: БД сама публикует событие изменения (CDC)",
+      "Они идентичны",
+      "Trigger быстрее всегда",
+      "Cache aside не работает"
+    ],
+    "correct_index": 0,
+    "explanation": "CDC (Debezium) даёт надёжную инвалидацию без забывчивости в коде."
+  },
+  {
+    "external_key": "xcache-050",
+    "topic": "caching",
+    "difficulty": 2,
+    "text": "Что такое Etag-based кэширование?",
+    "options": [
+      "Сервер возвращает ETag; клиент шлёт If-None-Match - 304 без тела если совпадает",
+      "Только Last-Modified",
+      "Cookie",
+      "TLS-сертификат"
+    ],
+    "correct_index": 0,
+    "explanation": "Conditional GET с ETag экономит трафик: если контент не изменился, тело не передаётся."
+  },
+  {
+    "external_key": "xtest-001",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое unit test?",
+    "options": [
+      "Тест отдельной единицы кода (функция/класс) в изоляции",
+      "Тест UI",
+      "Нагрузочный",
+      "Smoke"
+    ],
+    "correct_index": 0,
+    "explanation": "Unit test быстрый, мелко-гранулированный, не зависит от внешних систем."
+  },
+  {
+    "external_key": "xtest-002",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое integration test?",
+    "options": [
+      "Тест взаимодействия компонентов (часто с реальной БД, API)",
+      "UI",
+      "Только функция",
+      "Нагрузочный"
+    ],
+    "correct_index": 0,
+    "explanation": "Integration медленнее unit, но проверяет реальные интеграции."
+  },
+  {
+    "external_key": "xtest-003",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое pytest?",
+    "options": [
+      "Популярный test framework в Python с богатой системой fixture",
+      "Type checker",
+      "Линтер",
+      "Профилировщик"
+    ],
+    "correct_index": 0,
+    "explanation": "Поддерживает простые assert, параметризацию, fixtures, плагины."
+  },
+  {
+    "external_key": "xtest-004",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Какой decorator делает функцию тестом в pytest?",
+    "options": [
+      "Не нужен; функции test_* автоматически собираются",
+      "@pytest.test",
+      "@unittest.test",
+      "@test"
+    ],
+    "correct_index": 0,
+    "explanation": "По умолчанию pytest собирает функции test_* и методы Test* классов."
+  },
+  {
+    "external_key": "xtest-005",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое fixture в pytest?",
+    "options": [
+      "Функция-декоратор @pytest.fixture, предоставляющая данные/setup тесту",
+      "Просто константа",
+      "Mock",
+      "Test runner"
+    ],
+    "correct_index": 0,
+    "explanation": "Fixture передаётся как аргумент тестовой функции; pytest резолвит зависимости."
+  },
+  {
+    "external_key": "xtest-006",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое scope у fixture?",
+    "options": [
+      "function (default), class, module, session - управляет временем жизни fixture",
+      "Только session",
+      "Тип теста",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "scope='module' - fixture создаётся один раз на модуль; для дорогих setup."
+  },
+  {
+    "external_key": "xtest-007",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое parametrize в pytest?",
+    "options": [
+      "@pytest.mark.parametrize('x,y', [(1,1),(2,4)]) - запускает тест с разными аргументами",
+      "Mock",
+      "Fixture",
+      "Только session"
+    ],
+    "correct_index": 0,
+    "explanation": "Параметризация - стандартный способ тестировать несколько случаев одной функцией."
+  },
+  {
+    "external_key": "xtest-008",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Как запустить только определённые тесты в pytest?",
+    "options": [
+      "pytest -k 'test_login or auth'  # filter by name",
+      "Невозможно",
+      "Только все сразу",
+      "Через config"
+    ],
+    "correct_index": 0,
+    "explanation": "Также: pytest path/to/test.py::TestClass::test_method - точечный запуск."
+  },
+  {
+    "external_key": "xtest-009",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое mocking?",
+    "options": [
+      "Замена реальных зависимостей на mock-объекты для изоляции unit-теста",
+      "Дублирование",
+      "Кэширование",
+      "Логирование"
+    ],
+    "correct_index": 0,
+    "explanation": "unittest.mock или pytest-mock; помогает тестировать без БД, сети, файлов."
+  },
+  {
+    "external_key": "xtest-010",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое monkeypatch?",
+    "options": [
+      "Fixture pytest для подмены атрибутов/env-переменных на время теста",
+      "Метод unittest",
+      "Сериализатор",
+      "Type hint"
+    ],
+    "correct_index": 0,
+    "explanation": "monkeypatch.setenv('DB_URL', '...'); по окончании теста значение восстановится."
+  },
+  {
+    "external_key": "xtest-011",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test coverage?",
+    "options": [
+      "Доля кода, выполняющегося в тестах (line/branch coverage)",
+      "Тип бенчмарка",
+      "Количество тестов",
+      "Время выполнения"
+    ],
+    "correct_index": 0,
+    "explanation": "100% coverage не гарантирует корректность, но низкий coverage - сигнал риска."
+  },
+  {
+    "external_key": "xtest-012",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Какая утилита измеряет coverage в Python?",
+    "options": [
+      "coverage.py / pytest-cov",
+      "pylint",
+      "ruff",
+      "mypy"
+    ],
+    "correct_index": 0,
+    "explanation": "pytest --cov=mypackage - собирает данные через coverage.py."
+  },
+  {
+    "external_key": "xtest-013",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое assertions в pytest?",
+    "options": [
+      "Простые assert с детальным выводом при падении (rewrite)",
+      "Только assertEqual",
+      "Только классовые",
+      "Не нужны"
+    ],
+    "correct_index": 0,
+    "explanation": "pytest перехватывает AST и показывает значения переменных при failure."
+  },
+  {
+    "external_key": "xtest-014",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое conftest.py?",
+    "options": [
+      "Файл с общими fixture/hooks для тестов в каталоге и подкаталогах",
+      "Конфиг проекта",
+      "Точка входа",
+      "Только настройки CI"
+    ],
+    "correct_index": 0,
+    "explanation": "conftest.py автоматически подгружается pytest; не требует import."
+  },
+  {
+    "external_key": "xtest-015",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test pyramid?",
+    "options": [
+      "Концепция: много unit, меньше integration, мало e2e (по стоимости)",
+      "Тип покрытия",
+      "Графики",
+      "Метрика"
+    ],
+    "correct_index": 0,
+    "explanation": "Unit быстрые и дешёвые, e2e медленные и хрупкие. Баланс - в форме пирамиды."
+  },
+  {
+    "external_key": "xtest-016",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое snapshot test?",
+    "options": [
+      "Тест, сравнивающий результат с сохранённым 'эталонным' снимком",
+      "Бэкап",
+      "Sync",
+      "Только UI"
+    ],
+    "correct_index": 0,
+    "explanation": "syrupy/snapshottest. Удобно для больших структур; нужно регулярно обновлять."
+  },
+  {
+    "external_key": "xtest-017",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое property-based testing?",
+    "options": [
+      "Тестирование инвариантов на множестве случайных входов (Hypothesis)",
+      "Только enum",
+      "Mock",
+      "Только UI"
+    ],
+    "correct_index": 0,
+    "explanation": "Hypothesis генерирует разнообразные входы и ищет минимальный контрпример."
+  },
+  {
+    "external_key": "xtest-018",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое flaky test?",
+    "options": [
+      "Тест, иногда падающий без изменения кода (race, timing, внешние зависимости)",
+      "Тест на скорость",
+      "Тест UI",
+      "Закомментированный"
+    ],
+    "correct_index": 0,
+    "explanation": "Flaky тесты подрывают доверие; нужно либо чинить, либо изолировать."
+  },
+  {
+    "external_key": "xtest-019",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest-asyncio?",
+    "options": [
+      "Плагин для запуска async тестов: @pytest.mark.asyncio",
+      "Type checker",
+      "Mock",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Без него pytest не умеет вызывать async def test_*."
+  },
+  {
+    "external_key": "xtest-020",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest.raises?",
+    "options": [
+      "Контекст для проверки, что код выбрасывает указанное исключение",
+      "Только в unittest",
+      "Mock",
+      "Тип fixture"
+    ],
+    "correct_index": 0,
+    "explanation": "with pytest.raises(ValueError): foo() - тест проходит, если исключение брошено."
+  },
+  {
+    "external_key": "xtest-021",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest-mock?",
+    "options": [
+      "Плагин: fixture mocker (обёртка над unittest.mock); автоматический cleanup",
+      "Type checker",
+      "Coverage",
+      "Async"
+    ],
+    "correct_index": 0,
+    "explanation": "mocker.patch('module.func', return_value=42) - удобнее, чем декораторы."
+  },
+  {
+    "external_key": "xtest-022",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое xfail?",
+    "options": [
+      "@pytest.mark.xfail - тест ожидаемо падает; не считается ошибкой",
+      "Skip",
+      "Type",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно для известных багов: 'этот тест должен пройти после фикса'."
+  },
+  {
+    "external_key": "xtest-023",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое skip vs skipif?",
+    "options": [
+      "skip - всегда пропустить; skipif - пропустить при условии",
+      "Они одинаковы",
+      "skip только в CI",
+      "skipif только в DEBUG"
+    ],
+    "correct_index": 0,
+    "explanation": "skipif(sys.platform == 'win32', reason='unix only')."
+  },
+  {
+    "external_key": "xtest-024",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test isolation?",
+    "options": [
+      "Тесты не должны зависеть друг от друга и от порядка запуска",
+      "Только класс",
+      "Только сессия",
+      "Не важно"
+    ],
+    "correct_index": 0,
+    "explanation": "pytest-randomly меняет порядок тестов и ловит зависимости."
+  },
+  {
+    "external_key": "xtest-025",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest-xdist?",
+    "options": [
+      "Плагин для параллельного запуска тестов: pytest -n auto",
+      "Coverage",
+      "Type checker",
+      "Mock"
+    ],
+    "correct_index": 0,
+    "explanation": "Ускоряет большие тестовые наборы; требует чтобы тесты были isolated."
+  },
+  {
+    "external_key": "xtest-026",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое golden test?",
+    "options": [
+      "Тест, сравнивающий вывод с зафиксированным 'правильным' результатом",
+      "Тип нагрузки",
+      "Smoke",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Похоже на snapshot. Хорошо для парсеров, генераторов кода."
+  },
+  {
+    "external_key": "xtest-027",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое stub?",
+    "options": [
+      "Простой объект, возвращающий заранее заданные значения; mock проще",
+      "Полноценная реализация",
+      "Spy",
+      "Fake DB"
+    ],
+    "correct_index": 0,
+    "explanation": "Stub - часть классификации test doubles: dummy/stub/spy/mock/fake."
+  },
+  {
+    "external_key": "xtest-028",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое fake?",
+    "options": [
+      "Рабочая, но упрощённая реализация (in-memory db, fake email)",
+      "Никогда не вызывается",
+      "Mock",
+      "Spy"
+    ],
+    "correct_index": 0,
+    "explanation": "FakeRepository хранит данные в dict вместо БД; быстрее, проще mocks."
+  },
+  {
+    "external_key": "xtest-029",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое spy?",
+    "options": [
+      "Объект, оборачивающий реальный и записывающий вызовы для проверки",
+      "Mock",
+      "Stub",
+      "Только в JS"
+    ],
+    "correct_index": 0,
+    "explanation": "Spy не подменяет поведение, а наблюдает за вызовами (args, count)."
+  },
+  {
+    "external_key": "xtest-030",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое AAA pattern?",
+    "options": [
+      "Arrange-Act-Assert: подготовка, действие, проверка",
+      "Auto Apply Assert",
+      "Async Await Assert",
+      "Тип отчёта"
+    ],
+    "correct_index": 0,
+    "explanation": "Структурирует тест и улучшает читаемость."
+  },
+  {
+    "external_key": "xtest-031",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое Given-When-Then?",
+    "options": [
+      "BDD-стиль: данные предусловия, действие, ожидаемый результат",
+      "AAA в другом порядке",
+      "Только в Cucumber",
+      "Тип fixtures"
+    ],
+    "correct_index": 0,
+    "explanation": "GWT - формат BDD; читается на естественном языке."
+  },
+  {
+    "external_key": "xtest-032",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test factory (factory_boy)?",
+    "options": [
+      "Библиотека для создания моделей в тестах с автоматическими полями (Faker)",
+      "Только pytest",
+      "Mock",
+      "Стек"
+    ],
+    "correct_index": 0,
+    "explanation": "UserFactory.create() возвращает реалистичного пользователя для тестов."
+  },
+  {
+    "external_key": "xtest-033",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest --lf?",
+    "options": [
+      "Запустить только тесты, упавшие в прошлый раз",
+      "Все",
+      "Параллельно",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно при отладке: сначала чините, потом полный прогон."
+  },
+  {
+    "external_key": "xtest-034",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test contamination?",
+    "options": [
+      "Тест меняет глобальное состояние, и следующие тесты видят это",
+      "Coverage",
+      "Skip",
+      "Async"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается scope-aware fixtures, transaction rollback, чистым state per test."
+  },
+  {
+    "external_key": "xtest-035",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое тест с реальной БД?",
+    "options": [
+      "Использовать тестовую БД (SQLite в памяти или test schema), откатывать после каждого теста",
+      "Production БД",
+      "Без БД",
+      "Только Mock"
+    ],
+    "correct_index": 0,
+    "explanation": "Создаём чистую базу на каждый run или используем транзакцию-rollback."
+  },
+  {
+    "external_key": "xtest-036",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое регрессионное тестирование?",
+    "options": [
+      "Проверка, что изменения не сломали ранее работающие функции",
+      "Только новые тесты",
+      "UI smoke",
+      "Только сравнение"
+    ],
+    "correct_index": 0,
+    "explanation": "После багфикса добавляют тест, чтобы баг не вернулся."
+  },
+  {
+    "external_key": "xtest-037",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое smoke test?",
+    "options": [
+      "Базовая проверка, что система запускается и работают самые важные сценарии",
+      "Полное покрытие",
+      "Property-based",
+      "UI snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "Smoke - быстрый набор после деплоя; если падает, остальные тесты не запускают."
+  },
+  {
+    "external_key": "xtest-038",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое contract testing?",
+    "options": [
+      "Тесты, проверяющие согласованность API между сервисами (Pact, OpenAPI)",
+      "UI test",
+      "Mock",
+      "Только e2e"
+    ],
+    "correct_index": 0,
+    "explanation": "Producer и Consumer тестируют контракт независимо; уменьшает поломки в микросервисах."
+  },
+  {
+    "external_key": "xtest-039",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое load test?",
+    "options": [
+      "Проверка работы под целевой нагрузкой (RPS, концурент)",
+      "Smoke",
+      "Unit",
+      "UI"
+    ],
+    "correct_index": 0,
+    "explanation": "Locust, k6, JMeter моделируют нагрузку и измеряют latency/throughput."
+  },
+  {
+    "external_key": "xtest-040",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое stress test?",
+    "options": [
+      "Проверка работы выше нормы для определения точки отказа",
+      "Smoke",
+      "UI",
+      "Snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "Обычно нагружают до отказа, чтобы понять как система деградирует."
+  },
+  {
+    "external_key": "xtest-041",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое Selenium / Playwright?",
+    "options": [
+      "Инструменты для e2e UI-тестов в реальном браузере",
+      "Линтеры",
+      "Профилировщики",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Playwright - современная альтернатива Selenium с лучшими ожиданиями и параллелизмом."
+  },
+  {
+    "external_key": "xtest-042",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое httpx + pytest для тестирования FastAPI?",
+    "options": [
+      "TestClient (sync) или AsyncClient (async) делают запросы in-process",
+      "Только реальный сервер",
+      "Только curl",
+      "Только requests"
+    ],
+    "correct_index": 0,
+    "explanation": "TestClient FastAPI - обёртка httpx; тесты быстрые без сетевых запросов."
+  },
+  {
+    "external_key": "xtest-043",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое mutation testing?",
+    "options": [
+      "Внесение изменений в код и проверка, упадут ли тесты (mutmut, cosmic-ray)",
+      "Только UI",
+      "Coverage",
+      "Snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "Если мутация выживает - тесты не покрывают логику, нужно дописать."
+  },
+  {
+    "external_key": "xtest-044",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest --pdb?",
+    "options": [
+      "При падении заходит в интерактивный отладчик",
+      "Snapshot",
+      "Только последний",
+      "Только parallel"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для пошаговой отладки failed-тестов."
+  },
+  {
+    "external_key": "xtest-045",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое CI test pipeline?",
+    "options": [
+      "Автоматический прогон тестов на каждый PR (GitHub Actions, GitLab CI)",
+      "Только локально",
+      "Только manual",
+      "Daemon"
+    ],
+    "correct_index": 0,
+    "explanation": "Цель: ловить регрессии до merge. Часто матрица версий Python и OS."
+  },
+  {
+    "external_key": "xtest-046",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое тестирование async-кода с asyncio?",
+    "options": [
+      "Использовать async test functions + pytest-asyncio + AsyncMock",
+      "Только sync",
+      "Без mocking",
+      "Только реальный loop"
+    ],
+    "correct_index": 0,
+    "explanation": "AsyncMock для асинхронных вызовов; mocker.patch с new=AsyncMock."
+  },
+  {
+    "external_key": "xtest-047",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое тест на retry/idempotency?",
+    "options": [
+      "Проверка, что повторные вызовы не дублируют побочные эффекты",
+      "Coverage",
+      "Sync",
+      "Smoke"
+    ],
+    "correct_index": 0,
+    "explanation": "Критично для платежей и интеграций - повтор не должен вызвать двойное списание."
+  },
+  {
+    "external_key": "xtest-048",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое testcontainers?",
+    "options": [
+      "Запуск реальных зависимостей (Postgres, Redis) в Docker для интеграционных тестов",
+      "Только Mock",
+      "CI plugin",
+      "Snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "testcontainers-python поднимает контейнер на тест и убивает после."
+  },
+  {
+    "external_key": "xtest-049",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое запах теста (test smell)?",
+    "options": [
+      "Антипаттерн в тесте: магические числа, дублирование, тесная связь с реализацией",
+      "Дизайн API",
+      "Coverage",
+      "Только UI"
+    ],
+    "correct_index": 0,
+    "explanation": "Тест должен быть читаемым, fix - хороший шаг к чистому коду."
+  },
+  {
+    "external_key": "xtest-050",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest --collect-only?",
+    "options": [
+      "Показать список тестов без запуска - проверить selection, маркировки",
+      "Coverage",
+      "Только last failed",
+      "Только asynchronous"
+    ],
+    "correct_index": 0,
+    "explanation": "Помогает дебажить почему тесты не находятся или фильтр не работает."
   }
 ]

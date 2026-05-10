@@ -1,0 +1,697 @@
+[
+  {
+    "external_key": "xtest-001",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое unit test?",
+    "options": [
+      "Тест отдельной единицы кода (функция/класс) в изоляции",
+      "Тест UI",
+      "Нагрузочный",
+      "Smoke"
+    ],
+    "correct_index": 0,
+    "explanation": "Unit test быстрый, мелко-гранулированный, не зависит от внешних систем."
+  },
+  {
+    "external_key": "xtest-002",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое integration test?",
+    "options": [
+      "Тест взаимодействия компонентов (часто с реальной БД, API)",
+      "UI",
+      "Только функция",
+      "Нагрузочный"
+    ],
+    "correct_index": 0,
+    "explanation": "Integration медленнее unit, но проверяет реальные интеграции."
+  },
+  {
+    "external_key": "xtest-003",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Что такое pytest?",
+    "options": [
+      "Популярный test framework в Python с богатой системой fixture",
+      "Type checker",
+      "Линтер",
+      "Профилировщик"
+    ],
+    "correct_index": 0,
+    "explanation": "Поддерживает простые assert, параметризацию, fixtures, плагины."
+  },
+  {
+    "external_key": "xtest-004",
+    "topic": "testing",
+    "difficulty": 1,
+    "text": "Какой decorator делает функцию тестом в pytest?",
+    "options": [
+      "Не нужен; функции test_* автоматически собираются",
+      "@pytest.test",
+      "@unittest.test",
+      "@test"
+    ],
+    "correct_index": 0,
+    "explanation": "По умолчанию pytest собирает функции test_* и методы Test* классов."
+  },
+  {
+    "external_key": "xtest-005",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое fixture в pytest?",
+    "options": [
+      "Функция-декоратор @pytest.fixture, предоставляющая данные/setup тесту",
+      "Просто константа",
+      "Mock",
+      "Test runner"
+    ],
+    "correct_index": 0,
+    "explanation": "Fixture передаётся как аргумент тестовой функции; pytest резолвит зависимости."
+  },
+  {
+    "external_key": "xtest-006",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое scope у fixture?",
+    "options": [
+      "function (default), class, module, session - управляет временем жизни fixture",
+      "Только session",
+      "Тип теста",
+      "Кэш"
+    ],
+    "correct_index": 0,
+    "explanation": "scope='module' - fixture создаётся один раз на модуль; для дорогих setup."
+  },
+  {
+    "external_key": "xtest-007",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое parametrize в pytest?",
+    "options": [
+      "@pytest.mark.parametrize('x,y', [(1,1),(2,4)]) - запускает тест с разными аргументами",
+      "Mock",
+      "Fixture",
+      "Только session"
+    ],
+    "correct_index": 0,
+    "explanation": "Параметризация - стандартный способ тестировать несколько случаев одной функцией."
+  },
+  {
+    "external_key": "xtest-008",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Как запустить только определённые тесты в pytest?",
+    "options": [
+      "pytest -k 'test_login or auth'  # filter by name",
+      "Невозможно",
+      "Только все сразу",
+      "Через config"
+    ],
+    "correct_index": 0,
+    "explanation": "Также: pytest path/to/test.py::TestClass::test_method - точечный запуск."
+  },
+  {
+    "external_key": "xtest-009",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое mocking?",
+    "options": [
+      "Замена реальных зависимостей на mock-объекты для изоляции unit-теста",
+      "Дублирование",
+      "Кэширование",
+      "Логирование"
+    ],
+    "correct_index": 0,
+    "explanation": "unittest.mock или pytest-mock; помогает тестировать без БД, сети, файлов."
+  },
+  {
+    "external_key": "xtest-010",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое monkeypatch?",
+    "options": [
+      "Fixture pytest для подмены атрибутов/env-переменных на время теста",
+      "Метод unittest",
+      "Сериализатор",
+      "Type hint"
+    ],
+    "correct_index": 0,
+    "explanation": "monkeypatch.setenv('DB_URL', '...'); по окончании теста значение восстановится."
+  },
+  {
+    "external_key": "xtest-011",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test coverage?",
+    "options": [
+      "Доля кода, выполняющегося в тестах (line/branch coverage)",
+      "Тип бенчмарка",
+      "Количество тестов",
+      "Время выполнения"
+    ],
+    "correct_index": 0,
+    "explanation": "100% coverage не гарантирует корректность, но низкий coverage - сигнал риска."
+  },
+  {
+    "external_key": "xtest-012",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Какая утилита измеряет coverage в Python?",
+    "options": ["coverage.py / pytest-cov", "pylint", "ruff", "mypy"],
+    "correct_index": 0,
+    "explanation": "pytest --cov=mypackage - собирает данные через coverage.py."
+  },
+  {
+    "external_key": "xtest-013",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое assertions в pytest?",
+    "options": [
+      "Простые assert с детальным выводом при падении (rewrite)",
+      "Только assertEqual",
+      "Только классовые",
+      "Не нужны"
+    ],
+    "correct_index": 0,
+    "explanation": "pytest перехватывает AST и показывает значения переменных при failure."
+  },
+  {
+    "external_key": "xtest-014",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое conftest.py?",
+    "options": [
+      "Файл с общими fixture/hooks для тестов в каталоге и подкаталогах",
+      "Конфиг проекта",
+      "Точка входа",
+      "Только настройки CI"
+    ],
+    "correct_index": 0,
+    "explanation": "conftest.py автоматически подгружается pytest; не требует import."
+  },
+  {
+    "external_key": "xtest-015",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test pyramid?",
+    "options": [
+      "Концепция: много unit, меньше integration, мало e2e (по стоимости)",
+      "Тип покрытия",
+      "Графики",
+      "Метрика"
+    ],
+    "correct_index": 0,
+    "explanation": "Unit быстрые и дешёвые, e2e медленные и хрупкие. Баланс - в форме пирамиды."
+  },
+  {
+    "external_key": "xtest-016",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое snapshot test?",
+    "options": [
+      "Тест, сравнивающий результат с сохранённым 'эталонным' снимком",
+      "Бэкап",
+      "Sync",
+      "Только UI"
+    ],
+    "correct_index": 0,
+    "explanation": "syrupy/snapshottest. Удобно для больших структур; нужно регулярно обновлять."
+  },
+  {
+    "external_key": "xtest-017",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое property-based testing?",
+    "options": [
+      "Тестирование инвариантов на множестве случайных входов (Hypothesis)",
+      "Только enum",
+      "Mock",
+      "Только UI"
+    ],
+    "correct_index": 0,
+    "explanation": "Hypothesis генерирует разнообразные входы и ищет минимальный контрпример."
+  },
+  {
+    "external_key": "xtest-018",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое flaky test?",
+    "options": [
+      "Тест, иногда падающий без изменения кода (race, timing, внешние зависимости)",
+      "Тест на скорость",
+      "Тест UI",
+      "Закомментированный"
+    ],
+    "correct_index": 0,
+    "explanation": "Flaky тесты подрывают доверие; нужно либо чинить, либо изолировать."
+  },
+  {
+    "external_key": "xtest-019",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest-asyncio?",
+    "options": [
+      "Плагин для запуска async тестов: @pytest.mark.asyncio",
+      "Type checker",
+      "Mock",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Без него pytest не умеет вызывать async def test_*."
+  },
+  {
+    "external_key": "xtest-020",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest.raises?",
+    "options": [
+      "Контекст для проверки, что код выбрасывает указанное исключение",
+      "Только в unittest",
+      "Mock",
+      "Тип fixture"
+    ],
+    "correct_index": 0,
+    "explanation": "with pytest.raises(ValueError): foo() - тест проходит, если исключение брошено."
+  },
+  {
+    "external_key": "xtest-021",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest-mock?",
+    "options": [
+      "Плагин: fixture mocker (обёртка над unittest.mock); автоматический cleanup",
+      "Type checker",
+      "Coverage",
+      "Async"
+    ],
+    "correct_index": 0,
+    "explanation": "mocker.patch('module.func', return_value=42) - удобнее, чем декораторы."
+  },
+  {
+    "external_key": "xtest-022",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое xfail?",
+    "options": [
+      "@pytest.mark.xfail - тест ожидаемо падает; не считается ошибкой",
+      "Skip",
+      "Type",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Полезно для известных багов: 'этот тест должен пройти после фикса'."
+  },
+  {
+    "external_key": "xtest-023",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое skip vs skipif?",
+    "options": [
+      "skip - всегда пропустить; skipif - пропустить при условии",
+      "Они одинаковы",
+      "skip только в CI",
+      "skipif только в DEBUG"
+    ],
+    "correct_index": 0,
+    "explanation": "skipif(sys.platform == 'win32', reason='unix only')."
+  },
+  {
+    "external_key": "xtest-024",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test isolation?",
+    "options": [
+      "Тесты не должны зависеть друг от друга и от порядка запуска",
+      "Только класс",
+      "Только сессия",
+      "Не важно"
+    ],
+    "correct_index": 0,
+    "explanation": "pytest-randomly меняет порядок тестов и ловит зависимости."
+  },
+  {
+    "external_key": "xtest-025",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest-xdist?",
+    "options": [
+      "Плагин для параллельного запуска тестов: pytest -n auto",
+      "Coverage",
+      "Type checker",
+      "Mock"
+    ],
+    "correct_index": 0,
+    "explanation": "Ускоряет большие тестовые наборы; требует чтобы тесты были isolated."
+  },
+  {
+    "external_key": "xtest-026",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое golden test?",
+    "options": [
+      "Тест, сравнивающий вывод с зафиксированным 'правильным' результатом",
+      "Тип нагрузки",
+      "Smoke",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Похоже на snapshot. Хорошо для парсеров, генераторов кода."
+  },
+  {
+    "external_key": "xtest-027",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое stub?",
+    "options": [
+      "Простой объект, возвращающий заранее заданные значения; mock проще",
+      "Полноценная реализация",
+      "Spy",
+      "Fake DB"
+    ],
+    "correct_index": 0,
+    "explanation": "Stub - часть классификации test doubles: dummy/stub/spy/mock/fake."
+  },
+  {
+    "external_key": "xtest-028",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое fake?",
+    "options": [
+      "Рабочая, но упрощённая реализация (in-memory db, fake email)",
+      "Никогда не вызывается",
+      "Mock",
+      "Spy"
+    ],
+    "correct_index": 0,
+    "explanation": "FakeRepository хранит данные в dict вместо БД; быстрее, проще mocks."
+  },
+  {
+    "external_key": "xtest-029",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое spy?",
+    "options": [
+      "Объект, оборачивающий реальный и записывающий вызовы для проверки",
+      "Mock",
+      "Stub",
+      "Только в JS"
+    ],
+    "correct_index": 0,
+    "explanation": "Spy не подменяет поведение, а наблюдает за вызовами (args, count)."
+  },
+  {
+    "external_key": "xtest-030",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое AAA pattern?",
+    "options": [
+      "Arrange-Act-Assert: подготовка, действие, проверка",
+      "Auto Apply Assert",
+      "Async Await Assert",
+      "Тип отчёта"
+    ],
+    "correct_index": 0,
+    "explanation": "Структурирует тест и улучшает читаемость."
+  },
+  {
+    "external_key": "xtest-031",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое Given-When-Then?",
+    "options": [
+      "BDD-стиль: данные предусловия, действие, ожидаемый результат",
+      "AAA в другом порядке",
+      "Только в Cucumber",
+      "Тип fixtures"
+    ],
+    "correct_index": 0,
+    "explanation": "GWT - формат BDD; читается на естественном языке."
+  },
+  {
+    "external_key": "xtest-032",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test factory (factory_boy)?",
+    "options": [
+      "Библиотека для создания моделей в тестах с автоматическими полями (Faker)",
+      "Только pytest",
+      "Mock",
+      "Стек"
+    ],
+    "correct_index": 0,
+    "explanation": "UserFactory.create() возвращает реалистичного пользователя для тестов."
+  },
+  {
+    "external_key": "xtest-033",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest --lf?",
+    "options": [
+      "Запустить только тесты, упавшие в прошлый раз",
+      "Все",
+      "Параллельно",
+      "Coverage"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно при отладке: сначала чините, потом полный прогон."
+  },
+  {
+    "external_key": "xtest-034",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое test contamination?",
+    "options": [
+      "Тест меняет глобальное состояние, и следующие тесты видят это",
+      "Coverage",
+      "Skip",
+      "Async"
+    ],
+    "correct_index": 0,
+    "explanation": "Решается scope-aware fixtures, transaction rollback, чистым state per test."
+  },
+  {
+    "external_key": "xtest-035",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое тест с реальной БД?",
+    "options": [
+      "Использовать тестовую БД (SQLite в памяти или test schema), откатывать после каждого теста",
+      "Production БД",
+      "Без БД",
+      "Только Mock"
+    ],
+    "correct_index": 0,
+    "explanation": "Создаём чистую базу на каждый run или используем транзакцию-rollback."
+  },
+  {
+    "external_key": "xtest-036",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое регрессионное тестирование?",
+    "options": [
+      "Проверка, что изменения не сломали ранее работающие функции",
+      "Только новые тесты",
+      "UI smoke",
+      "Только сравнение"
+    ],
+    "correct_index": 0,
+    "explanation": "После багфикса добавляют тест, чтобы баг не вернулся."
+  },
+  {
+    "external_key": "xtest-037",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое smoke test?",
+    "options": [
+      "Базовая проверка, что система запускается и работают самые важные сценарии",
+      "Полное покрытие",
+      "Property-based",
+      "UI snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "Smoke - быстрый набор после деплоя; если падает, остальные тесты не запускают."
+  },
+  {
+    "external_key": "xtest-038",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое contract testing?",
+    "options": [
+      "Тесты, проверяющие согласованность API между сервисами (Pact, OpenAPI)",
+      "UI test",
+      "Mock",
+      "Только e2e"
+    ],
+    "correct_index": 0,
+    "explanation": "Producer и Consumer тестируют контракт независимо; уменьшает поломки в микросервисах."
+  },
+  {
+    "external_key": "xtest-039",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое load test?",
+    "options": [
+      "Проверка работы под целевой нагрузкой (RPS, концурент)",
+      "Smoke",
+      "Unit",
+      "UI"
+    ],
+    "correct_index": 0,
+    "explanation": "Locust, k6, JMeter моделируют нагрузку и измеряют latency/throughput."
+  },
+  {
+    "external_key": "xtest-040",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое stress test?",
+    "options": [
+      "Проверка работы выше нормы для определения точки отказа",
+      "Smoke",
+      "UI",
+      "Snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "Обычно нагружают до отказа, чтобы понять как система деградирует."
+  },
+  {
+    "external_key": "xtest-041",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое Selenium / Playwright?",
+    "options": [
+      "Инструменты для e2e UI-тестов в реальном браузере",
+      "Линтеры",
+      "Профилировщики",
+      "ORM"
+    ],
+    "correct_index": 0,
+    "explanation": "Playwright - современная альтернатива Selenium с лучшими ожиданиями и параллелизмом."
+  },
+  {
+    "external_key": "xtest-042",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое httpx + pytest для тестирования FastAPI?",
+    "options": [
+      "TestClient (sync) или AsyncClient (async) делают запросы in-process",
+      "Только реальный сервер",
+      "Только curl",
+      "Только requests"
+    ],
+    "correct_index": 0,
+    "explanation": "TestClient FastAPI - обёртка httpx; тесты быстрые без сетевых запросов."
+  },
+  {
+    "external_key": "xtest-043",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое mutation testing?",
+    "options": [
+      "Внесение изменений в код и проверка, упадут ли тесты (mutmut, cosmic-ray)",
+      "Только UI",
+      "Coverage",
+      "Snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "Если мутация выживает - тесты не покрывают логику, нужно дописать."
+  },
+  {
+    "external_key": "xtest-044",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest --pdb?",
+    "options": [
+      "При падении заходит в интерактивный отладчик",
+      "Snapshot",
+      "Только последний",
+      "Только parallel"
+    ],
+    "correct_index": 0,
+    "explanation": "Удобно для пошаговой отладки failed-тестов."
+  },
+  {
+    "external_key": "xtest-045",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое CI test pipeline?",
+    "options": [
+      "Автоматический прогон тестов на каждый PR (GitHub Actions, GitLab CI)",
+      "Только локально",
+      "Только manual",
+      "Daemon"
+    ],
+    "correct_index": 0,
+    "explanation": "Цель: ловить регрессии до merge. Часто матрица версий Python и OS."
+  },
+  {
+    "external_key": "xtest-046",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое тестирование async-кода с asyncio?",
+    "options": [
+      "Использовать async test functions + pytest-asyncio + AsyncMock",
+      "Только sync",
+      "Без mocking",
+      "Только реальный loop"
+    ],
+    "correct_index": 0,
+    "explanation": "AsyncMock для асинхронных вызовов; mocker.patch с new=AsyncMock."
+  },
+  {
+    "external_key": "xtest-047",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое тест на retry/idempotency?",
+    "options": [
+      "Проверка, что повторные вызовы не дублируют побочные эффекты",
+      "Coverage",
+      "Sync",
+      "Smoke"
+    ],
+    "correct_index": 0,
+    "explanation": "Критично для платежей и интеграций - повтор не должен вызвать двойное списание."
+  },
+  {
+    "external_key": "xtest-048",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое testcontainers?",
+    "options": [
+      "Запуск реальных зависимостей (Postgres, Redis) в Docker для интеграционных тестов",
+      "Только Mock",
+      "CI plugin",
+      "Snapshot"
+    ],
+    "correct_index": 0,
+    "explanation": "testcontainers-python поднимает контейнер на тест и убивает после."
+  },
+  {
+    "external_key": "xtest-049",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое запах теста (test smell)?",
+    "options": [
+      "Антипаттерн в тесте: магические числа, дублирование, тесная связь с реализацией",
+      "Дизайн API",
+      "Coverage",
+      "Только UI"
+    ],
+    "correct_index": 0,
+    "explanation": "Тест должен быть читаемым, fix - хороший шаг к чистому коду."
+  },
+  {
+    "external_key": "xtest-050",
+    "topic": "testing",
+    "difficulty": 2,
+    "text": "Что такое pytest --collect-only?",
+    "options": [
+      "Показать список тестов без запуска - проверить selection, маркировки",
+      "Coverage",
+      "Только last failed",
+      "Только asynchronous"
+    ],
+    "correct_index": 0,
+    "explanation": "Помогает дебажить почему тесты не находятся или фильтр не работает."
+  }
+]
