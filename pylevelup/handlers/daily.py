@@ -19,6 +19,7 @@ from pylevelup.repositories import (
 )
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
+from pylevelup.utils.edit import safe_edit_text
 from pylevelup.utils.text import clean_text
 
 router = Router(name="pylevelup_daily")
@@ -94,47 +95,44 @@ async def _ensure_today_challenge(
         return await db.get(Question, existing.question_id)
 
 
-async def _show_challenge(
-    target: Message,
+async def _challenge_content(
     session_factory: async_sessionmaker,
     telegram_id: int,
-) -> None:
+) -> tuple[str, InlineKeyboardMarkup] | None:
     today = _today()
     user = await _resolve_user(session_factory, telegram_id)
     if user is None:
-        await target.answer("Сначала /start.")
-        return
+        return None
     question = await _ensure_today_challenge(session_factory, today)
     if question is None:
-        await target.answer("Не удалось подобрать вопрос для челленджа. Попробуй позже.")
-        return
+        return (
+            "Не удалось подобрать вопрос для челленджа. Попробуй позже.",
+            _build_result_keyboard(),
+        )
     async with session_factory() as db:
         repo = DailyChallengeRepository(db)
         attempt = await repo.get_attempt(user.id, today)
     if attempt is not None:
-        await _send_my_result(target, session_factory, user.id, question, today)
-        return
-    await target.answer(
+        return await _result_content(session_factory, user.id, question, today)
+    return (
         _format_question(question, today),
-        reply_markup=_build_answer_keyboard(question.id, len(question.options)),
+        _build_answer_keyboard(question.id, len(question.options)),
     )
 
 
-async def _send_my_result(
-    target: Message,
+async def _result_content(
     session_factory: async_sessionmaker,
     user_id: int,
     question: Question,
     today: date,
-) -> None:
+) -> tuple[str, InlineKeyboardMarkup]:
     async with session_factory() as db:
         repo = DailyChallengeRepository(db)
         attempt = await repo.get_attempt(user_id, today)
         rank = await repo.user_rank(today, user_id) if attempt and attempt.is_correct else None
         total, correct = await repo.stats(today)
     if attempt is None:
-        await target.answer("Челлендж ещё не пройден.")
-        return
+        return "Челлендж ещё не пройден.", _build_result_keyboard()
     correct_text = clean_text(question.options[question.correct_index])
     parts: list[str] = [f"<b>Челлендж дня - {today.isoformat()}</b>", ""]
     parts.append(f"<b>{escape(clean_text(question.text))}</b>")
@@ -153,23 +151,22 @@ async def _send_my_result(
         parts.append("")
         parts.append("<b>Пояснение</b>")
         parts.append(escape(clean_text(question.explanation)))
-    await target.answer("\n".join(parts), reply_markup=_build_result_keyboard())
+    return "\n".join(parts), _build_result_keyboard()
 
 
-async def _show_leaderboard(
-    target: Message,
+async def _leaderboard_content(
     session_factory: async_sessionmaker,
-) -> None:
+) -> tuple[str, InlineKeyboardMarkup]:
     today = _today()
     async with session_factory() as db:
         repo = DailyChallengeRepository(db)
         top = await repo.list_top_correct(today, limit=10)
         total, correct = await repo.stats(today)
     if not top:
-        await target.answer(
-            f"<b>Лидерборд дня - {today.isoformat()}</b>\n\nПока никто не дал правильный ответ. Будь первым."
+        return (
+            f"<b>Лидерборд дня - {today.isoformat()}</b>\n\nПока никто не дал правильный ответ. Будь первым.",
+            _build_result_keyboard(),
         )
-        return
     lines = [f"<b>Лидерборд дня - {today.isoformat()}</b>", ""]
     for rank, (user, response_ms) in enumerate(top, start=1):
         name = escape(user.username or user.first_name or f"id{user.telegram_id}")
@@ -180,10 +177,7 @@ async def _show_leaderboard(
         lines.append(f"{rank}. @{name} - {time_str}")
     lines.append("")
     lines.append(f"Правильных: {correct} из {total} попыток.")
-    await target.answer(
-        "\n".join(lines),
-        reply_markup=_build_result_keyboard(),
-    )
+    return "\n".join(lines), _build_result_keyboard()
 
 
 @router.message(Command("daily"))
@@ -193,7 +187,12 @@ async def handle_daily_command(
 ) -> None:
     if message.from_user is None:
         return
-    await _show_challenge(message, session_factory, message.from_user.id)
+    content = await _challenge_content(session_factory, message.from_user.id)
+    if content is None:
+        await message.answer("Сначала /start.")
+        return
+    text, markup = content
+    await message.answer(text, reply_markup=markup)
 
 
 @router.callback_query(F.data == "daily:show")
@@ -205,7 +204,12 @@ async def handle_daily_show(
         await call.answer()
         return
     await call.answer()
-    await _show_challenge(call.message, session_factory, call.from_user.id)
+    content = await _challenge_content(session_factory, call.from_user.id)
+    if content is None:
+        await call.message.answer("Сначала /start.")
+        return
+    text, markup = content
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
 
 @router.callback_query(F.data == "daily:board")
@@ -217,7 +221,8 @@ async def handle_daily_board(
         await call.answer()
         return
     await call.answer()
-    await _show_leaderboard(call.message, session_factory)
+    text, markup = await _leaderboard_content(session_factory)
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("daily:ans:"))
@@ -254,17 +259,15 @@ async def handle_daily_answer(
         repo = DailyChallengeRepository(db)
         if await repo.has_attempted(user.id, today):
             await call.answer("Сегодня уже отвечал", show_alert=True)
-            await _send_my_result(call.message, session_factory, user.id, question, today)
+            text, markup = await _result_content(session_factory, user.id, question, today)
+            await safe_edit_text(call.message, text, reply_markup=markup)
             return
         await repo.record_attempt(user.id, today, is_correct, response_time_ms=None)
         await db.commit()
 
-    try:
-        await call.message.edit_reply_markup(reply_markup=None)
-    except Exception:
-        pass
-    await call.answer()
-    await _send_my_result(call.message, session_factory, user.id, question, today)
+    await call.answer("Верно" if is_correct else "Неверно")
+    text, markup = await _result_content(session_factory, user.id, question, today)
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
     async with session_factory() as db:
         new_codes = await evaluate_and_grant(db, user.id)

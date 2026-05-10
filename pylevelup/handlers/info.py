@@ -1,8 +1,18 @@
 from aiogram import F, Router
 from aiogram.filters import Command
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
+
+from pylevelup.utils.edit import edit_or_send
 
 router = Router(name="pylevelup_info")
+
+
+def _back_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="В главное меню", callback_data="menu:main")],
+        ]
+    )
 
 INFO_TEXT = (
     "<b>PyLevelUp</b>\n\n"
@@ -29,7 +39,9 @@ INFO_TEXT = (
 
 @router.message(Command("info"))
 async def handle_info(message: Message) -> None:
-    await message.answer(INFO_TEXT, disable_web_page_preview=True)
+    await message.answer(
+        INFO_TEXT, disable_web_page_preview=True, reply_markup=_back_keyboard()
+    )
 
 
 @router.callback_query(F.data == "info:show")
@@ -37,5 +49,10 @@ async def handle_info_callback(callback: CallbackQuery) -> None:
     if callback.message is None:
         await callback.answer()
         return
-    await callback.message.answer(INFO_TEXT, disable_web_page_preview=True)
     await callback.answer()
+    await edit_or_send(
+        callback,
+        INFO_TEXT,
+        reply_markup=_back_keyboard(),
+        disable_web_page_preview=True,
+    )

@@ -17,6 +17,7 @@ from pylevelup.keyboards import (
 )
 from pylevelup.repositories import BookmarkRepository, UserRepository
 from pylevelup.services.study_service import StudyCard, StudyService
+from pylevelup.utils.edit import safe_edit_text
 from pylevelup.utils.text import clean_text
 
 router = Router(name="pylevelup_study")
@@ -74,18 +75,21 @@ async def _send_card(
     telegram_id: int,
     card: StudyCard,
     category_key: str,
+    edit: bool = False,
 ) -> None:
     user_id = await _user_id(study_service, telegram_id)
     bookmarked = False
     if user_id is not None:
         bookmarked = await _is_bookmarked(study_service, user_id, card.question_id)
-    await target.answer(
-        _format_card(card, category_key),
-        reply_markup=build_study_card_keyboard(
-            question_id=card.question_id,
-            bookmarked=bookmarked,
-        ),
+    text = _format_card(card, category_key)
+    markup = build_study_card_keyboard(
+        question_id=card.question_id,
+        bookmarked=bookmarked,
     )
+    if edit:
+        await safe_edit_text(target, text, reply_markup=markup)
+    else:
+        await target.answer(text, reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("pur:study:"))
@@ -109,14 +113,22 @@ async def handle_purpose_study(
     topics = list_topic_filter(category_key)
     card = await study_service.start(callback.from_user, topics=topics)
     if card is None:
-        await callback.message.answer(
+        await safe_edit_text(
+            callback.message,
             "Для этой категории пока нет вопросов. Попробуй другую.",
             reply_markup=build_main_menu(),
         )
         return
     await state.clear()
     await state.update_data(study_category=category_key)
-    await _send_card(callback.message, study_service, callback.from_user.id, card, category_key)
+    await _send_card(
+        callback.message,
+        study_service,
+        callback.from_user.id,
+        card,
+        category_key,
+        edit=True,
+    )
 
 
 async def _start_mistakes_session(
@@ -178,7 +190,8 @@ async def handle_study_next(
     card = await study_service.next_card(user_id)
     if card is None:
         await callback.answer()
-        await callback.message.answer(
+        await safe_edit_text(
+            callback.message,
             "Карточки закончились. Возвращайся в меню или выбери другую категорию.",
             reply_markup=build_main_menu(),
         )
@@ -186,7 +199,14 @@ async def handle_study_next(
     data = await state.get_data()
     category_key = data.get("study_category", ALL_CATEGORY_KEY)
     await callback.answer()
-    await _send_card(callback.message, study_service, callback.from_user.id, card, category_key)
+    await _send_card(
+        callback.message,
+        study_service,
+        callback.from_user.id,
+        card,
+        category_key,
+        edit=True,
+    )
 
 
 @router.callback_query(F.data == "study:stop")
@@ -203,7 +223,8 @@ async def handle_study_stop(
         await study_service.clear(user_id)
     await state.clear()
     await callback.answer()
-    await callback.message.answer(
+    await safe_edit_text(
+        callback.message,
         "Изучение завершено. Можно перейти к тренажёру или посмотреть статистику.",
         reply_markup=build_main_menu(),
     )

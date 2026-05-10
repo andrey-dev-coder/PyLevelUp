@@ -26,6 +26,7 @@ from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.services.test_session_service import TestSessionService
 from pylevelup.states import TestStates
+from pylevelup.utils.edit import edit_or_send, safe_edit_text
 from pylevelup.utils.text import clean_text, format_question_text
 
 router = Router(name="pylevelup_test")
@@ -190,7 +191,8 @@ async def handle_menu_test(
         await callback.answer()
         return
     await callback.answer()
-    await callback.message.answer(
+    await edit_or_send(
+        callback,
         "Выбери категорию вопросов:",
         reply_markup=build_category_keyboard(),
     )
@@ -202,7 +204,8 @@ async def handle_menu_main(callback: CallbackQuery, state: FSMContext) -> None:
         await callback.answer()
         return
     await callback.answer()
-    await callback.message.answer(
+    await edit_or_send(
+        callback,
         "Главное меню. Выбирай, что хочешь сделать:",
         reply_markup=build_main_menu(),
     )
@@ -226,7 +229,8 @@ async def handle_category_pick(
         await callback.answer("Неизвестная категория", show_alert=True)
         return
     await callback.answer()
-    await callback.message.answer(
+    await edit_or_send(
+        callback,
         f"Категория: <b>{escape(display_name(category_key))}</b>\n"
         "Выбери режим:",
         reply_markup=build_purpose_keyboard(category_key),
@@ -251,7 +255,8 @@ async def handle_purpose_practice(
         await callback.answer("Неизвестная категория", show_alert=True)
         return
     await callback.answer()
-    await callback.message.answer(
+    await edit_or_send(
+        callback,
         f"Тренажёр: <b>{escape(display_name(category_key))}</b>\nСколько вопросов решаем?",
         reply_markup=build_mode_keyboard(category_key),
     )
@@ -355,8 +360,13 @@ async def handle_answer(
     is_correct = chosen == correct_index
     correct_option_text = clean_text(options[correct_index])
     feedback_prefix = "Верно" if is_correct else "Неверно"
-    feedback_lines = [
+    chosen_option_text = clean_text(options[chosen]) if 0 <= chosen < len(options) else ""
+
+    original_text = callback.message.html_text or callback.message.text or ""
+    feedback_block = [
+        "",
         f"<b>{feedback_prefix}.</b>",
+        f"Твой ответ: <b>{chosen + 1}</b>. {escape(chosen_option_text)}",
         f"Правильный ответ: <b>{correct_index + 1}</b>. {escape(correct_option_text)}",
     ]
     if not is_correct:
@@ -368,13 +378,17 @@ async def handle_answer(
         if explanations and 0 <= chosen < len(explanations):
             wrong_explanation = explanations[chosen]
             if wrong_explanation:
-                feedback_lines.append("")
-                feedback_lines.append(
+                feedback_block.append("")
+                feedback_block.append(
                     f"<i>Почему вариант {chosen + 1} неверен:</i> "
                     f"{escape(clean_text(wrong_explanation))}"
                 )
-    await callback.message.answer("\n".join(feedback_lines))
-    await callback.answer()
+    await callback.answer(feedback_prefix)
+    await safe_edit_text(
+        callback.message,
+        original_text + "\n" + "\n".join(feedback_block),
+        reply_markup=None,
+    )
 
     if not cache_state.is_unlimited and cache_state.remaining() == 0:
         await _finish(callback.message, session_service, state, user_id, by_user=False)

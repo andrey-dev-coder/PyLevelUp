@@ -11,6 +11,7 @@ from pylevelup.repositories import AchievementRepository, UserRepository
 from pylevelup.services import StatsService, UserStats
 from pylevelup.services.achievements import ACHIEVEMENTS
 from pylevelup.services.mastery import compute_level, next_level
+from pylevelup.utils.edit import safe_edit_text
 
 router = Router(name="pylevelup_stats")
 
@@ -89,12 +90,11 @@ def _format_profile(stats: UserStats | None, first_name: str | None, achievement
     return header + streaks + answers + rank + achievements_block + by_topic
 
 
-async def _send_profile(
-    target: Message,
+async def _resolve_profile(
     telegram_id: int,
     first_name: str | None,
     session_factory: async_sessionmaker,
-) -> None:
+) -> tuple[str, int]:
     async with session_factory() as db:
         user = await UserRepository(db).get_by_telegram_id(telegram_id)
         stats = None
@@ -106,17 +106,17 @@ async def _send_profile(
                 mistakes = stats.mistakes_count
             earned = await AchievementRepository(db).get_user_codes(user.id)
             achievements_earned = len(earned)
-    await target.answer(
-        _format_profile(stats, first_name, achievements_earned),
-        reply_markup=build_profile_keyboard(has_mistakes=mistakes > 0),
-    )
+    return _format_profile(stats, first_name, achievements_earned), mistakes
 
 
 @router.message(Command("stats"))
 async def handle_stats(message: Message, session_factory: async_sessionmaker) -> None:
     if message.from_user is None:
         return
-    await _send_profile(message, message.from_user.id, message.from_user.first_name, session_factory)
+    text, mistakes = await _resolve_profile(
+        message.from_user.id, message.from_user.first_name, session_factory
+    )
+    await message.answer(text, reply_markup=build_profile_keyboard(has_mistakes=mistakes > 0))
 
 
 @router.callback_query(F.data == "stats:show")
@@ -124,10 +124,12 @@ async def handle_stats_callback(callback: CallbackQuery, session_factory: async_
     if callback.message is None or callback.from_user is None:
         await callback.answer()
         return
-    await _send_profile(
-        callback.message,
-        callback.from_user.id,
-        callback.from_user.first_name,
-        session_factory,
-    )
     await callback.answer()
+    text, mistakes = await _resolve_profile(
+        callback.from_user.id, callback.from_user.first_name, session_factory
+    )
+    await safe_edit_text(
+        callback.message,
+        text,
+        reply_markup=build_profile_keyboard(has_mistakes=mistakes > 0),
+    )

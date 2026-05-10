@@ -27,6 +27,7 @@ from pylevelup.repositories import (
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.states import MockStates
+from pylevelup.utils.edit import edit_or_send, safe_edit_text
 from pylevelup.utils.text import clean_text
 
 router = Router(name="pylevelup_mock")
@@ -146,15 +147,20 @@ async def _start_session(
     session_factory: async_sessionmaker,
     topics: list[str] | None,
     spec_label: str,
+    edit_target: bool = False,
 ) -> None:
     async with session_factory() as db:
         repo = QuestionRepository(db)
         questions = await repo.random_active(limit=MOCK_TOTAL_QUESTIONS, topics=topics)
     if len(questions) < MOCK_TOTAL_QUESTIONS:
-        await target.answer(
+        warning = (
             f"Недостаточно вопросов по выбранным темам ({len(questions)} из "
             f"{MOCK_TOTAL_QUESTIONS}). Выбери больше тем."
         )
+        if edit_target:
+            await safe_edit_text(target, warning, reply_markup=_intro_keyboard())
+        else:
+            await target.answer(warning)
         return
     started_at = datetime.now(UTC)
     deadline = datetime.fromtimestamp(
@@ -171,12 +177,16 @@ async def _start_session(
         mock_deadline=deadline.isoformat(),
         mock_spec_label=spec_label,
     )
-    await target.answer(
+    intro_text = (
         f"<b>Mock-собес запущен.</b>\n"
         f"Специализация: {escape(spec_label)}\n"
         f"{MOCK_TOTAL_QUESTIONS} вопросов, лимит 30 минут.\n"
         f"Удачи!"
     )
+    if edit_target:
+        await safe_edit_text(target, intro_text, reply_markup=None)
+    else:
+        await target.answer(intro_text)
     await _send_question(target, session_factory, queue[0], 1, MOCK_TOTAL_QUESTIONS, deadline)
 
 
@@ -312,7 +322,7 @@ async def handle_mock_show(
         return
     await state.clear()
     await call.answer()
-    await call.message.answer(_intro_text(), reply_markup=_intro_keyboard())
+    await edit_or_send(call, _intro_text(), reply_markup=_intro_keyboard())
 
 
 @router.callback_query(F.data.startswith("mock:spec:"))
@@ -334,7 +344,14 @@ async def handle_mock_spec(
         return
     await call.answer()
     topics = None if spec.key == "all" else list(spec.topics)
-    await _start_session(call.message, state, session_factory, topics, spec.title)
+    await _start_session(
+        call.message,
+        state,
+        session_factory,
+        topics,
+        spec.title,
+        edit_target=True,
+    )
 
 
 @router.callback_query(F.data == "mock:custom")
@@ -347,7 +364,8 @@ async def handle_mock_custom(
         return
     await call.answer()
     await state.update_data(mock_custom_topics=[])
-    await call.message.answer(
+    await edit_or_send(
+        call,
         "<b>Свой набор тем</b>\nОтметь нужные и нажми 'Начать':",
         reply_markup=_custom_keyboard([]),
     )
@@ -402,7 +420,14 @@ async def handle_mock_custom_go(
     label = "Свой набор: " + ", ".join(display_name(t) for t in selected)
     if len(label) > 200:
         label = f"Свой набор ({len(selected)} тем)"
-    await _start_session(call.message, state, session_factory, selected, label)
+    await _start_session(
+        call.message,
+        state,
+        session_factory,
+        selected,
+        label,
+        edit_target=True,
+    )
 
 
 @router.callback_query(F.data == "mock:stop", MockStates.in_session)
@@ -468,11 +493,21 @@ async def handle_mock_answer(
     next_index = index + 1
     await state.update_data(mock_answers=answers, mock_index=next_index)
 
-    try:
-        await call.message.edit_reply_markup(reply_markup=None)
-    except Exception:
-        pass
+    chosen_text = clean_text(question.options[chosen]) if 0 <= chosen < len(question.options) else ""
+    correct_text = clean_text(question.options[question.correct_index])
+    original_text = call.message.html_text or call.message.text or ""
+    feedback_lines = [
+        original_text,
+        "",
+        f"<b>{'Верно' if is_correct else 'Неверно'}.</b>",
+        f"Твой ответ: <b>{chosen + 1}</b>. {escape(chosen_text)}",
+    ]
+    if not is_correct:
+        feedback_lines.append(
+            f"Правильный ответ: <b>{question.correct_index + 1}</b>. {escape(correct_text)}"
+        )
     await call.answer("Верно" if is_correct else "Неверно")
+    await safe_edit_text(call.message, "\n".join(feedback_lines), reply_markup=None)
 
     now = datetime.now(UTC)
     if next_index >= len(queue):

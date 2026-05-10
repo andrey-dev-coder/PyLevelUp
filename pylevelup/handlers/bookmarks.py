@@ -14,6 +14,7 @@ from pylevelup.db.models import User
 from pylevelup.repositories import BookmarkRepository, UserRepository
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
+from pylevelup.utils.edit import safe_edit_text
 from pylevelup.utils.text import clean_text
 
 router = Router(name="pylevelup_bookmarks")
@@ -92,16 +93,14 @@ async def handle_toggle(
             await notify_user_about_codes(bot, call.from_user.id, new_codes)
 
 
-async def _show_list(
-    target_message: Message,
+async def _build_list_content(
     session_factory: async_sessionmaker,
     telegram_id: int,
     page: int = 0,
-) -> None:
+) -> tuple[str, InlineKeyboardMarkup] | None:
     user = await _resolve_user(session_factory, telegram_id)
     if user is None:
-        await target_message.answer("Сначала /start.")
-        return
+        return None
     async with session_factory() as db:
         repo = BookmarkRepository(db)
         total = await repo.count(user.id)
@@ -109,13 +108,16 @@ async def _show_list(
             user.id, limit=PAGE_SIZE, offset=page * PAGE_SIZE
         )
     if total == 0:
-        await target_message.answer(
-            "Закладок пока нет. Добавляй вопросы кнопкой ☆ во время теста или изучения."
+        return (
+            "Закладок пока нет. Добавляй вопросы кнопкой ☆ во время теста или изучения.",
+            InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [InlineKeyboardButton(text="В главное меню", callback_data="menu:main")]
+                ]
+            ),
         )
-        return
     if not questions and page > 0:
-        await _show_list(target_message, session_factory, telegram_id, 0)
-        return
+        return await _build_list_content(session_factory, telegram_id, 0)
     header = f"<b>Твои закладки</b> ({total} всего, страница {page + 1})"
     lines = [header, ""]
     for index, q in enumerate(questions, start=1 + page * PAGE_SIZE):
@@ -125,10 +127,7 @@ async def _show_list(
         lines.append(f"<b>{index}. [{escape(q.topic)}]</b>")
         lines.append(escape(snippet))
         lines.append("")
-    await target_message.answer(
-        "\n".join(lines).rstrip(),
-        reply_markup=_list_keyboard(page, total),
-    )
+    return "\n".join(lines).rstrip(), _list_keyboard(page, total)
 
 
 @router.message(Command("bookmarks"))
@@ -138,7 +137,12 @@ async def handle_bookmarks_command(
 ) -> None:
     if message.from_user is None:
         return
-    await _show_list(message, session_factory, message.from_user.id, page=0)
+    content = await _build_list_content(session_factory, message.from_user.id, page=0)
+    if content is None:
+        await message.answer("Сначала /start.")
+        return
+    text, markup = content
+    await message.answer(text, reply_markup=markup)
 
 
 @router.callback_query(F.data == "bookmarks:show")
@@ -150,7 +154,12 @@ async def handle_bookmarks_show(
         await call.answer()
         return
     await call.answer()
-    await _show_list(call.message, session_factory, call.from_user.id, page=0)
+    content = await _build_list_content(session_factory, call.from_user.id, page=0)
+    if content is None:
+        await call.message.answer("Сначала /start.")
+        return
+    text, markup = content
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("bm:list:"))
@@ -167,7 +176,12 @@ async def handle_bookmarks_page(
         return
     page = int(parts[2])
     await call.answer()
-    await _show_list(call.message, session_factory, call.from_user.id, page=page)
+    content = await _build_list_content(session_factory, call.from_user.id, page=page)
+    if content is None:
+        await call.message.answer("Сначала /start.")
+        return
+    text, markup = content
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
 
 __all__ = ["router"]
