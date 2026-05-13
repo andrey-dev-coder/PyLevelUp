@@ -261,6 +261,17 @@ class QuestionReport(Base, TimestampMixin):
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
+class CustomCategory(Base, TimestampMixin):
+    __tablename__ = "custom_categories"
+
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    title: Mapped[str] = mapped_column(String(128), nullable=False)
+    short: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    created_by_user_id: Mapped[int | None] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+    )
+
+
 class AIUsage(Base):
     __tablename__ = "ai_usage"
     __table_args__ = (

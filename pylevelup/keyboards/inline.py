@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from pylevelup.categories import ALL_CATEGORY_KEY, CATEGORIES, SESSION_MODES
+from pylevelup.categories import ALL_CATEGORY_KEY, CATEGORIES, SESSION_MODES, custom_categories
 
 
 def build_answer_keyboard(
@@ -108,6 +108,8 @@ def build_category_keyboard() -> InlineKeyboardMarkup:
     keyboard.button(text="Все темы (микс)", callback_data=f"cat:{ALL_CATEGORY_KEY}")
     for category in CATEGORIES:
         keyboard.button(text=category.title, callback_data=f"cat:{category.key}")
+    for category in custom_categories():
+        keyboard.button(text=f"{category.title} (своя)", callback_data=f"cat:{category.key}")
     keyboard.button(text="Назад в меню", callback_data="menu:main")
     keyboard.adjust(1)
     return keyboard.as_markup()

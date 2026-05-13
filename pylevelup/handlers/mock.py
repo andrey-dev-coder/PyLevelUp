@@ -13,9 +13,10 @@ from aiogram.types import (
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from pylevelup.categories import (
-    CATEGORIES,
     SPECIALIZATIONS,
     SPECIALIZATIONS_BY_KEY,
+    all_categories,
+    all_category_keys,
     display_name,
 )
 from pylevelup.db.models import Question, User
@@ -57,7 +58,7 @@ def _intro_keyboard() -> InlineKeyboardMarkup:
 
 def _custom_keyboard(selected: list[str]) -> InlineKeyboardMarkup:
     rows: list[list[InlineKeyboardButton]] = []
-    for cat in CATEGORIES:
+    for cat in all_categories():
         prefix = "☑" if cat.key in selected else "▫️"
         rows.append(
             [
@@ -384,8 +385,7 @@ async def handle_mock_toggle(
         await call.answer()
         return
     topic_key = parts[2]
-    valid_keys = {c.key for c in CATEGORIES}
-    if topic_key not in valid_keys:
+    if topic_key not in all_category_keys():
         await call.answer()
         return
     data = await state.get_data()

@@ -10,6 +10,7 @@ from pylevelup.handlers import (
     daily,
     dashboard,
     hints,
+    import_questions,
     info,
     mock,
     open_questions,
@@ -26,6 +27,7 @@ def build_root_router() -> Router:
     router = Router(name="pylevelup_root")
     router.include_routers(
         admin.router,
+        import_questions.router,
         dashboard.router,
         broadcast.router,
         start.router,

@@ -7,11 +7,13 @@ from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats, BotCommandScopeChat
 from redis.asyncio import Redis
 
+from pylevelup.categories import set_custom_categories
 from pylevelup.config import Settings, get_settings
 from pylevelup.db.session import create_async_engine_instance, create_async_sessionmaker
 from pylevelup.handlers import build_root_router
 from pylevelup.logger import configure_logging, get_logger
 from pylevelup.middlewares import AccessControlMiddleware
+from pylevelup.repositories import CustomCategoryRepository
 from pylevelup.services.session_cache import RedisSessionCache
 from pylevelup.services.spaced_repetition import SpacedRepetitionEngine
 from pylevelup.services.study_service import StudyService
@@ -47,6 +49,8 @@ OWNER_COMMANDS: tuple[BotCommand, ...] = BOT_COMMANDS + (
     BotCommand(command="users", description="Список пользователей"),
     BotCommand(command="reports", description="Открытые жалобы на вопросы"),
     BotCommand(command="admin", description="Owner-дашборд (DAU/MAU, топ-проваленных)"),
+    BotCommand(command="import", description="Импорт вопросов из JSON-файла"),
+    BotCommand(command="categories", description="Управление пользовательскими категориями"),
 )
 
 
@@ -70,9 +74,21 @@ async def _on_shutdown(bot: Bot) -> None:
     logger.info("bot_shutdown")
 
 
+async def _load_custom_categories(sessionmaker) -> None:
+    try:
+        async with sessionmaker() as session:
+            repo = CustomCategoryRepository(session)
+            customs = await repo.list_all()
+        set_custom_categories([(c.key, c.title, c.short) for c in customs])
+        logger.info("custom_categories_loaded", count=len(customs))
+    except Exception as exc:
+        logger.warning("custom_categories_load_failed", error=str(exc))
+
+
 async def _run(settings: Settings) -> None:
     engine = create_async_engine_instance(settings.database_url)
     sessionmaker = create_async_sessionmaker(engine)
+    await _load_custom_categories(sessionmaker)
 
     fsm_redis = Redis.from_url(settings.redis_fsm_url)
     cache_redis = Redis.from_url(settings.redis_cache_url)

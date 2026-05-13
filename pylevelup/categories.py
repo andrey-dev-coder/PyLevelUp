@@ -28,20 +28,55 @@ CATEGORIES: tuple[Category, ...] = (
 CATEGORY_BY_KEY: dict[str, Category] = {c.key: c for c in CATEGORIES}
 ALL_CATEGORY_KEY = "all"
 
+_CUSTOM_CACHE: dict[str, Category] = {}
+
+
+def set_custom_categories(entries: list[tuple[str, str, str | None]]) -> None:
+    _CUSTOM_CACHE.clear()
+    for key, title, short in entries:
+        _CUSTOM_CACHE[key] = Category(key=key, title=title, short=short or title)
+
+
+def add_custom_category(key: str, title: str, short: str | None) -> None:
+    _CUSTOM_CACHE[key] = Category(key=key, title=title, short=short or title)
+
+
+def remove_custom_category(key: str) -> None:
+    _CUSTOM_CACHE.pop(key, None)
+
+
+def custom_categories() -> tuple[Category, ...]:
+    return tuple(_CUSTOM_CACHE.values())
+
+
+def all_categories() -> tuple[Category, ...]:
+    return CATEGORIES + custom_categories()
+
+
+def all_category_keys() -> set[str]:
+    return {c.key for c in CATEGORIES} | set(_CUSTOM_CACHE.keys())
+
 
 def list_topic_filter(category_key: str) -> list[str] | None:
     if category_key == ALL_CATEGORY_KEY:
         return None
-    if category_key not in CATEGORY_BY_KEY:
-        return None
-    return [category_key]
+    if category_key in CATEGORY_BY_KEY or category_key in _CUSTOM_CACHE:
+        return [category_key]
+    return None
 
 
 def display_name(category_key: str) -> str:
     if category_key == ALL_CATEGORY_KEY:
         return "Все темы"
-    cat = CATEGORY_BY_KEY.get(category_key)
+    cat = CATEGORY_BY_KEY.get(category_key) or _CUSTOM_CACHE.get(category_key)
     return cat.title if cat else category_key
+
+
+def short_name(category_key: str) -> str:
+    if category_key == ALL_CATEGORY_KEY:
+        return "Все"
+    cat = CATEGORY_BY_KEY.get(category_key) or _CUSTOM_CACHE.get(category_key)
+    return cat.short if cat else category_key
 
 
 SESSION_MODES: tuple[tuple[str, int | None], ...] = (
