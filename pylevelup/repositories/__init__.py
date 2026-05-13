@@ -11,6 +11,7 @@ from pylevelup.repositories.question_repo import QuestionRepository
 from pylevelup.repositories.report_repo import QuestionReportRepository
 from pylevelup.repositories.session_repo import DailySessionRepository
 from pylevelup.repositories.settings_repo import ACCESS_CODE_KEY, SettingsRepository
+from pylevelup.repositories.topic_access_repo import TopicAccessRepository
 from pylevelup.repositories.user_repo import UserRepository
 
 __all__ = [
@@ -28,5 +29,6 @@ __all__ = [
     "QuestionRepository",
     "QuestionReportRepository",
     "SettingsRepository",
+    "TopicAccessRepository",
     "UserRepository",
 ]

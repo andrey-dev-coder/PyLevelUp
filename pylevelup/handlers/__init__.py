@@ -20,6 +20,7 @@ from pylevelup.handlers import (
     stats,
     study,
     test,
+    user_admin,
 )
 
 
@@ -27,6 +28,7 @@ def build_root_router() -> Router:
     router = Router(name="pylevelup_root")
     router.include_routers(
         admin.router,
+        user_admin.router,
         import_questions.router,
         dashboard.router,
         broadcast.router,

@@ -27,6 +27,7 @@ from pylevelup.repositories import (
 )
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
+from pylevelup.services.topic_access import get_allowed_topics
 from pylevelup.states import MockStates
 from pylevelup.utils.edit import edit_or_send, safe_edit_text
 from pylevelup.utils.text import render_with_code
@@ -56,9 +57,14 @@ def _intro_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
-def _custom_keyboard(selected: list[str]) -> InlineKeyboardMarkup:
+def _custom_keyboard(
+    selected: list[str],
+    allowed: set[str] | None = None,
+) -> InlineKeyboardMarkup:
     rows: list[list[InlineKeyboardButton]] = []
     for cat in all_categories():
+        if allowed is not None and cat.key not in allowed:
+            continue
         prefix = "☑" if cat.key in selected else "▫️"
         rows.append(
             [
@@ -149,7 +155,22 @@ async def _start_session(
     topics: list[str] | None,
     spec_label: str,
     edit_target: bool = False,
+    telegram_id: int | None = None,
 ) -> None:
+    if telegram_id is not None:
+        allowed = await get_allowed_topics(session_factory, telegram_id)
+        if allowed is not None:
+            if topics is None:
+                topics = sorted(allowed)
+            else:
+                topics = [t for t in topics if t in allowed]
+            if not topics:
+                msg = "Тебе пока не открыто ни одной темы. Напиши владельцу бота."
+                if edit_target:
+                    await safe_edit_text(target, msg, reply_markup=_intro_keyboard())
+                else:
+                    await target.answer(msg)
+                return
     async with session_factory() as db:
         repo = QuestionRepository(db)
         questions = await repo.random_active(limit=MOCK_TOTAL_QUESTIONS, topics=topics)
@@ -352,6 +373,7 @@ async def handle_mock_spec(
         topics,
         spec.title,
         edit_target=True,
+        telegram_id=call.from_user.id if call.from_user else None,
     )
 
 
@@ -359,16 +381,27 @@ async def handle_mock_spec(
 async def handle_mock_custom(
     call: CallbackQuery,
     state: FSMContext,
+    session_factory: async_sessionmaker,
 ) -> None:
     if call.message is None:
         await call.answer()
         return
     await call.answer()
+    allowed: set[str] | None = None
+    if call.from_user is not None:
+        allowed = await get_allowed_topics(session_factory, call.from_user.id)
+    if allowed is not None and not allowed:
+        await safe_edit_text(
+            call.message,
+            "Тебе пока не открыто ни одной темы. Напиши владельцу бота.",
+            reply_markup=_intro_keyboard(),
+        )
+        return
     await state.update_data(mock_custom_topics=[])
     await edit_or_send(
         call,
         "<b>Свой набор тем</b>\nОтметь нужные и нажми 'Начать':",
-        reply_markup=_custom_keyboard([]),
+        reply_markup=_custom_keyboard([], allowed=allowed),
     )
 
 
@@ -376,6 +409,7 @@ async def handle_mock_custom(
 async def handle_mock_toggle(
     call: CallbackQuery,
     state: FSMContext,
+    session_factory: async_sessionmaker,
 ) -> None:
     if call.message is None or call.data is None:
         await call.answer()
@@ -388,6 +422,12 @@ async def handle_mock_toggle(
     if topic_key not in all_category_keys():
         await call.answer()
         return
+    allowed: set[str] | None = None
+    if call.from_user is not None:
+        allowed = await get_allowed_topics(session_factory, call.from_user.id)
+    if allowed is not None and topic_key not in allowed:
+        await call.answer("Эта тема тебе не открыта.", show_alert=True)
+        return
     data = await state.get_data()
     selected: list[str] = list(data.get("mock_custom_topics") or [])
     if topic_key in selected:
@@ -397,7 +437,7 @@ async def handle_mock_toggle(
     await state.update_data(mock_custom_topics=selected)
     await call.answer()
     try:
-        await call.message.edit_reply_markup(reply_markup=_custom_keyboard(selected))
+        await call.message.edit_reply_markup(reply_markup=_custom_keyboard(selected, allowed=allowed))
     except Exception:
         pass
 
@@ -427,6 +467,7 @@ async def handle_mock_custom_go(
         selected,
         label,
         edit_target=True,
+        telegram_id=call.from_user.id if call.from_user else None,
     )
 
 

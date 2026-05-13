@@ -5,11 +5,12 @@ from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from pylevelup.categories import (
     ALL_CATEGORY_KEY,
-    CATEGORY_BY_KEY,
     SESSION_MODES,
+    all_category_keys,
     display_name,
     list_topic_filter,
 )
@@ -26,6 +27,7 @@ from pylevelup.repositories import BookmarkRepository, QuestionRepository, UserR
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.services.test_session_service import TestSessionService
+from pylevelup.services.topic_access import get_allowed_topics
 from pylevelup.states import TestStates
 from pylevelup.utils.edit import edit_or_send, safe_edit_text
 from pylevelup.utils.text import clean_text, format_question_text, render_with_code
@@ -120,6 +122,7 @@ async def _start_for(
     message: Message,
     telegram_user,
     session_service: TestSessionService,
+    session_factory: async_sessionmaker,
     state: FSMContext,
     category_key: str,
     target_total: int | None,
@@ -128,6 +131,17 @@ async def _start_for(
     if telegram_user is None:
         return
     topics = list_topic_filter(category_key)
+    allowed = await get_allowed_topics(session_factory, telegram_user.id)
+    if allowed is not None:
+        if topics is None:
+            topics = sorted(allowed)
+        else:
+            topics = [t for t in topics if t in allowed]
+        if not topics:
+            await message.answer(
+                "Тебе пока не открыто ни одной темы. Напиши владельцу бота."
+            )
+            return
     counts_toward_daily = category_key == ALL_CATEGORY_KEY
     result = await session_service.start_session(
         telegram_user,
@@ -162,11 +176,20 @@ async def _start_for(
 async def handle_test_command(
     message: Message,
     session_service: TestSessionService,
+    session_factory: async_sessionmaker,
     state: FSMContext,
 ) -> None:
+    allowed: set[str] | None = None
+    if message.from_user is not None:
+        allowed = await get_allowed_topics(session_factory, message.from_user.id)
+    if allowed is not None and not allowed:
+        await message.answer(
+            "Тебе пока не открыто ни одной темы. Напиши владельцу бота."
+        )
+        return
     await message.answer(
         "Выбери категорию вопросов:",
-        reply_markup=build_category_keyboard(),
+        reply_markup=build_category_keyboard(allowed_topics=allowed),
     )
 
 
@@ -186,16 +209,23 @@ async def handle_algorithms_command(
 async def handle_menu_test(
     callback: CallbackQuery,
     session_service: TestSessionService,
+    session_factory: async_sessionmaker,
     state: FSMContext,
 ) -> None:
     if callback.message is None:
         await callback.answer()
         return
+    allowed: set[str] | None = None
+    if callback.from_user is not None:
+        allowed = await get_allowed_topics(session_factory, callback.from_user.id)
+    if allowed is not None and not allowed:
+        await callback.answer("Тебе не открыта ни одна тема. Напиши владельцу.", show_alert=True)
+        return
     await callback.answer()
     await edit_or_send(
         callback,
         "Выбери категорию вопросов:",
-        reply_markup=build_category_keyboard(),
+        reply_markup=build_category_keyboard(allowed_topics=allowed),
     )
 
 
@@ -216,6 +246,7 @@ async def handle_menu_main(callback: CallbackQuery, state: FSMContext) -> None:
 async def handle_category_pick(
     callback: CallbackQuery,
     session_service: TestSessionService,
+    session_factory: async_sessionmaker,
     state: FSMContext,
 ) -> None:
     if callback.message is None or callback.data is None:
@@ -226,9 +257,17 @@ async def handle_category_pick(
         await callback.answer()
         return
     category_key = parts[1]
-    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+    if category_key != ALL_CATEGORY_KEY and category_key not in all_category_keys():
         await callback.answer("Неизвестная категория", show_alert=True)
         return
+    if callback.from_user is not None:
+        allowed = await get_allowed_topics(session_factory, callback.from_user.id)
+        if allowed is not None:
+            if category_key == ALL_CATEGORY_KEY:
+                pass
+            elif category_key not in allowed:
+                await callback.answer("Эта тема тебе не открыта.", show_alert=True)
+                return
     await callback.answer()
     await edit_or_send(
         callback,
@@ -252,7 +291,7 @@ async def handle_purpose_practice(
         await callback.answer()
         return
     category_key = parts[2]
-    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+    if category_key != ALL_CATEGORY_KEY and category_key not in all_category_keys():
         await callback.answer("Неизвестная категория", show_alert=True)
         return
     await callback.answer()
@@ -267,6 +306,7 @@ async def handle_purpose_practice(
 async def handle_mode_pick(
     callback: CallbackQuery,
     session_service: TestSessionService,
+    session_factory: async_sessionmaker,
     state: FSMContext,
 ) -> None:
     if callback.message is None or callback.from_user is None or callback.data is None:
@@ -278,7 +318,7 @@ async def handle_mode_pick(
         return
     category_key = parts[1]
     mode_token = parts[2]
-    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+    if category_key != ALL_CATEGORY_KEY and category_key not in all_category_keys():
         await callback.answer("Неизвестная категория", show_alert=True)
         return
     target_total: int | None
@@ -301,6 +341,7 @@ async def handle_mode_pick(
         callback.message,
         callback.from_user,
         session_service,
+        session_factory,
         state,
         category_key=category_key,
         target_total=target_total,

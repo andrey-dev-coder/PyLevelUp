@@ -103,12 +103,17 @@ def build_profile_keyboard(has_mistakes: bool) -> InlineKeyboardMarkup:
     return keyboard.as_markup()
 
 
-def build_category_keyboard() -> InlineKeyboardMarkup:
+def build_category_keyboard(allowed_topics: set[str] | None = None) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
-    keyboard.button(text="Все темы (микс)", callback_data=f"cat:{ALL_CATEGORY_KEY}")
+    if allowed_topics is None or len(allowed_topics) > 1:
+        keyboard.button(text="Все темы (микс)", callback_data=f"cat:{ALL_CATEGORY_KEY}")
     for category in CATEGORIES:
+        if allowed_topics is not None and category.key not in allowed_topics:
+            continue
         keyboard.button(text=category.title, callback_data=f"cat:{category.key}")
     for category in custom_categories():
+        if allowed_topics is not None and category.key not in allowed_topics:
+            continue
         keyboard.button(text=f"{category.title} (своя)", callback_data=f"cat:{category.key}")
     keyboard.button(text="Назад в меню", callback_data="menu:main")
     keyboard.adjust(1)
