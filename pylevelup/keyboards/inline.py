@@ -73,6 +73,17 @@ def build_main_menu() -> InlineKeyboardMarkup:
     return keyboard.as_markup()
 
 
+def build_next_question_keyboard(is_last: bool = False) -> InlineKeyboardMarkup:
+    label = "Завершить тест" if is_last else "Следующий вопрос →"
+    callback = "test:finish" if is_last else "test:next"
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=label, callback_data=callback)],
+            [InlineKeyboardButton(text="Остановить", callback_data="test:stop")],
+        ]
+    )
+
+
 def build_profile_keyboard(has_mistakes: bool) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.button(text="Все ачивки", callback_data="ach:show")
@@ -149,6 +160,7 @@ __all__ = [
     "build_finish_keyboard",
     "build_main_menu",
     "build_mode_keyboard",
+    "build_next_question_keyboard",
     "build_profile_keyboard",
     "build_purpose_keyboard",
     "build_study_card_keyboard",

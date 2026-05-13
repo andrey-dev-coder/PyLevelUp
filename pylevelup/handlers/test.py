@@ -20,6 +20,7 @@ from pylevelup.keyboards import (
     build_finish_keyboard,
     build_main_menu,
     build_mode_keyboard,
+    build_next_question_keyboard,
     build_purpose_keyboard,
 )
 from pylevelup.repositories import BookmarkRepository, QuestionRepository, UserRepository
@@ -424,23 +425,54 @@ async def handle_answer(
                     f"{escape(clean_text(wrong_explanation))}"
                 )
     await callback.answer(feedback_prefix)
+    is_last = (
+        not cache_state.is_unlimited and cache_state.remaining() == 0
+    )
     await safe_edit_text(
         callback.message,
         original_text + "\n" + "\n".join(feedback_block),
+        reply_markup=build_next_question_keyboard(is_last=is_last),
     )
 
-    if not cache_state.is_unlimited and cache_state.remaining() == 0:
-        await _finish(callback.message, session_service, state, user_id, by_user=False)
     if len(cache_state.pending) >= 10:
         await session_service.flush_session(user_id, mark_finished=False)
-    async with session_service.session_factory() as db:
-        new_codes = await evaluate_and_grant(db, user_id)
-        await db.commit()
-    if new_codes:
-        await notify_user_about_codes(bot, callback.from_user.id, new_codes)
-    if not cache_state.is_unlimited and cache_state.remaining() == 0:
+    try:
+        async with session_service.session_factory() as db:
+            new_codes = await evaluate_and_grant(db, user_id)
+            await db.commit()
+        if new_codes:
+            await notify_user_about_codes(bot, callback.from_user.id, new_codes)
+    except Exception:
+        pass
+
+
+@router.callback_query(F.data == "test:next")
+async def handle_test_next(
+    callback: CallbackQuery,
+    session_service: TestSessionService,
+    state: FSMContext,
+) -> None:
+    if callback.from_user is None or callback.message is None:
+        await callback.answer()
         return
-    await _send_current_question(callback.message, callback.from_user.id, session_service, state)
+    await callback.answer()
+    await _send_current_question(
+        callback.message, callback.from_user.id, session_service, state
+    )
+
+
+@router.callback_query(F.data == "test:finish")
+async def handle_test_finish(
+    callback: CallbackQuery,
+    session_service: TestSessionService,
+    state: FSMContext,
+) -> None:
+    if callback.from_user is None or callback.message is None:
+        await callback.answer()
+        return
+    user_id = await _user_id(session_service, callback.from_user.id)
+    await callback.answer()
+    await _finish(callback.message, session_service, state, user_id, by_user=False)
 
 
 @router.callback_query(F.data == "test:stop")
