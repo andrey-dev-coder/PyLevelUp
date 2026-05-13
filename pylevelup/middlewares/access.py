@@ -9,7 +9,9 @@ from pylevelup.config import Settings
 from pylevelup.db.models import User
 from pylevelup.repositories import (
     ACCESS_CODE_KEY,
+    AccessCodeRepository,
     SettingsRepository,
+    TopicAccessRepository,
     UserRepository,
 )
 
@@ -61,7 +63,7 @@ class AccessControlMiddleware(BaseMiddleware):
             await db.commit()
 
             authorized = await self._maybe_authorize(
-                event, db, users_repo, telegram_id, access_code
+                event, db, users_repo, user.id, telegram_id, access_code
             )
             if authorized:
                 await db.commit()
@@ -102,6 +104,7 @@ class AccessControlMiddleware(BaseMiddleware):
         event: Message | CallbackQuery,
         db,
         users_repo: UserRepository,
+        user_id: int,
         telegram_id: int,
         access_code: str,
     ) -> bool:
@@ -110,10 +113,18 @@ class AccessControlMiddleware(BaseMiddleware):
         candidate = event.text.strip()
         if candidate.startswith("/"):
             return False
-        if candidate != access_code:
-            return False
-        await users_repo.mark_authorized(telegram_id)
-        return True
+        if candidate == access_code:
+            await users_repo.mark_authorized(telegram_id)
+            return True
+        ac_repo = AccessCodeRepository(db)
+        ac = await ac_repo.get(candidate)
+        if ac is not None:
+            await users_repo.mark_authorized(telegram_id)
+            if ac.allowed_topics:
+                topic_repo = TopicAccessRepository(db)
+                await topic_repo.replace(user_id, ac.allowed_topics)
+            return True
+        return False
 
     async def _reject_banned(self, event: Message | CallbackQuery) -> None:
         text = "Доступ к боту закрыт. Если считаешь это ошибкой, напиши @m203ac."

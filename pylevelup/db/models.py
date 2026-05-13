@@ -261,6 +261,14 @@ class QuestionReport(Base, TimestampMixin):
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
+class AccessCode(Base, TimestampMixin):
+    __tablename__ = "access_codes"
+
+    code: Mapped[str] = mapped_column(String(128), primary_key=True)
+    label: Mapped[str] = mapped_column(String(128), nullable=False)
+    allowed_topics: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+
+
 class UserTopicAccess(Base):
     __tablename__ = "user_topic_access"
 

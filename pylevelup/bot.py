@@ -53,6 +53,7 @@ OWNER_COMMANDS: tuple[BotCommand, ...] = BOT_COMMANDS + (
     BotCommand(command="categories", description="Управление пользовательскими категориями"),
     BotCommand(command="user_topics", description="Доступные темы для пользователя"),
     BotCommand(command="user_stats", description="Подробная статистика пользователя"),
+    BotCommand(command="panel", description="Панель управления (кнопки)"),
 )
 
 

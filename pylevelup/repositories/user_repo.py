@@ -141,6 +141,20 @@ class UserRepository:
         stmt = select(User).order_by(User.created_at.desc()).limit(limit)
         return list((await self.session.execute(stmt)).scalars().all())
 
+    async def list_page(self, offset: int = 0, limit: int = 10) -> list[User]:
+        stmt = (
+            select(User)
+            .order_by(User.created_at.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def total_count(self) -> int:
+        return int(
+            (await self.session.execute(select(func.count(User.id)))).scalar_one() or 0
+        )
+
     async def list_broadcast_recipients(self) -> list[User]:
         stmt = select(User).where(
             User.is_active.is_(True),

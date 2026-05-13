@@ -3,6 +3,7 @@ from aiogram import Router
 from pylevelup.handlers import (
     achievements,
     admin,
+    admin_panel,
     ai_helper,
     bookmarks,
     broadcast,
@@ -28,6 +29,7 @@ def build_root_router() -> Router:
     router = Router(name="pylevelup_root")
     router.include_routers(
         admin.router,
+        admin_panel.router,
         user_admin.router,
         import_questions.router,
         dashboard.router,
