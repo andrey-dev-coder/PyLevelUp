@@ -26,6 +26,7 @@ from pylevelup.categories import (
 from pylevelup.config import Settings
 from pylevelup.repositories import (
     CustomCategoryRepository,
+    OpenQuestionRepository,
     QuestionRepository,
     UserRepository,
 )
@@ -112,8 +113,18 @@ def _categories_menu_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
-FORMAT_HINT = (
-    "<b>Формат файла</b>\n"
+def _type_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Тестовые вопросы", callback_data="imp:type:test")],
+            [InlineKeyboardButton(text="Теория (карточки с ответами)", callback_data="imp:type:theory")],
+            [InlineKeyboardButton(text="Отмена", callback_data="imp:cancel")],
+        ]
+    )
+
+
+FORMAT_HINT_TEST = (
+    "<b>Формат файла (тесты)</b>\n"
     "Прикрепи .json (UTF-8) - массив объектов:\n"
     "<pre><code>[\n"
     "  {\n"
@@ -131,8 +142,27 @@ FORMAT_HINT = (
     "- <b>difficulty</b> (1-5, по умолчанию 1)\n"
     "- <b>explanation</b> - пояснение, опционально\n"
     "- <b>external_key</b> - уникальный id, опционально (я сгенерирую если не указан)\n"
-    "- <b>topic</b> - можно не указывать, я подставлю выбранную категорию\n"
-    f"Лимит на файл: {MAX_FILE_BYTES // 1024} КБ, до {MAX_QUESTIONS_PER_IMPORT} вопросов за раз."
+    f"Лимит на файл: {MAX_FILE_BYTES // 1024} КБ, до {MAX_QUESTIONS_PER_IMPORT} за раз."
+)
+
+FORMAT_HINT_THEORY = (
+    "<b>Формат файла (теория / карточки)</b>\n"
+    "Прикрепи .json (UTF-8) - массив объектов:\n"
+    "<pre><code>[\n"
+    "  {\n"
+    "    \"text\": \"Что такое GIL в Python?\",\n"
+    "    \"ideal_answer\": \"GIL (Global Interpreter Lock) - глобальная блокировка...\",\n"
+    "    \"checklist\": [\"Упомянуть CPython\", \"Потоки vs процессы\"],\n"
+    "    \"difficulty\": 2\n"
+    "  }\n"
+    "]</code></pre>\n"
+    "Поля:\n"
+    "- <b>text</b> (обязательно) - вопрос/тема карточки\n"
+    "- <b>ideal_answer</b> (обязательно) - эталонный ответ\n"
+    "- <b>checklist</b> - список пунктов чек-листа, опционально\n"
+    "- <b>difficulty</b> (1-5, по умолчанию 2)\n"
+    "- <b>external_key</b> - уникальный id, опционально\n"
+    f"Лимит на файл: {MAX_FILE_BYTES // 1024} КБ, до {MAX_QUESTIONS_PER_IMPORT} за раз."
 )
 
 
@@ -221,11 +251,44 @@ async def handle_pick_category(
         await call.answer("Категория не найдена")
         return
     await state.update_data(import_topic=key)
-    await state.set_state(ImportStates.awaiting_file)
+    await state.set_state(ImportStates.choosing_type)
     await call.answer()
     await safe_edit_text(
         call.message,
-        f"<b>Категория:</b> {escape(display_name(key))}\n\n{FORMAT_HINT}",
+        f"<b>Категория:</b> {escape(display_name(key))}\n\nЧто импортируем?",
+        reply_markup=_type_keyboard(),
+    )
+
+
+@router.callback_query(F.data.startswith("imp:type:"))
+async def handle_pick_type(
+    call: CallbackQuery,
+    state: FSMContext,
+    settings: Settings,
+) -> None:
+    if not _is_owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    import_type = call.data.split(":", 2)[2]
+    if import_type not in ("test", "theory"):
+        await call.answer()
+        return
+    data = await state.get_data()
+    topic = data.get("import_topic")
+    if not isinstance(topic, str):
+        await state.clear()
+        await call.answer("Сессия сброшена")
+        return
+    await state.update_data(import_type=import_type)
+    await state.set_state(ImportStates.awaiting_file)
+    await call.answer()
+    hint = FORMAT_HINT_TEST if import_type == "test" else FORMAT_HINT_THEORY
+    await safe_edit_text(
+        call.message,
+        f"<b>Категория:</b> {escape(display_name(topic))}\n\n{hint}",
         reply_markup=_cancel_keyboard(),
     )
 
@@ -326,10 +389,11 @@ async def handle_category_title(
         await db.commit()
     add_custom_category(key, title, title[:32])
     await state.update_data(import_topic=key)
-    await state.set_state(ImportStates.awaiting_file)
+    await state.set_state(ImportStates.choosing_type)
     await message.answer(
-        f"Категория создана: <b>{escape(title)}</b> (<code>{escape(key)}</code>)\n\n{FORMAT_HINT}",
-        reply_markup=_cancel_keyboard(),
+        f"Категория создана: <b>{escape(title)}</b> (<code>{escape(key)}</code>)\n\n"
+        "Что импортируем?",
+        reply_markup=_type_keyboard(),
     )
 
 
@@ -391,24 +455,31 @@ async def handle_file(
         return
     data = await state.get_data()
     topic = data.get("import_topic")
+    import_type = data.get("import_type", "test")
     if not isinstance(topic, str):
         await state.clear()
         await message.answer("Сессия сброшена, начни заново через /import.")
         return
-    valid, errors = _validate_payload(payload, topic)
+    if import_type == "theory":
+        valid, errors = _validate_theory_payload(payload, topic)
+    else:
+        valid, errors = _validate_payload(payload, topic)
     if not valid and errors:
         sample = "\n".join(errors[:10])
         more = f"\n... ещё {len(errors) - 10} ошибок" if len(errors) > 10 else ""
+        item_name = "карточек" if import_type == "theory" else "вопросов"
         await message.answer(
-            f"В файле нет валидных вопросов. Первые ошибки:\n<pre>{escape(sample)}{escape(more)}</pre>",
+            f"В файле нет валидных {item_name}. Первые ошибки:\n<pre>{escape(sample)}{escape(more)}</pre>",
             reply_markup=_cancel_keyboard(),
         )
         return
     await state.update_data(import_valid=valid, import_errors=errors[:20])
     await state.set_state(ImportStates.confirming)
+    item_name = "карточек" if import_type == "theory" else "вопросов"
     preview_lines = [
-        f"<b>Готово к импорту:</b> {len(valid)} вопросов",
+        f"<b>Готово к импорту:</b> {len(valid)} {item_name}",
         f"<b>Категория:</b> {escape(display_name(topic))}",
+        f"<b>Тип:</b> {'Теория' if import_type == 'theory' else 'Тесты'}",
     ]
     if errors:
         preview_lines.append(f"<b>Невалидных:</b> {len(errors)}")
@@ -416,7 +487,7 @@ async def handle_file(
         preview_lines.append(f"Первые ошибки:\n<pre>{escape(head)}</pre>")
     if valid:
         sample_q = valid[0]
-        preview_lines.append("<b>Пример первого вопроса:</b>")
+        preview_lines.append("<b>Пример:</b>")
         preview_lines.append(f"<i>{escape(sample_q['text'][:200])}</i>")
     await message.answer(
         "\n".join(preview_lines),
@@ -454,6 +525,7 @@ async def handle_confirm(
     data = await state.get_data()
     valid = data.get("import_valid") or []
     topic = data.get("import_topic")
+    import_type = data.get("import_type", "test")
     if not isinstance(valid, list) or not isinstance(topic, str) or not valid:
         await call.answer("Нет данных")
         await state.clear()
@@ -461,27 +533,46 @@ async def handle_confirm(
     await call.answer("Импортирую...")
     inserted = 0
     failed = 0
-    async with session_factory() as db:
-        repo = QuestionRepository(db)
-        for item in valid:
-            try:
-                await repo.upsert_external(
-                    external_key=item["external_key"],
-                    topic=topic,
-                    difficulty=int(item.get("difficulty", 1)),
-                    text=item["text"],
-                    options=list(item["options"]),
-                    correct_index=int(item["correct_index"]),
-                    explanation=item.get("explanation"),
-                )
-                inserted += 1
-            except Exception:
-                failed += 1
-        await db.commit()
+    if import_type == "theory":
+        async with session_factory() as db:
+            repo = OpenQuestionRepository(db)
+            for item in valid:
+                try:
+                    await repo.upsert(
+                        external_key=item["external_key"],
+                        topic=topic,
+                        difficulty=int(item.get("difficulty", 2)),
+                        text=item["text"],
+                        ideal_answer=item["ideal_answer"],
+                        checklist=item.get("checklist"),
+                    )
+                    inserted += 1
+                except Exception:
+                    failed += 1
+            await db.commit()
+    else:
+        async with session_factory() as db:
+            repo = QuestionRepository(db)
+            for item in valid:
+                try:
+                    await repo.upsert_external(
+                        external_key=item["external_key"],
+                        topic=topic,
+                        difficulty=int(item.get("difficulty", 1)),
+                        text=item["text"],
+                        options=list(item["options"]),
+                        correct_index=int(item["correct_index"]),
+                        explanation=item.get("explanation"),
+                    )
+                    inserted += 1
+                except Exception:
+                    failed += 1
+            await db.commit()
     await state.clear()
+    type_label = "Теория" if import_type == "theory" else "Тесты"
     await edit_or_send(
         call,
-        f"<b>Импорт завершён</b>\nКатегория: {escape(display_name(topic))}\n"
+        f"<b>Импорт завершён</b>\nТип: {type_label}\nКатегория: {escape(display_name(topic))}\n"
         f"Добавлено / обновлено: {inserted}\n"
         f"Ошибок: {failed}",
     )
@@ -544,6 +635,61 @@ def _validate_payload(payload: list, topic: str) -> tuple[list[dict], list[str]]
                 "correct_index": correct,
                 "difficulty": difficulty,
                 "explanation": explanation.strip() if isinstance(explanation, str) else None,
+            }
+        )
+    return valid, errors
+
+
+def _validate_theory_payload(payload: list, topic: str) -> tuple[list[dict], list[str]]:
+    valid: list[dict] = []
+    errors: list[str] = []
+    seen_keys: set[str] = set()
+    if len(payload) > MAX_QUESTIONS_PER_IMPORT:
+        errors.append(
+            f"[файл] лимит {MAX_QUESTIONS_PER_IMPORT}, обработаю первые {MAX_QUESTIONS_PER_IMPORT}"
+        )
+        payload = payload[:MAX_QUESTIONS_PER_IMPORT]
+    for idx, raw in enumerate(payload):
+        if not isinstance(raw, dict):
+            errors.append(f"#{idx}: не объект")
+            continue
+        text = raw.get("text")
+        if not isinstance(text, str) or len(text.strip()) < 3:
+            errors.append(f"#{idx}: пустой или короткий text")
+            continue
+        ideal_answer = raw.get("ideal_answer")
+        if not isinstance(ideal_answer, str) or len(ideal_answer.strip()) < 3:
+            errors.append(f"#{idx}: пустой или короткий ideal_answer")
+            continue
+        checklist = raw.get("checklist")
+        if checklist is not None:
+            if not isinstance(checklist, list):
+                checklist = None
+            else:
+                checklist = [str(c) for c in checklist if isinstance(c, str) and c.strip()]
+                if not checklist:
+                    checklist = None
+        try:
+            difficulty = int(raw.get("difficulty", 2))
+        except (TypeError, ValueError):
+            difficulty = 2
+        if difficulty < 1 or difficulty > 5:
+            difficulty = max(1, min(5, difficulty))
+        external_key = raw.get("external_key")
+        if not isinstance(external_key, str) or not external_key.strip():
+            external_key = f"theory_{topic}_{uuid.uuid4().hex[:12]}"
+        external_key = external_key.strip()
+        if external_key in seen_keys:
+            errors.append(f"#{idx}: дублирующийся external_key {external_key}")
+            continue
+        seen_keys.add(external_key)
+        valid.append(
+            {
+                "external_key": external_key,
+                "text": text.strip(),
+                "ideal_answer": ideal_answer.strip(),
+                "checklist": checklist,
+                "difficulty": difficulty,
             }
         )
     return valid, errors

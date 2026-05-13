@@ -65,7 +65,6 @@ def build_main_menu() -> InlineKeyboardMarkup:
     keyboard.button(text="Работа над ошибками", callback_data="mistakes:start")
     keyboard.button(text="Закладки", callback_data="bookmarks:show")
     keyboard.button(text="Открытые вопросы", callback_data="open:show_random")
-    keyboard.button(text="Спросить ИИ", callback_data="ai:ask")
     keyboard.button(text="Шпаргалки", callback_data="cheatsheet:show")
     keyboard.button(text="Поиск", callback_data="search:show")
     keyboard.button(text="Мой профиль", callback_data="stats:show")
@@ -75,21 +74,7 @@ def build_main_menu() -> InlineKeyboardMarkup:
 
 
 def build_post_answer_keyboard(question_id: int, chosen_index: int | None = None) -> InlineKeyboardMarkup:
-    chosen_token = "" if chosen_index is None else str(chosen_index)
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="Подробнее",
-                    callback_data=f"ai:more:{question_id}:{chosen_token}",
-                ),
-                InlineKeyboardButton(
-                    text="Спросить ИИ",
-                    callback_data="ai:ask",
-                ),
-            ]
-        ]
-    )
+    return InlineKeyboardMarkup(inline_keyboard=[])
 
 
 def build_profile_keyboard(has_mistakes: bool) -> InlineKeyboardMarkup:
@@ -149,10 +134,6 @@ def build_study_card_keyboard(
         keyboard.button(
             text=f"{star} В закладки",
             callback_data=f"bm:toggle:{question_id}",
-        )
-        keyboard.button(
-            text="Подробнее",
-            callback_data=f"ai:more:{question_id}:",
         )
         keyboard.button(
             text="🚩 Ошибка в вопросе",
