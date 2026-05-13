@@ -20,7 +20,6 @@ from pylevelup.keyboards import (
     build_finish_keyboard,
     build_main_menu,
     build_mode_keyboard,
-    build_post_answer_keyboard,
     build_purpose_keyboard,
 )
 from pylevelup.repositories import BookmarkRepository, QuestionRepository, UserRepository
@@ -428,9 +427,6 @@ async def handle_answer(
     await safe_edit_text(
         callback.message,
         original_text + "\n" + "\n".join(feedback_block),
-        reply_markup=build_post_answer_keyboard(
-            question_id, chosen if not is_correct else None
-        ),
     )
 
     if not cache_state.is_unlimited and cache_state.remaining() == 0:

@@ -73,10 +73,6 @@ def build_main_menu() -> InlineKeyboardMarkup:
     return keyboard.as_markup()
 
 
-def build_post_answer_keyboard(question_id: int, chosen_index: int | None = None) -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(inline_keyboard=[])
-
-
 def build_profile_keyboard(has_mistakes: bool) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
     keyboard.button(text="Все ачивки", callback_data="ach:show")
@@ -153,7 +149,6 @@ __all__ = [
     "build_finish_keyboard",
     "build_main_menu",
     "build_mode_keyboard",
-    "build_post_answer_keyboard",
     "build_profile_keyboard",
     "build_purpose_keyboard",
     "build_study_card_keyboard",
