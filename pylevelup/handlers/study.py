@@ -3,19 +3,26 @@ from html import escape
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Message,
+)
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from pylevelup.categories import (
     ALL_CATEGORY_KEY,
-    CATEGORY_BY_KEY,
+    all_category_keys,
     display_name,
     list_topic_filter,
 )
+from pylevelup.db.models import OpenQuestion
 from pylevelup.keyboards import (
     build_main_menu,
     build_study_card_keyboard,
 )
-from pylevelup.repositories import BookmarkRepository, UserRepository
+from pylevelup.repositories import BookmarkRepository, OpenQuestionRepository, UserRepository
 from pylevelup.services.study_service import StudyCard, StudyService
 from pylevelup.utils.edit import safe_edit_text
 from pylevelup.utils.text import clean_text, render_with_code
@@ -97,6 +104,7 @@ async def handle_purpose_study(
     callback: CallbackQuery,
     study_service: StudyService,
     state: FSMContext,
+    session_factory: async_sessionmaker,
 ) -> None:
     if callback.message is None or callback.from_user is None or callback.data is None:
         await callback.answer()
@@ -106,16 +114,28 @@ async def handle_purpose_study(
         await callback.answer()
         return
     category_key = parts[2]
-    if category_key != ALL_CATEGORY_KEY and category_key not in CATEGORY_BY_KEY:
+    if category_key != ALL_CATEGORY_KEY and category_key not in all_category_keys():
         await callback.answer("Неизвестная категория", show_alert=True)
         return
     await callback.answer()
     topics = list_topic_filter(category_key)
     card = await study_service.start(callback.from_user, topics=topics)
     if card is None:
+        topic_for_theory = category_key if category_key != ALL_CATEGORY_KEY else None
+        async with session_factory() as db:
+            theory_card = await OpenQuestionRepository(db).random_active(topic=topic_for_theory)
+        if theory_card is not None:
+            await state.clear()
+            await state.update_data(theory_category=category_key)
+            await safe_edit_text(
+                callback.message,
+                _format_theory_question(theory_card, category_key),
+                reply_markup=_theory_question_keyboard(theory_card.id),
+            )
+            return
         await safe_edit_text(
             callback.message,
-            "Для этой категории пока нет вопросов. Попробуй другую.",
+            "Для этой категории пока нет ни тестовых вопросов, ни теории.",
             reply_markup=build_main_menu(),
         )
         return
@@ -128,6 +148,129 @@ async def handle_purpose_study(
         card,
         category_key,
         edit=True,
+    )
+
+
+def _format_theory_question(question: OpenQuestion, category_key: str) -> str:
+    header_name = display_name(category_key) if category_key != ALL_CATEGORY_KEY else display_name(question.topic)
+    return (
+        f"<i>Теория - {escape(header_name)}</i>\n\n"
+        f"<b>{render_with_code(question.text)}</b>\n\n"
+        "Сформулируй ответ для себя, затем нажми <b>Показать ответ</b>."
+    )
+
+
+def _format_theory_answer(question: OpenQuestion, category_key: str) -> str:
+    header_name = display_name(category_key) if category_key != ALL_CATEGORY_KEY else display_name(question.topic)
+    parts: list[str] = [
+        f"<i>Теория - {escape(header_name)}</i>",
+        "",
+        f"<b>{render_with_code(question.text)}</b>",
+        "",
+        "<b>Эталонный ответ</b>",
+        render_with_code(question.ideal_answer),
+    ]
+    if question.checklist:
+        parts.append("")
+        parts.append("<b>Чек-лист пунктов</b>")
+        for item in question.checklist:
+            parts.append(f"- {render_with_code(item)}")
+    return "\n".join(parts)
+
+
+def _theory_question_keyboard(question_id: int) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Показать ответ", callback_data=f"th:show:{question_id}")],
+            [
+                InlineKeyboardButton(text="Следующая →", callback_data="th:next"),
+                InlineKeyboardButton(text="Завершить", callback_data="th:stop"),
+            ],
+        ]
+    )
+
+
+def _theory_answer_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Следующая карточка →", callback_data="th:next")],
+            [InlineKeyboardButton(text="Завершить", callback_data="th:stop")],
+        ]
+    )
+
+
+@router.callback_query(F.data.startswith("th:show:"))
+async def handle_theory_show_answer(
+    callback: CallbackQuery,
+    state: FSMContext,
+    session_factory: async_sessionmaker,
+) -> None:
+    if callback.message is None or callback.data is None:
+        await callback.answer()
+        return
+    try:
+        question_id = int(callback.data.split(":", 2)[2])
+    except (ValueError, IndexError):
+        await callback.answer()
+        return
+    async with session_factory() as db:
+        question = await OpenQuestionRepository(db).get(question_id)
+    if question is None:
+        await callback.answer("Карточка недоступна", show_alert=True)
+        return
+    data = await state.get_data()
+    category_key = data.get("theory_category", ALL_CATEGORY_KEY)
+    await callback.answer()
+    await safe_edit_text(
+        callback.message,
+        _format_theory_answer(question, category_key),
+        reply_markup=_theory_answer_keyboard(),
+    )
+
+
+@router.callback_query(F.data == "th:next")
+async def handle_theory_next(
+    callback: CallbackQuery,
+    state: FSMContext,
+    session_factory: async_sessionmaker,
+) -> None:
+    if callback.message is None:
+        await callback.answer()
+        return
+    data = await state.get_data()
+    category_key = data.get("theory_category", ALL_CATEGORY_KEY)
+    topic = category_key if category_key != ALL_CATEGORY_KEY else None
+    async with session_factory() as db:
+        question = await OpenQuestionRepository(db).random_active(topic=topic)
+    await callback.answer()
+    if question is None:
+        await safe_edit_text(
+            callback.message,
+            "Карточек больше нет.",
+            reply_markup=build_main_menu(),
+        )
+        return
+    await safe_edit_text(
+        callback.message,
+        _format_theory_question(question, category_key),
+        reply_markup=_theory_question_keyboard(question.id),
+    )
+
+
+@router.callback_query(F.data == "th:stop")
+async def handle_theory_stop(
+    callback: CallbackQuery,
+    state: FSMContext,
+) -> None:
+    if callback.message is None:
+        await callback.answer()
+        return
+    await state.clear()
+    await callback.answer()
+    await safe_edit_text(
+        callback.message,
+        "Изучение теории завершено.",
+        reply_markup=build_main_menu(),
     )
 
 
