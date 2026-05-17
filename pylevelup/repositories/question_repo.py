@@ -129,6 +129,31 @@ class QuestionRepository:
             stmt = stmt.where(Question.id.notin_(exclude_ids))
         return list((await self.session.execute(stmt)).scalars().all())
 
+    async def find_active_by_difficulty(
+        self,
+        target_difficulty: int,
+        topics: list[str] | None,
+        exclude_ids: list[int] | None = None,
+    ) -> Question | None:
+        for diff in (target_difficulty, target_difficulty + 1, target_difficulty - 1):
+            if not 1 <= diff <= 5:
+                continue
+            stmt = (
+                select(Question)
+                .where(Question.is_active.is_(True))
+                .where(Question.difficulty == diff)
+                .order_by(func.random())
+                .limit(1)
+            )
+            if topics:
+                stmt = stmt.where(Question.topic.in_(topics))
+            if exclude_ids:
+                stmt = stmt.where(Question.id.notin_(exclude_ids))
+            result = (await self.session.execute(stmt)).scalar_one_or_none()
+            if result is not None:
+                return result
+        return None
+
     async def search(self, query: str, limit: int = 10) -> list[Question]:
         if not query.strip():
             return []

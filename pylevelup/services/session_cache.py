@@ -30,6 +30,9 @@ class SessionCacheState:
     counts_toward_daily: bool = True
     pending: list[PendingAnswer] = field(default_factory=list)
     last_question_sent_at: datetime | None = None
+    correct_streak: int = 0
+    wrong_streak: int = 0
+    current_difficulty: int = 2
 
     def remaining(self) -> int:
         if self.is_unlimited:
@@ -65,6 +68,9 @@ class SessionCacheState:
                         if self.last_question_sent_at
                         else None
                     ),
+                    "correct_streak": self.correct_streak,
+                    "wrong_streak": self.wrong_streak,
+                    "current_difficulty": self.current_difficulty,
                 }
             ).decode(),
             "pending": orjson.dumps(
@@ -109,6 +115,9 @@ class SessionCacheState:
             counts_toward_daily=bool(state.get("counts_toward_daily", True)),
             pending=pending,
             last_question_sent_at=datetime.fromisoformat(last_sent) if last_sent else None,
+            correct_streak=int(state.get("correct_streak", 0)),
+            wrong_streak=int(state.get("wrong_streak", 0)),
+            current_difficulty=int(state.get("current_difficulty", 2)),
         )
 
 
@@ -168,6 +177,17 @@ class RedisSessionCache:
         state.answered += 1
         if is_correct:
             state.correct += 1
+            state.correct_streak += 1
+            state.wrong_streak = 0
+        else:
+            state.wrong_streak += 1
+            state.correct_streak = 0
+        if state.correct_streak >= 3:
+            state.current_difficulty = min(5, state.current_difficulty + 1)
+            state.correct_streak = 0
+        elif state.wrong_streak >= 2:
+            state.current_difficulty = max(1, state.current_difficulty - 1)
+            state.wrong_streak = 0
         state.current_index += 1
         await self.save(state)
         return state

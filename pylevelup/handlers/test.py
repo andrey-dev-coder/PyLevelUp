@@ -71,6 +71,7 @@ async def _send_current_question(
         return
 
     cache_state, _new_payloads = await session_service.refill_queue_if_needed(cache_state)
+    cache_state, _adapt_payloads = await session_service.adapt_next_for_difficulty(cache_state)
     question_id = cache_state.current_question_id()
     if question_id is None:
         await _finish(message, session_service, state, cache_state.user_id, by_user=False)

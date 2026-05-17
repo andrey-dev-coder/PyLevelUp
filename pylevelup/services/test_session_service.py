@@ -121,6 +121,36 @@ class TestSessionService:
         await self.cache.save(state)
         return state, payloads
 
+    async def adapt_next_for_difficulty(
+        self, state: SessionCacheState
+    ) -> tuple[SessionCacheState, dict[int, tuple[str, list[str], int]]]:
+        if state.current_index >= len(state.queue):
+            return state, {}
+        next_qid = state.queue[state.current_index]
+        target = state.current_difficulty
+        async with self.session_factory() as db:
+            repo = QuestionRepository(db)
+            next_q = await repo.get_by_id(next_qid)
+            if next_q is None or abs(next_q.difficulty - target) <= 1:
+                return state, {}
+            substitute = await repo.find_active_by_difficulty(
+                target_difficulty=target,
+                topics=state.topic_filter,
+                exclude_ids=state.queue,
+            )
+        if substitute is None:
+            return state, {}
+        state.queue[state.current_index] = substitute.id
+        payloads = {
+            substitute.id: (
+                substitute.text,
+                list(substitute.options),
+                substitute.correct_index,
+            )
+        }
+        await self.cache.save(state)
+        return state, payloads
+
     async def get_question_payload(
         self, question_id: int
     ) -> tuple[str, list[str], int, str | None, str | None] | None:
