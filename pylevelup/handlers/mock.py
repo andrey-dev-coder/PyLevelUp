@@ -30,7 +30,7 @@ from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.services.topic_access import get_allowed_topics
 from pylevelup.states import MockStates
 from pylevelup.utils.edit import edit_or_send, safe_edit_text
-from pylevelup.utils.text import render_with_code
+from pylevelup.utils.text import format_code_block, render_with_code
 
 router = Router(name="pylevelup_mock")
 
@@ -122,8 +122,12 @@ def _format_question(question: Question, position: int, total: int, deadline: da
         f"<i>Mock-собес #{position} из {total} (осталось {minutes:02d}:{seconds:02d})</i>",
         "",
         f"<b>{render_with_code(question.text)}</b>",
-        "",
     ]
+    code_block = format_code_block(question.code, question.code_language)
+    if code_block:
+        parts.append("")
+        parts.append(code_block)
+    parts.append("")
     for index, option in enumerate(question.options):
         parts.append(f"{index + 1}. {render_with_code(option)}")
     return "\n".join(parts)

@@ -96,15 +96,33 @@ def render_with_code(raw: str) -> str:
     return _segment_html(text)
 
 
+def format_code_block(code: str | None, language: str | None) -> str:
+    if not code or not code.strip():
+        return ""
+    raw = clean_text(code).rstrip("\n")
+    safe = escape(raw)
+    lang = (language or "").strip().lower()
+    if lang and re.fullmatch(r"[a-z0-9_+-]{1,32}", lang):
+        return f'<pre><code class="language-{lang}">{safe}</code></pre>'
+    return f"<pre>{safe}</pre>"
+
+
 def format_question_text(
     question_text: str,
     options: list[str],
     progress_index: int,
     total: int,
+    code: str | None = None,
+    code_language: str | None = None,
 ) -> str:
     header = f"Вопрос {progress_index + 1} из {total}"
     body = render_with_code(question_text)
+    code_block = format_code_block(code, code_language)
     options_lines = "\n".join(
         f"<b>{i + 1}.</b> {render_with_code(option)}" for i, option in enumerate(options)
     )
-    return f"<b>{header}</b>\n\n{body}\n\n{options_lines}"
+    parts = [f"<b>{header}</b>", body]
+    if code_block:
+        parts.append(code_block)
+    parts.append(options_lines)
+    return "\n\n".join(parts)

@@ -1,4 +1,5 @@
 import json
+import re
 from html import escape
 
 from aiogram import F, Router
@@ -34,10 +35,14 @@ class EditorStates(StatesGroup):
     editing_q_options = State()
     editing_q_explanation = State()
     editing_q_difficulty = State()
+    editing_q_code = State()
+    editing_q_code_lang = State()
     editing_t_text = State()
     editing_t_answer = State()
     editing_t_checklist = State()
     editing_t_difficulty = State()
+    editing_t_code = State()
+    editing_t_code_lang = State()
     searching_q_all = State()
     searching_q_topic = State()
     searching_t_all = State()
@@ -265,9 +270,14 @@ def _format_question(q: Question) -> str:
         f"Статус: {'активен' if q.is_active else '<u>скрыт</u>'}",
         "",
         f"<b>Текст:</b>\n{escape(q.text)}",
-        "",
-        "<b>Варианты:</b>",
     ]
+    if q.code:
+        lang = q.code_language or "plain"
+        parts.append("")
+        parts.append(f"<b>Код ({escape(lang)}):</b>")
+        parts.append(f"<pre>{escape(q.code)}</pre>")
+    parts.append("")
+    parts.append("<b>Варианты:</b>")
     for idx, opt in enumerate(q.options):
         marker = "✓ " if idx == q.correct_index else "  "
         parts.append(f"{marker}{idx}. {escape(opt)}")
@@ -279,12 +289,17 @@ def _format_question(q: Question) -> str:
 
 def _qview_kb(q: Question) -> InlineKeyboardMarkup:
     hide_text = "✅ Активировать" if not q.is_active else "🚫 Скрыть"
+    code_label = "✏️ Код" if not q.code else "✏️ Код ✓"
     rows = [
         [InlineKeyboardButton(text="✏️ Текст", callback_data=f"ape:qe:{q.id}:text")],
         [InlineKeyboardButton(text="✏️ Варианты", callback_data=f"ape:qe:{q.id}:opts")],
         [InlineKeyboardButton(text="✏️ Правильный ответ", callback_data=f"ape:qcorrect:{q.id}")],
         [InlineKeyboardButton(text="✏️ Пояснение", callback_data=f"ape:qe:{q.id}:expl")],
         [InlineKeyboardButton(text="✏️ Сложность", callback_data=f"ape:qe:{q.id}:diff")],
+        [
+            InlineKeyboardButton(text=code_label, callback_data=f"ape:qe:{q.id}:code"),
+            InlineKeyboardButton(text="✏️ Язык", callback_data=f"ape:qe:{q.id}:lang"),
+        ],
         [InlineKeyboardButton(text=hide_text, callback_data=f"ape:qhide:{q.id}")],
         [InlineKeyboardButton(text="🗑 Удалить", callback_data=f"ape:qdelc:{q.id}")],
         [InlineKeyboardButton(text="<< К списку", callback_data=f"ape:qlist:{q.topic}:0")],
@@ -525,6 +540,14 @@ _FIELD_PROMPTS_Q = {
     ),
     "expl": "Пришли новое <b>пояснение</b>. Чтобы очистить - отправь <code>-</code>.",
     "diff": "Пришли новую <b>сложность</b> от 1 до 5.",
+    "code": (
+        "Пришли <b>блок кода</b> (один или несколько строк, до 4096 символов). "
+        "Чтобы убрать блок - отправь <code>-</code>."
+    ),
+    "lang": (
+        "Пришли <b>язык кода</b> для подсветки (например <code>python</code>, "
+        "<code>sql</code>, <code>js</code>). Чтобы очистить - отправь <code>-</code>."
+    ),
 }
 
 _FIELD_STATE_Q = {
@@ -532,6 +555,8 @@ _FIELD_STATE_Q = {
     "opts": EditorStates.editing_q_options,
     "expl": EditorStates.editing_q_explanation,
     "diff": EditorStates.editing_q_difficulty,
+    "code": EditorStates.editing_q_code,
+    "lang": EditorStates.editing_q_code_lang,
 }
 
 
@@ -717,6 +742,70 @@ async def handle_qedit_difficulty_input(
     await message.answer(_format_question(q), reply_markup=_qview_kb(q))
 
 
+@router.message(EditorStates.editing_q_code)
+async def handle_qedit_code_input(
+    message: Message,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    raw = (message.text or "").rstrip("\n")
+    new_value: str | None = None if raw.strip() == "-" else raw
+    if new_value is not None and len(new_value) > 4096:
+        await message.answer("Блок кода до 4096 символов.")
+        return
+    data = await state.get_data()
+    qid = data.get("edit_target_id")
+    if not isinstance(qid, int):
+        await state.clear()
+        return
+    async with session_factory() as db:
+        await QuestionRepository(db).update_code(qid, code=new_value)
+        await db.commit()
+        q = await QuestionRepository(db).get_by_id(qid)
+    await state.clear()
+    if q is None:
+        return
+    await message.answer(_format_question(q), reply_markup=_qview_kb(q))
+
+
+@router.message(EditorStates.editing_q_code_lang)
+async def handle_qedit_code_lang_input(
+    message: Message,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    raw = (message.text or "").strip().lower()
+    new_value: str | None
+    if raw == "-" or not raw:
+        new_value = None
+    elif not re.fullmatch(r"[a-z0-9_+-]{1,32}", raw):
+        await message.answer(
+            "Язык должен быть короткой строкой (a-z, 0-9, _ + -). Например python, sql, js."
+        )
+        return
+    else:
+        new_value = raw
+    data = await state.get_data()
+    qid = data.get("edit_target_id")
+    if not isinstance(qid, int):
+        await state.clear()
+        return
+    async with session_factory() as db:
+        await QuestionRepository(db).update_code_language(qid, code_language=new_value)
+        await db.commit()
+        q = await QuestionRepository(db).get_by_id(qid)
+    await state.clear()
+    if q is None:
+        return
+    await message.answer(_format_question(q), reply_markup=_qview_kb(q))
+
+
 def _tlist_kb(key: str, page: int, items: list[OpenQuestion], total: int) -> InlineKeyboardMarkup:
     rows: list[list[InlineKeyboardButton]] = []
     for t in items:
@@ -803,9 +892,14 @@ def _format_theory(t: OpenQuestion) -> str:
         f"Статус: {'активна' if t.is_active else '<u>скрыта</u>'}",
         "",
         f"<b>Вопрос:</b>\n{escape(t.text)}",
-        "",
-        f"<b>Эталонный ответ:</b>\n{escape(t.ideal_answer)}",
     ]
+    if t.code:
+        lang = t.code_language or "plain"
+        parts.append("")
+        parts.append(f"<b>Код ({escape(lang)}):</b>")
+        parts.append(f"<pre>{escape(t.code)}</pre>")
+    parts.append("")
+    parts.append(f"<b>Эталонный ответ:</b>\n{escape(t.ideal_answer)}")
     if t.checklist:
         parts.append("")
         parts.append("<b>Чек-лист:</b>")
@@ -816,11 +910,16 @@ def _format_theory(t: OpenQuestion) -> str:
 
 def _tview_kb(t: OpenQuestion) -> InlineKeyboardMarkup:
     hide_text = "✅ Активировать" if not t.is_active else "🚫 Скрыть"
+    code_label = "✏️ Код" if not t.code else "✏️ Код ✓"
     rows = [
         [InlineKeyboardButton(text="✏️ Текст", callback_data=f"ape:te:{t.id}:text")],
         [InlineKeyboardButton(text="✏️ Эталонный ответ", callback_data=f"ape:te:{t.id}:ans")],
         [InlineKeyboardButton(text="✏️ Чек-лист", callback_data=f"ape:te:{t.id}:chk")],
         [InlineKeyboardButton(text="✏️ Сложность", callback_data=f"ape:te:{t.id}:diff")],
+        [
+            InlineKeyboardButton(text=code_label, callback_data=f"ape:te:{t.id}:code"),
+            InlineKeyboardButton(text="✏️ Язык", callback_data=f"ape:te:{t.id}:lang"),
+        ],
         [InlineKeyboardButton(text=hide_text, callback_data=f"ape:thide:{t.id}")],
         [InlineKeyboardButton(text="🗑 Удалить", callback_data=f"ape:tdelc:{t.id}")],
         [InlineKeyboardButton(text="<< К списку", callback_data=f"ape:tlist:{t.topic}:0")],
@@ -977,6 +1076,13 @@ _FIELD_PROMPTS_T = {
         "Пример: <code>[\"Упомянуть GIL\", \"Потоки vs процессы\"]</code>"
     ),
     "diff": "Пришли новую <b>сложность</b> от 1 до 5.",
+    "code": (
+        "Пришли <b>блок кода</b> (до 4096 символов). Чтобы убрать - отправь <code>-</code>."
+    ),
+    "lang": (
+        "Пришли <b>язык кода</b> (например <code>python</code>). "
+        "Чтобы очистить - отправь <code>-</code>."
+    ),
 }
 
 _FIELD_STATE_T = {
@@ -984,6 +1090,8 @@ _FIELD_STATE_T = {
     "ans": EditorStates.editing_t_answer,
     "chk": EditorStates.editing_t_checklist,
     "diff": EditorStates.editing_t_difficulty,
+    "code": EditorStates.editing_t_code,
+    "lang": EditorStates.editing_t_code_lang,
 }
 
 
@@ -1152,6 +1260,69 @@ async def handle_tedit_difficulty_input(
         return
     await message.answer(_format_theory(t), reply_markup=_tview_kb(t))
 
+
+@router.message(EditorStates.editing_t_code)
+async def handle_tedit_code_input(
+    message: Message,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    raw = (message.text or "").rstrip("\n")
+    new_value: str | None = None if raw.strip() == "-" else raw
+    if new_value is not None and len(new_value) > 4096:
+        await message.answer("Блок кода до 4096 символов.")
+        return
+    data = await state.get_data()
+    tid = data.get("edit_target_id")
+    if not isinstance(tid, int):
+        await state.clear()
+        return
+    async with session_factory() as db:
+        await OpenQuestionRepository(db).update_code(tid, code=new_value)
+        await db.commit()
+        t = await OpenQuestionRepository(db).get(tid)
+    await state.clear()
+    if t is None:
+        return
+    await message.answer(_format_theory(t), reply_markup=_tview_kb(t))
+
+
+@router.message(EditorStates.editing_t_code_lang)
+async def handle_tedit_code_lang_input(
+    message: Message,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    raw = (message.text or "").strip().lower()
+    new_value: str | None
+    if raw == "-" or not raw:
+        new_value = None
+    elif not re.fullmatch(r"[a-z0-9_+-]{1,32}", raw):
+        await message.answer(
+            "Язык должен быть короткой строкой (a-z, 0-9, _ + -). Например python, sql, js."
+        )
+        return
+    else:
+        new_value = raw
+    data = await state.get_data()
+    tid = data.get("edit_target_id")
+    if not isinstance(tid, int):
+        await state.clear()
+        return
+    async with session_factory() as db:
+        await OpenQuestionRepository(db).update_code_language(tid, code_language=new_value)
+        await db.commit()
+        t = await OpenQuestionRepository(db).get(tid)
+    await state.clear()
+    if t is None:
+        return
+    await message.answer(_format_theory(t), reply_markup=_tview_kb(t))
 
 
 def _parse_id_hint(query: str) -> int | None:

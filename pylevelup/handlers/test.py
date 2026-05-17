@@ -82,13 +82,20 @@ async def _send_current_question(
         await state.clear()
         return
 
-    text, options, _correct = payload
+    text, options, _correct, code, code_lang = payload
     if cache_state.is_unlimited:
         progress_label = f"#{cache_state.answered + 1} (без лимита)"
     else:
         total = cache_state.target_total or len(cache_state.queue)
         progress_label = f"#{cache_state.answered + 1} из {total}"
-    rendered = format_question_text(text, options, cache_state.current_index, len(cache_state.queue))
+    rendered = format_question_text(
+        text,
+        options,
+        cache_state.current_index,
+        len(cache_state.queue),
+        code=code,
+        code_language=code_lang,
+    )
     rendered = f"<i>{progress_label}</i>\n\n" + rendered
     cache_state.last_question_sent_at = datetime.now(UTC)
     await session_service.cache.save(cache_state)
@@ -527,7 +534,7 @@ async def handle_answer(
     if payload is None:
         await callback.answer("Вопрос недоступен", show_alert=True)
         return
-    _, options, correct_index = payload
+    _, options, correct_index, _, _ = payload
 
     last_sent = cache_state.last_question_sent_at or datetime.now(UTC)
     response_time_ms = max(

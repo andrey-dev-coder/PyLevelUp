@@ -33,6 +33,8 @@ class QuestionRepository:
         options: list[str],
         correct_index: int,
         explanation: str | None,
+        code: str | None = None,
+        code_language: str | None = None,
     ) -> Question:
         stmt = pg_insert(Question).values(
             external_key=external_key,
@@ -42,6 +44,8 @@ class QuestionRepository:
             options=options,
             correct_index=correct_index,
             explanation=explanation,
+            code=code,
+            code_language=code_language,
             is_active=True,
         )
         stmt = stmt.on_conflict_do_update(
@@ -53,6 +57,8 @@ class QuestionRepository:
                 "options": stmt.excluded.options,
                 "correct_index": stmt.excluded.correct_index,
                 "explanation": stmt.excluded.explanation,
+                "code": stmt.excluded.code,
+                "code_language": stmt.excluded.code_language,
                 "is_active": True,
             },
         ).returning(Question.id)
@@ -224,6 +230,32 @@ class QuestionRepository:
             question.explanation = explanation
         if difficulty is not None:
             question.difficulty = difficulty
+        await self.session.flush()
+        return question
+
+    async def update_code(
+        self,
+        question_id: int,
+        *,
+        code: str | None,
+    ) -> Question | None:
+        question = await self.session.get(Question, question_id)
+        if question is None:
+            return None
+        question.code = code
+        await self.session.flush()
+        return question
+
+    async def update_code_language(
+        self,
+        question_id: int,
+        *,
+        code_language: str | None,
+    ) -> Question | None:
+        question = await self.session.get(Question, question_id)
+        if question is None:
+            return None
+        question.code_language = code_language
         await self.session.flush()
         return question
 

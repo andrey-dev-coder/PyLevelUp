@@ -41,6 +41,8 @@ class OpenQuestionRepository:
         text: str,
         ideal_answer: str,
         checklist: list[str] | None,
+        code: str | None = None,
+        code_language: str | None = None,
     ) -> OpenQuestion:
         stmt = pg_insert(OpenQuestion).values(
             external_key=external_key,
@@ -49,6 +51,8 @@ class OpenQuestionRepository:
             text=text,
             ideal_answer=ideal_answer,
             checklist=checklist,
+            code=code,
+            code_language=code_language,
             is_active=True,
         )
         stmt = stmt.on_conflict_do_update(
@@ -59,6 +63,8 @@ class OpenQuestionRepository:
                 "text": stmt.excluded.text,
                 "ideal_answer": stmt.excluded.ideal_answer,
                 "checklist": stmt.excluded.checklist,
+                "code": stmt.excluded.code,
+                "code_language": stmt.excluded.code_language,
                 "is_active": True,
             },
         ).returning(OpenQuestion.id)
@@ -109,6 +115,32 @@ class OpenQuestionRepository:
             question.checklist = checklist
         if difficulty is not None:
             question.difficulty = difficulty
+        await self.session.flush()
+        return question
+
+    async def update_code(
+        self,
+        question_id: int,
+        *,
+        code: str | None,
+    ) -> "OpenQuestion | None":
+        question = await self.session.get(OpenQuestion, question_id)
+        if question is None:
+            return None
+        question.code = code
+        await self.session.flush()
+        return question
+
+    async def update_code_language(
+        self,
+        question_id: int,
+        *,
+        code_language: str | None,
+    ) -> "OpenQuestion | None":
+        question = await self.session.get(OpenQuestion, question_id)
+        if question is None:
+            return None
+        question.code_language = code_language
         await self.session.flush()
         return question
 

@@ -142,6 +142,7 @@ FORMAT_HINT_TEST = (
     "- <b>difficulty</b> (1-5, по умолчанию 1)\n"
     "- <b>explanation</b> - пояснение, опционально\n"
     "- <b>external_key</b> - уникальный id, опционально (я сгенерирую если не указан)\n"
+    "- <b>code</b> - блок кода под текстом вопроса (опционально). Отобразится в моноширинном виде с подсветкой если задан <b>code_language</b> (например python, sql, js).\n"
     f"Лимит на файл: {MAX_FILE_BYTES // 1024} КБ, до {MAX_QUESTIONS_PER_IMPORT} за раз."
 )
 
@@ -162,6 +163,7 @@ FORMAT_HINT_THEORY = (
     "- <b>checklist</b> - список пунктов чек-листа, опционально\n"
     "- <b>difficulty</b> (1-5, по умолчанию 2)\n"
     "- <b>external_key</b> - уникальный id, опционально\n"
+    "- <b>code</b> / <b>code_language</b> - блок кода с подсветкой, опционально\n"
     f"Лимит на файл: {MAX_FILE_BYTES // 1024} КБ, до {MAX_QUESTIONS_PER_IMPORT} за раз."
 )
 
@@ -545,6 +547,8 @@ async def handle_confirm(
                         text=item["text"],
                         ideal_answer=item["ideal_answer"],
                         checklist=item.get("checklist"),
+                        code=item.get("code"),
+                        code_language=item.get("code_language"),
                     )
                     inserted += 1
                 except Exception:
@@ -563,6 +567,8 @@ async def handle_confirm(
                         options=list(item["options"]),
                         correct_index=int(item["correct_index"]),
                         explanation=item.get("explanation"),
+                        code=item.get("code"),
+                        code_language=item.get("code_language"),
                     )
                     inserted += 1
                 except Exception:
@@ -627,6 +633,16 @@ def _validate_payload(payload: list, topic: str) -> tuple[list[dict], list[str]]
             errors.append(f"#{idx}: дублирующийся external_key {external_key}")
             continue
         seen_keys.add(external_key)
+        code_value = raw.get("code")
+        if not isinstance(code_value, str) or not code_value.strip():
+            code_value = None
+        else:
+            code_value = code_value.rstrip("\n")
+        code_language = raw.get("code_language") or raw.get("language")
+        if not isinstance(code_language, str) or not code_language.strip():
+            code_language = None
+        else:
+            code_language = code_language.strip().lower()[:32]
         valid.append(
             {
                 "external_key": external_key,
@@ -635,6 +651,8 @@ def _validate_payload(payload: list, topic: str) -> tuple[list[dict], list[str]]
                 "correct_index": correct,
                 "difficulty": difficulty,
                 "explanation": explanation.strip() if isinstance(explanation, str) else None,
+                "code": code_value,
+                "code_language": code_language,
             }
         )
     return valid, errors
@@ -683,6 +701,16 @@ def _validate_theory_payload(payload: list, topic: str) -> tuple[list[dict], lis
             errors.append(f"#{idx}: дублирующийся external_key {external_key}")
             continue
         seen_keys.add(external_key)
+        code_value = raw.get("code")
+        if not isinstance(code_value, str) or not code_value.strip():
+            code_value = None
+        else:
+            code_value = code_value.rstrip("\n")
+        code_language = raw.get("code_language") or raw.get("language")
+        if not isinstance(code_language, str) or not code_language.strip():
+            code_language = None
+        else:
+            code_language = code_language.strip().lower()[:32]
         valid.append(
             {
                 "external_key": external_key,
@@ -690,6 +718,8 @@ def _validate_theory_payload(payload: list, topic: str) -> tuple[list[dict], lis
                 "ideal_answer": ideal_answer.strip(),
                 "checklist": checklist,
                 "difficulty": difficulty,
+                "code": code_value,
+                "code_language": code_language,
             }
         )
     return valid, errors

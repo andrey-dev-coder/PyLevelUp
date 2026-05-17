@@ -20,7 +20,7 @@ from pylevelup.repositories import (
 from pylevelup.services.achievement_evaluator import evaluate_and_grant
 from pylevelup.services.achievement_notify import notify_user_about_codes
 from pylevelup.utils.edit import safe_edit_text
-from pylevelup.utils.text import clean_text, render_with_code
+from pylevelup.utils.text import clean_text, format_code_block, render_with_code
 
 router = Router(name="pylevelup_daily")
 
@@ -32,6 +32,10 @@ def _today() -> date:
 def _format_question(question: Question, today: date) -> str:
     parts: list[str] = [f"<b>Челлендж дня - {today.isoformat()}</b>", ""]
     parts.append(f"<b>{render_with_code(question.text)}</b>")
+    code_block = format_code_block(question.code, question.code_language)
+    if code_block:
+        parts.append("")
+        parts.append(code_block)
     parts.append("")
     for index, option in enumerate(question.options):
         parts.append(f"{index + 1}. {render_with_code(option)}")

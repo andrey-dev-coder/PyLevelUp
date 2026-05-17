@@ -25,7 +25,7 @@ from pylevelup.keyboards import (
 from pylevelup.repositories import BookmarkRepository, OpenQuestionRepository, UserRepository
 from pylevelup.services.study_service import StudyCard, StudyService
 from pylevelup.utils.edit import safe_edit_text
-from pylevelup.utils.text import clean_text, render_with_code
+from pylevelup.utils.text import clean_text, format_code_block, render_with_code
 
 router = Router(name="pylevelup_study")
 
@@ -42,6 +42,10 @@ def _format_card(card: StudyCard, category_key: str) -> str:
     parts.append(header)
     parts.append("")
     parts.append(f"<b>{render_with_code(card.text)}</b>")
+    code_block = format_code_block(card.code, card.code_language)
+    if code_block:
+        parts.append("")
+        parts.append(code_block)
     parts.append("")
     for index, option in enumerate(card.options):
         marker = "✅" if index == card.correct_index else "▫️"
@@ -153,11 +157,18 @@ async def handle_purpose_study(
 
 def _format_theory_question(question: OpenQuestion, category_key: str) -> str:
     header_name = display_name(category_key) if category_key != ALL_CATEGORY_KEY else display_name(question.topic)
-    return (
-        f"<i>Теория - {escape(header_name)}</i>\n\n"
-        f"<b>{render_with_code(question.text)}</b>\n\n"
-        "Сформулируй ответ для себя, затем нажми <b>Показать ответ</b>."
-    )
+    parts: list[str] = [
+        f"<i>Теория - {escape(header_name)}</i>",
+        "",
+        f"<b>{render_with_code(question.text)}</b>",
+    ]
+    code_block = format_code_block(question.code, question.code_language)
+    if code_block:
+        parts.append("")
+        parts.append(code_block)
+    parts.append("")
+    parts.append("Сформулируй ответ для себя, затем нажми <b>Показать ответ</b>.")
+    return "\n".join(parts)
 
 
 def _format_theory_answer(question: OpenQuestion, category_key: str) -> str:
@@ -166,10 +177,14 @@ def _format_theory_answer(question: OpenQuestion, category_key: str) -> str:
         f"<i>Теория - {escape(header_name)}</i>",
         "",
         f"<b>{render_with_code(question.text)}</b>",
-        "",
-        "<b>Эталонный ответ</b>",
-        render_with_code(question.ideal_answer),
     ]
+    code_block = format_code_block(question.code, question.code_language)
+    if code_block:
+        parts.append("")
+        parts.append(code_block)
+    parts.append("")
+    parts.append("<b>Эталонный ответ</b>")
+    parts.append(render_with_code(question.ideal_answer))
     if question.checklist:
         parts.append("")
         parts.append("<b>Чек-лист пунктов</b>")

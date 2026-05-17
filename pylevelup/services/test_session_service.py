@@ -121,12 +121,20 @@ class TestSessionService:
         await self.cache.save(state)
         return state, payloads
 
-    async def get_question_payload(self, question_id: int) -> tuple[str, list[str], int] | None:
+    async def get_question_payload(
+        self, question_id: int
+    ) -> tuple[str, list[str], int, str | None, str | None] | None:
         async with self.session_factory() as db:
             question = await QuestionRepository(db).get_by_id(question_id)
             if question is None:
                 return None
-            return question.text, list(question.options), question.correct_index
+            return (
+                question.text,
+                list(question.options),
+                question.correct_index,
+                question.code,
+                question.code_language,
+            )
 
     async def submit_answer(
         self,
