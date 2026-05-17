@@ -19,6 +19,7 @@ from pylevelup.handlers import (
     mock,
     open_questions,
     reports,
+    review,
     search,
     start,
     stats,
@@ -55,6 +56,7 @@ def build_root_router() -> Router:
         open_questions.router,
         ai_helper.router,
         learning_paths.router,
+        review.router,
     )
     return router
 

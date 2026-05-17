@@ -253,6 +253,7 @@ async def _finish(
     topics_snapshot: list[str] | None = (
         list(cache_state.topic_filter) if cache_state and cache_state.topic_filter else None
     )
+    wrong_count = len(cache_state.wrong_ids) if cache_state else 0
     await session_service.flush_session(user_id, mark_finished=True)
     await state.clear()
     suffix = "по твоему запросу" if by_user else "очередь закончилась"
@@ -266,7 +267,10 @@ async def _finish(
         suffix=suffix,
         bests=bests,
     )
-    await message.answer(text, reply_markup=build_finish_keyboard())
+    await message.answer(
+        text,
+        reply_markup=build_finish_keyboard(wrong_count=wrong_count),
+    )
 
 
 async def _start_for(

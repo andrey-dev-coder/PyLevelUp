@@ -47,8 +47,13 @@ def build_answer_keyboard(
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 
-def build_finish_keyboard() -> InlineKeyboardMarkup:
+def build_finish_keyboard(wrong_count: int = 0) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
+    if wrong_count > 0:
+        keyboard.button(
+            text=f"🔁 Разбор ошибок ({wrong_count})",
+            callback_data="review:start",
+        )
     keyboard.button(text="Запустить ещё", callback_data="menu:test")
     keyboard.button(text="Только алгоритмы", callback_data=f"cat:{'algorithms'}")
     keyboard.button(text="Моя статистика", callback_data="stats:show")

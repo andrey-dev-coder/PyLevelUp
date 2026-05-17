@@ -14,6 +14,7 @@ from pylevelup.handlers import build_root_router
 from pylevelup.logger import configure_logging, get_logger
 from pylevelup.middlewares import AccessControlMiddleware
 from pylevelup.repositories import CustomCategoryRepository
+from pylevelup.services.review_cache import ReviewCache
 from pylevelup.services.session_cache import RedisSessionCache
 from pylevelup.services.spaced_repetition import SpacedRepetitionEngine
 from pylevelup.services.study_service import StudyService
@@ -105,12 +106,14 @@ async def _run(settings: Settings) -> None:
     dp = Dispatcher(storage=storage)
 
     session_cache = RedisSessionCache(cache_redis, ttl_seconds=settings.session_timeout_seconds)
+    review_cache = ReviewCache(cache_redis)
     sr_engine = SpacedRepetitionEngine()
     session_service = TestSessionService(
         session_factory=sessionmaker,
         cache=session_cache,
         engine=sr_engine,
         settings=settings,
+        review_cache=review_cache,
     )
     study_service = StudyService(
         session_factory=sessionmaker,
@@ -121,6 +124,7 @@ async def _run(settings: Settings) -> None:
     dp["session_factory"] = sessionmaker
     dp["session_service"] = session_service
     dp["session_cache"] = session_cache
+    dp["review_cache"] = review_cache
     dp["study_service"] = study_service
     dp["settings"] = settings
 

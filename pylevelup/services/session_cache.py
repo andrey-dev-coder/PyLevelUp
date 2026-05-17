@@ -33,6 +33,7 @@ class SessionCacheState:
     correct_streak: int = 0
     wrong_streak: int = 0
     current_difficulty: int = 2
+    wrong_ids: list[int] = field(default_factory=list)
 
     def remaining(self) -> int:
         if self.is_unlimited:
@@ -71,6 +72,7 @@ class SessionCacheState:
                     "correct_streak": self.correct_streak,
                     "wrong_streak": self.wrong_streak,
                     "current_difficulty": self.current_difficulty,
+                    "wrong_ids": self.wrong_ids,
                 }
             ).decode(),
             "pending": orjson.dumps(
@@ -118,6 +120,7 @@ class SessionCacheState:
             correct_streak=int(state.get("correct_streak", 0)),
             wrong_streak=int(state.get("wrong_streak", 0)),
             current_difficulty=int(state.get("current_difficulty", 2)),
+            wrong_ids=list(state.get("wrong_ids") or []),
         )
 
 
@@ -182,6 +185,8 @@ class RedisSessionCache:
         else:
             state.wrong_streak += 1
             state.correct_streak = 0
+            if question_id not in state.wrong_ids:
+                state.wrong_ids.append(question_id)
         if state.correct_streak >= 3:
             state.current_difficulty = min(5, state.current_difficulty + 1)
             state.correct_streak = 0

@@ -13,6 +13,7 @@ from pylevelup.repositories import (
     QuestionRepository,
     UserRepository,
 )
+from pylevelup.services.review_cache import ReviewCache
 from pylevelup.services.session_cache import RedisSessionCache, SessionCacheState
 from pylevelup.services.spaced_repetition import SpacedRepetitionEngine
 
@@ -30,11 +31,13 @@ class TestSessionService:
         cache: RedisSessionCache,
         engine: SpacedRepetitionEngine,
         settings: Settings,
+        review_cache: ReviewCache | None = None,
     ) -> None:
         self.session_factory = session_factory
         self.cache = cache
         self.engine = engine
         self.settings = settings
+        self.review_cache = review_cache
 
     REFILL_BATCH = 10
 
@@ -210,6 +213,8 @@ class TestSessionService:
             await db.commit()
 
         if is_done:
+            if self.review_cache is not None:
+                await self.review_cache.save(state.user_id, list(state.wrong_ids))
             await self.cache.clear(user_id)
         else:
             state.pending = []
