@@ -5,7 +5,8 @@ from aiogram import Bot, F, Router
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy import case, func, select
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from pylevelup.categories import (
     ALL_CATEGORY_KEY,
@@ -14,6 +15,7 @@ from pylevelup.categories import (
     display_name,
     list_topic_filter,
 )
+from pylevelup.db.models import Attempt, DailySession, Question, User
 from pylevelup.keyboards import (
     build_answer_keyboard,
     build_category_keyboard,
@@ -102,6 +104,134 @@ async def _send_current_question(
     )
 
 
+async def _compute_personal_best(
+    db: AsyncSession,
+    user_id: int,
+    topics: list[str] | None,
+) -> dict[str, object]:
+    user = await db.get(User, user_id)
+    overall_accuracy: float | None = None
+    if user is not None and user.total_answered > 0:
+        overall_accuracy = user.total_correct / user.total_answered * 100
+
+    best_day_stmt = (
+        select(
+            (DailySession.correct_count * 100.0 / DailySession.questions_answered).label("acc"),
+            DailySession.session_date,
+            DailySession.questions_answered,
+        )
+        .where(
+            DailySession.user_id == user_id,
+            DailySession.questions_answered >= 5,
+        )
+        .order_by(
+            (DailySession.correct_count * 1.0 / DailySession.questions_answered).desc(),
+            DailySession.session_date.desc(),
+        )
+        .limit(1)
+    )
+    best_day_row = (await db.execute(best_day_stmt)).first()
+    best_day_acc = float(best_day_row.acc) if best_day_row else None
+    best_day_date = best_day_row.session_date if best_day_row else None
+    best_day_total = int(best_day_row.questions_answered) if best_day_row else None
+
+    topic_acc: float | None = None
+    topic_total: int | None = None
+    if topics:
+        correct_expr = func.sum(case((Attempt.is_correct, 1), else_=0))
+        topic_stmt = (
+            select(
+                func.count(Attempt.id).label("total"),
+                correct_expr.label("correct"),
+            )
+            .select_from(Attempt)
+            .join(Question, Question.id == Attempt.question_id)
+            .where(Attempt.user_id == user_id, Question.topic.in_(topics))
+        )
+        row = (await db.execute(topic_stmt)).first()
+        if row is not None and row.total and int(row.total) > 0:
+            total = int(row.total)
+            correct = int(row.correct or 0)
+            topic_total = total
+            topic_acc = correct / total * 100
+
+    return {
+        "overall_accuracy": overall_accuracy,
+        "best_day_acc": best_day_acc,
+        "best_day_date": best_day_date,
+        "best_day_total": best_day_total,
+        "topic_acc": topic_acc,
+        "topic_total": topic_total,
+        "current_streak": user.current_streak if user else 0,
+        "max_streak": user.max_streak if user else 0,
+    }
+
+
+def _format_finish_message(
+    answered: int,
+    correct: int,
+    topics: list[str] | None,
+    is_full_finish: bool,
+    suffix: str,
+    bests: dict[str, object],
+) -> str:
+    if answered == 0:
+        accuracy_part = "Вопросов в этой сессии не зачтено."
+    else:
+        acc = correct / answered * 100
+        accuracy_part = f"Ответил: {answered} | правильно: {correct} ({acc:.0f}%)"
+
+    topic_name = ""
+    if topics and len(topics) == 1:
+        topic_name = display_name(topics[0])
+
+    lines: list[str] = [
+        f"<b>Сессия завершена</b> ({suffix})",
+        "",
+        accuracy_part,
+    ]
+    if topic_name:
+        lines.append(f"Тема: {escape(topic_name)}")
+    lines.append("")
+    lines.append("<b>Личные рекорды</b>")
+
+    overall = bests.get("overall_accuracy")
+    if isinstance(overall, float):
+        lines.append(f"- За всё время: {overall:.0f}%")
+
+    best_day_acc = bests.get("best_day_acc")
+    best_day_date = bests.get("best_day_date")
+    best_day_total = bests.get("best_day_total")
+    if isinstance(best_day_acc, float):
+        date_str = best_day_date.isoformat() if best_day_date else ""
+        lines.append(
+            f"- Лучший день: {best_day_acc:.0f}% "
+            f"({best_day_total} вопросов, {date_str})"
+        )
+
+    topic_acc = bests.get("topic_acc")
+    topic_total = bests.get("topic_total")
+    if topic_name and isinstance(topic_acc, float) and isinstance(topic_total, int):
+        lines.append(
+            f"- В теме «{escape(topic_name)}»: {topic_acc:.0f}% (за {topic_total} ответов)"
+        )
+
+    cur_streak = bests.get("current_streak", 0)
+    max_streak = bests.get("max_streak", 0)
+    if max_streak:
+        lines.append(f"- Стрик: текущий {cur_streak}, максимум {max_streak}")
+
+    if answered >= 5 and isinstance(best_day_acc, float):
+        session_acc = correct / answered * 100
+        if session_acc > best_day_acc - 0.001 and is_full_finish:
+            lines.append("")
+            lines.append("🏆 <b>Новый личный рекорд по дню!</b>")
+
+    lines.append("")
+    lines.append("Запусти ещё через /test или посмотри подробно в /stats.")
+    return "\n".join(lines)
+
+
 async def _finish(
     message: Message,
     session_service: TestSessionService,
@@ -109,13 +239,26 @@ async def _finish(
     user_id: int,
     by_user: bool,
 ) -> None:
+    cache_state = await session_service.cache.load(user_id)
+    answered_snapshot = cache_state.answered if cache_state else 0
+    correct_snapshot = cache_state.correct if cache_state else 0
+    topics_snapshot: list[str] | None = (
+        list(cache_state.topic_filter) if cache_state and cache_state.topic_filter else None
+    )
     await session_service.flush_session(user_id, mark_finished=True)
     await state.clear()
     suffix = "по твоему запросу" if by_user else "очередь закончилась"
-    await message.answer(
-        f"Сессия завершена ({suffix}).\n\nПосмотри результат через /stats или запусти ещё.",
-        reply_markup=build_finish_keyboard(),
+    async with session_service.session_factory() as db:
+        bests = await _compute_personal_best(db, user_id, topics_snapshot)
+    text = _format_finish_message(
+        answered=answered_snapshot,
+        correct=correct_snapshot,
+        topics=topics_snapshot,
+        is_full_finish=not by_user,
+        suffix=suffix,
+        bests=bests,
     )
+    await message.answer(text, reply_markup=build_finish_keyboard())
 
 
 async def _start_for(
