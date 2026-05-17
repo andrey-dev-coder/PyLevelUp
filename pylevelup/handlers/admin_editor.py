@@ -1123,3 +1123,4 @@ async def handle_tedit_difficulty_input(
     if t is None:
         return
     await message.answer(_format_theory(t), reply_markup=_tview_kb(t))
+

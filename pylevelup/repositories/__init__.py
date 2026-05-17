@@ -5,6 +5,10 @@ from pylevelup.repositories.attempt_repo import AttemptRepository
 from pylevelup.repositories.bookmark_repo import BookmarkRepository
 from pylevelup.repositories.custom_category_repo import CustomCategoryRepository
 from pylevelup.repositories.daily_challenge_repo import DailyChallengeRepository
+from pylevelup.repositories.learning_path_repo import (
+    LearningPathRepository,
+    UserPathProgressRepository,
+)
 from pylevelup.repositories.mock_repo import MockSessionRepository
 from pylevelup.repositories.open_question_repo import OpenQuestionRepository
 from pylevelup.repositories.progress_repo import ProgressRepository
@@ -25,7 +29,9 @@ __all__ = [
     "CustomCategoryRepository",
     "DailyChallengeRepository",
     "DailySessionRepository",
+    "LearningPathRepository",
     "MockSessionRepository",
+    "UserPathProgressRepository",
     "OpenQuestionRepository",
     "ProgressRepository",
     "QuestionRepository",

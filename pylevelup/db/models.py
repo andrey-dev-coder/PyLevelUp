@@ -324,3 +324,60 @@ class OpenQuestion(Base, TimestampMixin):
     ideal_answer: Mapped[str] = mapped_column(Text, nullable=False)
     checklist: Mapped[list[str] | None] = mapped_column(JSONB, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+
+class LearningPath(Base, TimestampMixin):
+    __tablename__ = "learning_paths"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    slug: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    title: Mapped[str] = mapped_column(String(128), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    order_index: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    steps: Mapped[list["LearningPathStep"]] = relationship(
+        "LearningPathStep",
+        back_populates="path",
+        cascade="all, delete-orphan",
+        order_by="LearningPathStep.position",
+    )
+
+
+class LearningPathStep(Base):
+    __tablename__ = "learning_path_steps"
+    __table_args__ = (
+        UniqueConstraint("path_id", "position", name="uq_path_step_position"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    path_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("learning_paths.id", ondelete="CASCADE"), nullable=False
+    )
+    position: Mapped[int] = mapped_column(Integer, nullable=False)
+    topic_key: Mapped[str] = mapped_column(String(64), nullable=False)
+    title: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    required_accuracy: Mapped[int] = mapped_column(Integer, nullable=False, default=70)
+    required_questions: Mapped[int] = mapped_column(Integer, nullable=False, default=10)
+
+    path: Mapped["LearningPath"] = relationship("LearningPath", back_populates="steps")
+
+
+class UserLearningPathProgress(Base):
+    __tablename__ = "user_learning_path_progress"
+    __table_args__ = (
+        UniqueConstraint("user_id", "path_id", name="uq_user_path"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    path_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("learning_paths.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    current_position: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    started_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

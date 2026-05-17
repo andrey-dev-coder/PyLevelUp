@@ -5,6 +5,7 @@ from pylevelup.handlers import (
     admin,
     admin_editor,
     admin_panel,
+    admin_paths,
     ai_helper,
     bookmarks,
     broadcast,
@@ -14,6 +15,7 @@ from pylevelup.handlers import (
     hints,
     import_questions,
     info,
+    learning_paths,
     mock,
     open_questions,
     reports,
@@ -32,6 +34,7 @@ def build_root_router() -> Router:
         admin.router,
         admin_panel.router,
         admin_editor.router,
+        admin_paths.router,
         user_admin.router,
         import_questions.router,
         dashboard.router,
@@ -51,6 +54,7 @@ def build_root_router() -> Router:
         reports.router,
         open_questions.router,
         ai_helper.router,
+        learning_paths.router,
     )
     return router
 
