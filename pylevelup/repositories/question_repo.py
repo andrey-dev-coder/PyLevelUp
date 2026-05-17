@@ -141,6 +141,47 @@ class QuestionRepository:
         )
         return list((await self.session.execute(stmt)).scalars().all())
 
+    async def search_admin(
+        self,
+        query: str,
+        topic: str | None = None,
+        offset: int = 0,
+        limit: int = 10,
+    ) -> list[Question]:
+        if not query.strip():
+            return []
+        pattern = f"%{query.strip()}%"
+        stmt = select(Question).where(
+            or_(
+                Question.text.ilike(pattern),
+                Question.explanation.ilike(pattern),
+                cast(Question.options, Text).ilike(pattern),
+            )
+        )
+        if topic is not None:
+            stmt = stmt.where(Question.topic == topic)
+        stmt = stmt.order_by(Question.id.asc()).offset(offset).limit(limit)
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def count_search_admin(
+        self,
+        query: str,
+        topic: str | None = None,
+    ) -> int:
+        if not query.strip():
+            return 0
+        pattern = f"%{query.strip()}%"
+        stmt = select(func.count(Question.id)).where(
+            or_(
+                Question.text.ilike(pattern),
+                Question.explanation.ilike(pattern),
+                cast(Question.options, Text).ilike(pattern),
+            )
+        )
+        if topic is not None:
+            stmt = stmt.where(Question.topic == topic)
+        return int((await self.session.execute(stmt)).scalar_one())
+
     async def list_by_topic(
         self,
         topic: str,

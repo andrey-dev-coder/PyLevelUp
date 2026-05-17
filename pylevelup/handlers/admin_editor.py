@@ -38,6 +38,13 @@ class EditorStates(StatesGroup):
     editing_t_answer = State()
     editing_t_checklist = State()
     editing_t_difficulty = State()
+    searching_q_all = State()
+    searching_q_topic = State()
+    searching_t_all = State()
+    searching_t_topic = State()
+
+
+SEARCH_LIMIT = 20
 
 
 def _owner(user_id: int | None, settings: Settings) -> bool:
@@ -45,7 +52,10 @@ def _owner(user_id: int | None, settings: Settings) -> bool:
 
 
 def _all_categories_kb() -> InlineKeyboardMarkup:
-    rows: list[list[InlineKeyboardButton]] = []
+    rows: list[list[InlineKeyboardButton]] = [
+        [InlineKeyboardButton(text="🔍 Поиск по всем вопросам", callback_data="ape:qsearch:all")],
+        [InlineKeyboardButton(text="🔍 Поиск по всей теории", callback_data="ape:tsearch:all")],
+    ]
     for cat in CATEGORIES:
         rows.append(
             [InlineKeyboardButton(text=cat.title, callback_data=f"ape:cat:{cat.key}")]
@@ -97,6 +107,18 @@ def _category_actions_kb(key: str, test_count: int, theory_count: int) -> Inline
             InlineKeyboardButton(
                 text=f"📚 Теория ({theory_count})",
                 callback_data=f"ape:tlist:{key}:0",
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="🔍 Поиск в категории",
+                callback_data=f"ape:qsearch:cat:{key}",
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="🔍 Поиск по теории",
+                callback_data=f"ape:tsearch:cat:{key}",
             )
         ],
     ]
@@ -182,6 +204,9 @@ def _qlist_kb(key: str, page: int, items: list[Question], total: int) -> InlineK
         )
     if nav:
         rows.append(nav)
+    rows.append(
+        [InlineKeyboardButton(text="🔍 Поиск", callback_data=f"ape:qsearch:cat:{key}")]
+    )
     rows.append([InlineKeyboardButton(text="<< Категория", callback_data=f"ape:cat:{key}")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
@@ -717,6 +742,9 @@ def _tlist_kb(key: str, page: int, items: list[OpenQuestion], total: int) -> Inl
         )
     if nav:
         rows.append(nav)
+    rows.append(
+        [InlineKeyboardButton(text="🔍 Поиск", callback_data=f"ape:tsearch:cat:{key}")]
+    )
     rows.append([InlineKeyboardButton(text="<< Категория", callback_data=f"ape:cat:{key}")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
@@ -1124,3 +1152,319 @@ async def handle_tedit_difficulty_input(
         return
     await message.answer(_format_theory(t), reply_markup=_tview_kb(t))
 
+
+
+def _parse_id_hint(query: str) -> int | None:
+    raw = query.strip()
+    if raw.startswith("#"):
+        raw = raw[1:]
+    if raw.isdigit():
+        return int(raw)
+    return None
+
+
+def _search_prompt_kb(back_cb: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Отмена", callback_data=back_cb)],
+        ]
+    )
+
+
+@router.callback_query(F.data == "ape:qsearch:all")
+async def handle_qsearch_all_start(
+    call: CallbackQuery,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.message is None:
+        await call.answer()
+        return
+    await state.set_state(EditorStates.searching_q_all)
+    await call.answer()
+    await safe_edit_text(
+        call.message,
+        "<b>Поиск по всем тестовым вопросам</b>\n\n"
+        "Пришли фрагмент текста (ищется по тексту, вариантам и пояснению) "
+        "или <code>#1234</code> чтобы открыть вопрос по ID.",
+        reply_markup=_search_prompt_kb("ape:cats"),
+    )
+
+
+@router.callback_query(F.data.startswith("ape:qsearch:cat:"))
+async def handle_qsearch_cat_start(
+    call: CallbackQuery,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.message is None or call.data is None:
+        await call.answer()
+        return
+    key = call.data.split(":", 3)[3]
+    await state.set_state(EditorStates.searching_q_topic)
+    await state.update_data(search_topic=key)
+    await call.answer()
+    await safe_edit_text(
+        call.message,
+        f"<b>Поиск в категории «{escape(display_name(key))}»</b>\n\n"
+        "Пришли фрагмент текста или <code>#1234</code> для перехода по ID.",
+        reply_markup=_search_prompt_kb(f"ape:cat:{key}"),
+    )
+
+
+@router.callback_query(F.data == "ape:tsearch:all")
+async def handle_tsearch_all_start(
+    call: CallbackQuery,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.message is None:
+        await call.answer()
+        return
+    await state.set_state(EditorStates.searching_t_all)
+    await call.answer()
+    await safe_edit_text(
+        call.message,
+        "<b>Поиск по всей теории</b>\n\n"
+        "Пришли фрагмент текста или <code>#1234</code>.",
+        reply_markup=_search_prompt_kb("ape:cats"),
+    )
+
+
+@router.callback_query(F.data.startswith("ape:tsearch:cat:"))
+async def handle_tsearch_cat_start(
+    call: CallbackQuery,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.message is None or call.data is None:
+        await call.answer()
+        return
+    key = call.data.split(":", 3)[3]
+    await state.set_state(EditorStates.searching_t_topic)
+    await state.update_data(search_topic=key)
+    await call.answer()
+    await safe_edit_text(
+        call.message,
+        f"<b>Поиск теории в категории «{escape(display_name(key))}»</b>\n\n"
+        "Пришли фрагмент текста или <code>#1234</code>.",
+        reply_markup=_search_prompt_kb(f"ape:cat:{key}"),
+    )
+
+
+def _qsearch_results_kb(
+    items: list[Question], total: int, back_cb: str
+) -> InlineKeyboardMarkup:
+    rows: list[list[InlineKeyboardButton]] = []
+    for q in items:
+        marker = "🚫 " if not q.is_active else ""
+        label = f"{marker}#{q.id} [{display_name(q.topic)}] {_short_preview(q.text)}"
+        rows.append(
+            [InlineKeyboardButton(text=label, callback_data=f"ape:qview:{q.id}")]
+        )
+    rows.append([InlineKeyboardButton(text="🔍 Новый поиск", callback_data="ape:qsearch:all")])
+    rows.append([InlineKeyboardButton(text="<< Назад", callback_data=back_cb)])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+def _tsearch_results_kb(
+    items: list[OpenQuestion], total: int, back_cb: str
+) -> InlineKeyboardMarkup:
+    rows: list[list[InlineKeyboardButton]] = []
+    for t in items:
+        marker = "🚫 " if not t.is_active else ""
+        label = f"{marker}#{t.id} [{display_name(t.topic)}] {_short_preview(t.text)}"
+        rows.append(
+            [InlineKeyboardButton(text=label, callback_data=f"ape:tview:{t.id}")]
+        )
+    rows.append([InlineKeyboardButton(text="🔍 Новый поиск", callback_data="ape:tsearch:all")])
+    rows.append([InlineKeyboardButton(text="<< Назад", callback_data=back_cb)])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+async def _run_q_search(
+    message: Message,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+    query: str,
+    topic: str | None,
+    back_cb: str,
+) -> None:
+    qid = _parse_id_hint(query)
+    if qid is not None:
+        async with session_factory() as db:
+            q = await QuestionRepository(db).get_by_id(qid)
+        await state.clear()
+        if q is None:
+            await message.answer(
+                f"Вопрос #{qid} не найден.",
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [InlineKeyboardButton(text="<< Назад", callback_data=back_cb)]
+                    ]
+                ),
+            )
+            return
+        await message.answer(_format_question(q), reply_markup=_qview_kb(q))
+        return
+
+    async with session_factory() as db:
+        repo = QuestionRepository(db)
+        items = await repo.search_admin(query, topic=topic, offset=0, limit=SEARCH_LIMIT)
+        total = await repo.count_search_admin(query, topic=topic)
+    await state.clear()
+    if not items:
+        await message.answer(
+            f"По запросу <code>{escape(query)}</code> ничего не найдено.",
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [InlineKeyboardButton(text="🔍 Новый поиск", callback_data="ape:qsearch:all")],
+                    [InlineKeyboardButton(text="<< Назад", callback_data=back_cb)],
+                ]
+            ),
+        )
+        return
+    header = (
+        f"<b>Найдено: {total}</b>"
+        + (f" (показано первых {SEARCH_LIMIT})" if total > SEARCH_LIMIT else "")
+        + f"\nЗапрос: <code>{escape(query)}</code>"
+        + (f"\nКатегория: {escape(display_name(topic))}" if topic else "")
+    )
+    await message.answer(header, reply_markup=_qsearch_results_kb(items, total, back_cb))
+
+
+async def _run_t_search(
+    message: Message,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+    query: str,
+    topic: str | None,
+    back_cb: str,
+) -> None:
+    tid = _parse_id_hint(query)
+    if tid is not None:
+        async with session_factory() as db:
+            t = await OpenQuestionRepository(db).get(tid)
+        await state.clear()
+        if t is None:
+            await message.answer(
+                f"Карточка #{tid} не найдена.",
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [InlineKeyboardButton(text="<< Назад", callback_data=back_cb)]
+                    ]
+                ),
+            )
+            return
+        await message.answer(_format_theory(t), reply_markup=_tview_kb(t))
+        return
+
+    async with session_factory() as db:
+        repo = OpenQuestionRepository(db)
+        items = await repo.search_admin(query, topic=topic, offset=0, limit=SEARCH_LIMIT)
+        total = await repo.count_search_admin(query, topic=topic)
+    await state.clear()
+    if not items:
+        await message.answer(
+            f"По запросу <code>{escape(query)}</code> ничего не найдено.",
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [InlineKeyboardButton(text="🔍 Новый поиск", callback_data="ape:tsearch:all")],
+                    [InlineKeyboardButton(text="<< Назад", callback_data=back_cb)],
+                ]
+            ),
+        )
+        return
+    header = (
+        f"<b>Найдено: {total}</b>"
+        + (f" (показано первых {SEARCH_LIMIT})" if total > SEARCH_LIMIT else "")
+        + f"\nЗапрос: <code>{escape(query)}</code>"
+        + (f"\nКатегория: {escape(display_name(topic))}" if topic else "")
+    )
+    await message.answer(header, reply_markup=_tsearch_results_kb(items, total, back_cb))
+
+
+@router.message(EditorStates.searching_q_all)
+async def handle_qsearch_all_input(
+    message: Message,
+    settings: Settings,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    query = (message.text or "").strip()
+    if not query or len(query) < 2:
+        await message.answer("Запрос слишком короткий, нужно минимум 2 символа.")
+        return
+    await _run_q_search(message, session_factory, state, query, None, "ape:cats")
+
+
+@router.message(EditorStates.searching_q_topic)
+async def handle_qsearch_topic_input(
+    message: Message,
+    settings: Settings,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    query = (message.text or "").strip()
+    if not query or len(query) < 2:
+        await message.answer("Запрос слишком короткий, нужно минимум 2 символа.")
+        return
+    data = await state.get_data()
+    topic = data.get("search_topic")
+    if not isinstance(topic, str):
+        await state.clear()
+        return
+    await _run_q_search(message, session_factory, state, query, topic, f"ape:cat:{topic}")
+
+
+@router.message(EditorStates.searching_t_all)
+async def handle_tsearch_all_input(
+    message: Message,
+    settings: Settings,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    query = (message.text or "").strip()
+    if not query or len(query) < 2:
+        await message.answer("Запрос слишком короткий, нужно минимум 2 символа.")
+        return
+    await _run_t_search(message, session_factory, state, query, None, "ape:cats")
+
+
+@router.message(EditorStates.searching_t_topic)
+async def handle_tsearch_topic_input(
+    message: Message,
+    settings: Settings,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    query = (message.text or "").strip()
+    if not query or len(query) < 2:
+        await message.answer("Запрос слишком короткий, нужно минимум 2 символа.")
+        return
+    data = await state.get_data()
+    topic = data.get("search_topic")
+    if not isinstance(topic, str):
+        await state.clear()
+        return
+    await _run_t_search(message, session_factory, state, query, topic, f"ape:cat:{topic}")

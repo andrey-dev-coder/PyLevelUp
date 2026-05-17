@@ -1,4 +1,4 @@
-from sqlalchemy import func, select
+from sqlalchemy import Text, cast, func, or_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -127,3 +127,44 @@ class OpenQuestionRepository:
         )
         await self.session.flush()
         return (result.rowcount or 0) > 0
+
+    async def search_admin(
+        self,
+        query: str,
+        topic: str | None = None,
+        offset: int = 0,
+        limit: int = 10,
+    ) -> list[OpenQuestion]:
+        if not query.strip():
+            return []
+        pattern = f"%{query.strip()}%"
+        stmt = select(OpenQuestion).where(
+            or_(
+                OpenQuestion.text.ilike(pattern),
+                OpenQuestion.ideal_answer.ilike(pattern),
+                cast(OpenQuestion.checklist, Text).ilike(pattern),
+            )
+        )
+        if topic is not None:
+            stmt = stmt.where(OpenQuestion.topic == topic)
+        stmt = stmt.order_by(OpenQuestion.id.asc()).offset(offset).limit(limit)
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def count_search_admin(
+        self,
+        query: str,
+        topic: str | None = None,
+    ) -> int:
+        if not query.strip():
+            return 0
+        pattern = f"%{query.strip()}%"
+        stmt = select(func.count(OpenQuestion.id)).where(
+            or_(
+                OpenQuestion.text.ilike(pattern),
+                OpenQuestion.ideal_answer.ilike(pattern),
+                cast(OpenQuestion.checklist, Text).ilike(pattern),
+            )
+        )
+        if topic is not None:
+            stmt = stmt.where(OpenQuestion.topic == topic)
+        return int((await self.session.execute(stmt)).scalar_one())
