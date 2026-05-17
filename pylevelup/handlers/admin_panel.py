@@ -1,6 +1,7 @@
 from html import escape
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -49,6 +50,10 @@ class AccessCodeStates(StatesGroup):
     selecting_topics = State()
 
 
+class UserAdminStates(StatesGroup):
+    composing_dm = State()
+
+
 def _owner(user_id: int | None, settings: Settings) -> bool:
     return user_id is not None and user_id == settings.owner_telegram_id
 
@@ -60,7 +65,7 @@ def _all_topic_keys() -> list[str]:
 def _root_menu() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="👥 Пользователи", callback_data="ap:users:0")],
+            [InlineKeyboardButton(text="👥 Пользователи", callback_data="ap:uhub")],
             [InlineKeyboardButton(text="🔑 Коды доступа", callback_data="ap:codes")],
             [InlineKeyboardButton(text="📝 Редактор вопросов", callback_data="ape:cats")],
             [InlineKeyboardButton(text="🛣 Учебные планы", callback_data="app:list")],
@@ -121,11 +126,63 @@ async def handle_close(
     await safe_edit_text(call.message, "Панель закрыта.")
 
 
-@router.callback_query(F.data.startswith("ap:users:"))
-async def handle_users_list(
+def _kind_label(kind: str) -> str:
+    return {
+        "active": "Активные",
+        "banned": "Забаненные",
+        "pending": "Ожидают одобрения",
+    }.get(kind, kind)
+
+
+def _kind_icon(kind: str) -> str:
+    return {"active": "👥", "banned": "🔒", "pending": "⏳"}.get(kind, "")
+
+
+async def _render_user_hub(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+) -> None:
+    if call.message is None:
+        return
+    async with session_factory() as db:
+        repo = UserRepository(db)
+        active = await repo.count_filtered("active")
+        banned = await repo.count_filtered("banned")
+        pending = await repo.count_filtered("pending")
+    rows = [
+        [InlineKeyboardButton(text=f"👥 Активные ({active})", callback_data="ap:ulist:active:0")],
+        [InlineKeyboardButton(text=f"⏳ Ожидают одобрения ({pending})", callback_data="ap:ulist:pending:0")],
+        [InlineKeyboardButton(text=f"🔒 Забаненные ({banned})", callback_data="ap:ulist:banned:0")],
+        [InlineKeyboardButton(text="<< Панель", callback_data="ap:root")],
+    ]
+    await safe_edit_text(
+        call.message,
+        "<b>Пользователи</b>\nВыбери список.",
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=rows),
+    )
+
+
+@router.callback_query(F.data == "ap:uhub")
+async def handle_users_hub(
     call: CallbackQuery,
     session_factory: async_sessionmaker,
     settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    await state.clear()
+    await call.answer()
+    await _render_user_hub(call, session_factory)
+
+
+@router.callback_query(F.data.startswith("ap:ulist:"))
+async def handle_users_list_filtered(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
 ) -> None:
     if not _owner(call.from_user.id if call.from_user else None, settings):
         await call.answer()
@@ -133,72 +190,96 @@ async def handle_users_list(
     if call.data is None or call.message is None:
         await call.answer()
         return
-    page = int(call.data.split(":")[2])
+    parts = call.data.split(":")
+    if len(parts) != 4:
+        await call.answer()
+        return
+    kind = parts[2]
+    try:
+        page = int(parts[3])
+    except ValueError:
+        page = 0
+    if kind not in ("active", "banned", "pending"):
+        await call.answer()
+        return
+    await state.clear()
     offset = page * PAGE_SIZE
     async with session_factory() as db:
         repo = UserRepository(db)
-        users = await repo.list_page(offset=offset, limit=PAGE_SIZE)
-        total = await repo.total_count()
+        users = await repo.list_page_filtered(kind, offset=offset, limit=PAGE_SIZE)
+        total = await repo.count_filtered(kind)
     await call.answer()
     rows: list[list[InlineKeyboardButton]] = []
     for u in users:
         name = u.username or u.first_name or "no name"
-        flags = []
-        if u.is_banned:
-            flags.append("BAN")
-        elif u.is_authorized:
-            flags.append("OK")
-        else:
-            flags.append("new")
-        label = f"{name} ({', '.join(flags)})"
+        label = f"{name}"
+        if kind == "pending":
+            label = f"⏳ {label}"
+        elif kind == "banned":
+            label = f"🔒 {label}"
         rows.append(
-            [InlineKeyboardButton(text=label, callback_data=f"ap:ucard:{u.id}")]
+            [InlineKeyboardButton(text=label, callback_data=f"ap:ucard:{u.id}:{kind}")]
         )
     nav: list[InlineKeyboardButton] = []
     if page > 0:
-        nav.append(InlineKeyboardButton(text="<< Назад", callback_data=f"ap:users:{page - 1}"))
+        nav.append(
+            InlineKeyboardButton(text="<< Назад", callback_data=f"ap:ulist:{kind}:{page - 1}")
+        )
     if offset + PAGE_SIZE < total:
-        nav.append(InlineKeyboardButton(text="Вперёд >>", callback_data=f"ap:users:{page + 1}"))
+        nav.append(
+            InlineKeyboardButton(text="Вперёд >>", callback_data=f"ap:ulist:{kind}:{page + 1}")
+        )
     if nav:
         rows.append(nav)
-    rows.append([InlineKeyboardButton(text="<< Панель", callback_data="ap:root")])
-    total_pages = (total + PAGE_SIZE - 1) // PAGE_SIZE
+    rows.append([InlineKeyboardButton(text="<< Категории", callback_data="ap:uhub")])
+    total_pages = max(1, (total + PAGE_SIZE - 1) // PAGE_SIZE)
     text = (
-        f"<b>Пользователи</b>\n"
-        f"Всего: {total} | стр. {page + 1}/{total_pages}\n"
-        f"Тыкни на юзера для управления."
+        f"<b>{_kind_icon(kind)} {_kind_label(kind)}</b>\n"
+        f"Всего: {total} | стр. {page + 1}/{total_pages}"
     )
+    if total == 0:
+        text += "\n\nПусто."
     await safe_edit_text(call.message, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
 
 
-@router.callback_query(F.data.startswith("ap:ucard:"))
-async def handle_user_card(
+@router.callback_query(F.data.startswith("ap:users:"))
+async def handle_users_list_legacy(
     call: CallbackQuery,
     session_factory: async_sessionmaker,
     settings: Settings,
+    state: FSMContext,
 ) -> None:
     if not _owner(call.from_user.id if call.from_user else None, settings):
         await call.answer()
         return
-    if call.data is None or call.message is None:
-        await call.answer()
-        return
-    try:
-        user_id = int(call.data.split(":")[2])
-    except ValueError:
-        await call.answer()
-        return
+    await state.clear()
+    await call.answer()
+    await _render_user_hub(call, session_factory)
+
+
+def _detect_kind(user) -> str:
+    if user.is_banned:
+        return "banned"
+    if user.is_authorized:
+        return "active"
+    return "pending"
+
+
+async def _build_user_card(
+    session_factory: async_sessionmaker, user_id: int, kind: str | None = None
+) -> tuple[str, InlineKeyboardMarkup] | None:
     async with session_factory() as db:
         user_repo = UserRepository(db)
         user = await user_repo.get_by_id(user_id)
         if user is None:
-            await call.answer("Пользователь не найден")
-            return
+            return None
         ta_repo = TopicAccessRepository(db)
         allowed = await ta_repo.list_topics(user.id)
-    await call.answer()
     name = escape(user.username or user.first_name or "без имени")
-    status = "забанен" if user.is_banned else ("авторизован" if user.is_authorized else "не авторизован")
+    status = (
+        "забанен" if user.is_banned
+        else ("авторизован" if user.is_authorized else "ожидает одобрения")
+    )
     access_info = f"{len(allowed)} тем" if allowed else "все (по умолчанию)"
     text = (
         f"<b>Пользователь</b>\n"
@@ -209,15 +290,64 @@ async def handle_user_card(
         f"Стрик: {user.current_streak} | макс {user.max_streak}\n"
         f"Ответов: {user.total_answered} | точных: {user.total_correct}\n"
     )
+    if kind is None:
+        kind = _detect_kind(user)
     ban_btn_text = "Разбанить" if user.is_banned else "Забанить"
     ban_action = "unban" if user.is_banned else "ban"
-    rows = [
-        [InlineKeyboardButton(text="📊 Статистика", callback_data=f"ap:ustats:{user.id}")],
-        [InlineKeyboardButton(text="📂 Темы доступа", callback_data=f"ap:utop:{user.id}")],
-        [InlineKeyboardButton(text=f"{'🔓' if user.is_banned else '🔒'} {ban_btn_text}", callback_data=f"ap:u{ban_action}:{user.id}")],
-        [InlineKeyboardButton(text="<< Пользователи", callback_data="ap:users:0")],
+    rows: list[list[InlineKeyboardButton]] = [
+        [InlineKeyboardButton(text="📊 Статистика", callback_data=f"ap:ustats:{user.id}:{kind}")],
+        [InlineKeyboardButton(text="📂 Темы доступа", callback_data=f"ap:utop:{user.id}:{kind}")],
     ]
-    await safe_edit_text(call.message, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+    if not user.is_authorized and not user.is_banned:
+        rows.append(
+            [InlineKeyboardButton(text="✅ Одобрить", callback_data=f"ap:uappr:{user.id}:{kind}")]
+        )
+    rows.append(
+        [InlineKeyboardButton(text="💬 Написать", callback_data=f"ap:udm:{user.id}:{kind}")]
+    )
+    rows.append(
+        [InlineKeyboardButton(
+            text=f"{'🔓' if user.is_banned else '🔒'} {ban_btn_text}",
+            callback_data=f"ap:u{ban_action}:{user.id}:{kind}",
+        )]
+    )
+    rows.append(
+        [InlineKeyboardButton(text="🗑 Удалить пользователя", callback_data=f"ap:udelc:{user.id}:{kind}")]
+    )
+    rows.append(
+        [InlineKeyboardButton(text="<< Список", callback_data=f"ap:ulist:{kind}:0")]
+    )
+    return text, InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+@router.callback_query(F.data.startswith("ap:ucard:"))
+async def handle_user_card(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    parts = call.data.split(":")
+    try:
+        user_id = int(parts[2])
+    except ValueError:
+        await call.answer()
+        return
+    kind = parts[3] if len(parts) > 3 else None
+    await state.clear()
+    built = await _build_user_card(session_factory, user_id, kind)
+    if built is None:
+        await call.answer("Пользователь не найден", show_alert=True)
+        return
+    text, markup = built
+    await call.answer()
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("ap:ustats:"))
@@ -232,11 +362,13 @@ async def handle_user_stats_panel(
     if call.data is None or call.message is None:
         await call.answer()
         return
+    parts = call.data.split(":")
     try:
-        user_id = int(call.data.split(":")[2])
+        user_id = int(parts[2])
     except ValueError:
         await call.answer()
         return
+    kind = parts[3] if len(parts) > 3 else None
     async with session_factory() as db:
         user_repo = UserRepository(db)
         user = await user_repo.get_by_id(user_id)
@@ -247,9 +379,8 @@ async def handle_user_stats_panel(
 
         report = await _build_user_report(db, user)
     await call.answer()
-    rows = [
-        [InlineKeyboardButton(text="<< Назад", callback_data=f"ap:ucard:{user_id}")],
-    ]
+    back_cb = f"ap:ucard:{user_id}" + (f":{kind}" if kind else "")
+    rows = [[InlineKeyboardButton(text="<< Назад", callback_data=back_cb)]]
     await safe_edit_text(call.message, report, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
 
 
@@ -265,11 +396,13 @@ async def handle_user_ban_panel(
     if call.data is None or call.message is None:
         await call.answer()
         return
+    parts = call.data.split(":")
     try:
-        user_id = int(call.data.split(":")[2])
+        user_id = int(parts[2])
     except ValueError:
         await call.answer()
         return
+    kind = parts[3] if len(parts) > 3 else None
     async with session_factory() as db:
         user_repo = UserRepository(db)
         user = await user_repo.get_by_id(user_id)
@@ -282,7 +415,7 @@ async def handle_user_ban_panel(
         await user_repo.set_banned(user.telegram_id, banned=True)
         await db.commit()
     await call.answer("Забанен")
-    await _refresh_user_card(call, session_factory, user_id)
+    await _refresh_user_card(call, session_factory, user_id, kind)
 
 
 @router.callback_query(F.data.startswith("ap:uunban:"))
@@ -297,11 +430,13 @@ async def handle_user_unban_panel(
     if call.data is None or call.message is None:
         await call.answer()
         return
+    parts = call.data.split(":")
     try:
-        user_id = int(call.data.split(":")[2])
+        user_id = int(parts[2])
     except ValueError:
         await call.answer()
         return
+    kind = parts[3] if len(parts) > 3 else None
     async with session_factory() as db:
         user_repo = UserRepository(db)
         user = await user_repo.get_by_id(user_id)
@@ -311,45 +446,22 @@ async def handle_user_unban_panel(
         await user_repo.set_banned(user.telegram_id, banned=False)
         await db.commit()
     await call.answer("Разбанен")
-    await _refresh_user_card(call, session_factory, user_id)
+    await _refresh_user_card(call, session_factory, user_id, kind)
 
 
 async def _refresh_user_card(
     call: CallbackQuery,
     session_factory: async_sessionmaker,
     user_id: int,
+    kind: str | None = None,
 ) -> None:
-    async with session_factory() as db:
-        user_repo = UserRepository(db)
-        user = await user_repo.get_by_id(user_id)
-        if user is None:
-            return
-        ta_repo = TopicAccessRepository(db)
-        allowed = await ta_repo.list_topics(user.id)
-    name = escape(user.username or user.first_name or "без имени")
-    status = "забанен" if user.is_banned else ("авторизован" if user.is_authorized else "не авторизован")
-    access_info = f"{len(allowed)} тем" if allowed else "все (по умолчанию)"
-    text = (
-        f"<b>Пользователь</b>\n"
-        f"ID: <code>{user.telegram_id}</code>\n"
-        f"Имя: {name}\n"
-        f"Статус: {status}\n"
-        f"Доступ: {access_info}\n"
-        f"Стрик: {user.current_streak} | макс {user.max_streak}\n"
-        f"Ответов: {user.total_answered} | точных: {user.total_correct}\n"
-    )
-    ban_btn_text = "Разбанить" if user.is_banned else "Забанить"
-    ban_action = "unban" if user.is_banned else "ban"
-    rows = [
-        [InlineKeyboardButton(text="📊 Статистика", callback_data=f"ap:ustats:{user.id}")],
-        [InlineKeyboardButton(text="📂 Темы доступа", callback_data=f"ap:utop:{user.id}")],
-        [InlineKeyboardButton(
-            text=f"{'🔓' if user.is_banned else '🔒'} {ban_btn_text}",
-            callback_data=f"ap:u{ban_action}:{user.id}",
-        )],
-        [InlineKeyboardButton(text="<< Пользователи", callback_data="ap:users:0")],
-    ]
-    await safe_edit_text(call.message, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+    if call.message is None:
+        return
+    built = await _build_user_card(session_factory, user_id, kind)
+    if built is None:
+        return
+    text, markup = built
+    await safe_edit_text(call.message, text, reply_markup=markup)
 
 
 @router.callback_query(F.data.startswith("ap:utop:"))
@@ -1249,6 +1361,227 @@ async def handle_broadcast_shortcut(
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
                 [InlineKeyboardButton(text="<< Панель", callback_data="ap:root")]
+            ]
+        ),
+    )
+
+
+@router.callback_query(F.data.startswith("ap:uappr:"))
+async def handle_user_approve(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    bot: Bot,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    parts = call.data.split(":")
+    try:
+        user_id = int(parts[2])
+    except ValueError:
+        await call.answer()
+        return
+    kind = parts[3] if len(parts) > 3 else None
+    async with session_factory() as db:
+        repo = UserRepository(db)
+        user = await repo.get_by_id(user_id)
+        if user is None:
+            await call.answer("Не найден")
+            return
+        if user.is_banned:
+            await call.answer("Пользователь забанен", show_alert=True)
+            return
+        await repo.mark_authorized(user.telegram_id)
+        await db.commit()
+        notify_id = user.telegram_id
+    await call.answer("Одобрен")
+    try:
+        await bot.send_message(
+            notify_id,
+            "Доступ открыт. Используй /menu чтобы начать.",
+        )
+    except TelegramAPIError:
+        pass
+    await _refresh_user_card(call, session_factory, user_id, kind or "active")
+
+
+@router.callback_query(F.data.startswith("ap:udm:"))
+async def handle_user_dm_start(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    state: FSMContext,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    parts = call.data.split(":")
+    try:
+        user_id = int(parts[2])
+    except ValueError:
+        await call.answer()
+        return
+    kind = parts[3] if len(parts) > 3 else None
+    async with session_factory() as db:
+        user = await UserRepository(db).get_by_id(user_id)
+    if user is None:
+        await call.answer("Не найден", show_alert=True)
+        return
+    await state.set_state(UserAdminStates.composing_dm)
+    await state.update_data(dm_user_id=user_id, dm_kind=kind)
+    await call.answer()
+    name = escape(user.username or user.first_name or str(user.telegram_id))
+    back_cb = f"ap:ucard:{user_id}" + (f":{kind}" if kind else "")
+    await safe_edit_text(
+        call.message,
+        f"<b>Сообщение для {name}</b>\n\n"
+        "Пришли текст следующим сообщением. Он отправится этому пользователю от имени бота.",
+        reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="Отмена", callback_data=back_cb)]
+            ]
+        ),
+    )
+
+
+@router.message(UserAdminStates.composing_dm)
+async def handle_user_dm_text(
+    message: Message,
+    settings: Settings,
+    session_factory: async_sessionmaker,
+    state: FSMContext,
+    bot: Bot,
+) -> None:
+    if not _owner(message.from_user.id if message.from_user else None, settings):
+        return
+    body = (message.text or "").strip()
+    if not body:
+        await message.answer("Пустой текст, попробуй ещё раз или нажми Отмена.")
+        return
+    data = await state.get_data()
+    user_id = data.get("dm_user_id")
+    kind = data.get("dm_kind")
+    if not isinstance(user_id, int):
+        await state.clear()
+        return
+    async with session_factory() as db:
+        user = await UserRepository(db).get_by_id(user_id)
+    await state.clear()
+    if user is None:
+        await message.answer("Пользователь уже удалён из базы.")
+        return
+    try:
+        await bot.send_message(user.telegram_id, body)
+    except TelegramAPIError as exc:
+        await message.answer(f"Не удалось отправить: {escape(str(exc))}")
+        return
+    name = user.username or user.first_name or str(user.telegram_id)
+    suffix = f":{kind}" if isinstance(kind, str) else ""
+    await message.answer(
+        f"Отправлено пользователю {escape(name)}.",
+        reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="<< К карточке", callback_data=f"ap:ucard:{user_id}{suffix}")],
+                [InlineKeyboardButton(text="<< Панель", callback_data="ap:root")],
+            ]
+        ),
+    )
+
+
+@router.callback_query(F.data.startswith("ap:udelc:"))
+async def handle_user_delete_confirm(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    parts = call.data.split(":")
+    try:
+        user_id = int(parts[2])
+    except ValueError:
+        await call.answer()
+        return
+    kind = parts[3] if len(parts) > 3 else None
+    async with session_factory() as db:
+        user = await UserRepository(db).get_by_id(user_id)
+    if user is None:
+        await call.answer("Не найден", show_alert=True)
+        return
+    if user.telegram_id == settings.owner_telegram_id:
+        await call.answer("Себя удалить нельзя", show_alert=True)
+        return
+    await call.answer()
+    name = escape(user.username or user.first_name or str(user.telegram_id))
+    back_cb = f"ap:ucard:{user_id}" + (f":{kind}" if kind else "")
+    yes_cb = f"ap:udel:{user_id}" + (f":{kind}" if kind else "")
+    await safe_edit_text(
+        call.message,
+        f"<b>Удалить пользователя?</b>\n"
+        f"{name} (<code>{user.telegram_id}</code>)\n\n"
+        "Из БД будут снесены: профиль, все ответы, попытки, прогресс SR, закладки, "
+        "ачивки, mock-сессии, daily-попытки, доступы к темам.\n"
+        "<b>История чата с ботом останется у пользователя в Telegram</b> - бот не может "
+        "удалить уже отправленные сообщения старше 48ч.",
+        reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="✅ Да, удалить", callback_data=yes_cb)],
+                [InlineKeyboardButton(text="Отмена", callback_data=back_cb)],
+            ]
+        ),
+    )
+
+
+@router.callback_query(F.data.startswith("ap:udel:"))
+async def handle_user_delete_exec(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    parts = call.data.split(":")
+    try:
+        user_id = int(parts[2])
+    except ValueError:
+        await call.answer()
+        return
+    kind = parts[3] if len(parts) > 3 else "active"
+    async with session_factory() as db:
+        repo = UserRepository(db)
+        user = await repo.get_by_id(user_id)
+        if user is None:
+            await call.answer("Уже удалён", show_alert=True)
+            return
+        if user.telegram_id == settings.owner_telegram_id:
+            await call.answer("Себя удалить нельзя", show_alert=True)
+            return
+        name = user.username or user.first_name or str(user.telegram_id)
+        await repo.delete_user(user_id)
+        await db.commit()
+    await call.answer("Удалён")
+    await safe_edit_text(
+        call.message,
+        f"Пользователь {escape(name)} удалён из БД.",
+        reply_markup=InlineKeyboardMarkup(
+            inline_keyboard=[
+                [InlineKeyboardButton(text="<< К списку", callback_data=f"ap:ulist:{kind}:0")],
+                [InlineKeyboardButton(text="<< Панель", callback_data="ap:root")],
             ]
         ),
     )

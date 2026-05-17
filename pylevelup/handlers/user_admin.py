@@ -1,7 +1,8 @@
 from datetime import UTC, datetime, timedelta
 from html import escape
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
+from aiogram.exceptions import TelegramAPIError
 from aiogram.filters import Command, CommandObject
 from aiogram.types import (
     CallbackQuery,
@@ -254,6 +255,45 @@ async def handle_close_user_topics(
     await call.answer()
     if call.message is not None:
         await safe_edit_text(call.message, "Окно настройки доступа закрыто.")
+
+
+@router.message(Command("dm"))
+async def handle_dm_cmd(
+    message: Message,
+    command: CommandObject,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+    bot: Bot,
+) -> None:
+    if not _is_owner(message.from_user.id if message.from_user else None, settings):
+        return
+    args = (command.args or "").strip()
+    if not args:
+        await message.answer(
+            "Использование: <code>/dm &lt;TELEGRAM_ID или @username&gt; &lt;текст&gt;</code>"
+        )
+        return
+    parts = args.split(maxsplit=1)
+    if len(parts) != 2:
+        await message.answer("Нужен и адресат, и текст.")
+        return
+    target_raw, body = parts
+    body = body.strip()
+    if not body:
+        await message.answer("Текст пустой.")
+        return
+    async with session_factory() as db:
+        user = await _resolve(UserRepository(db), target_raw)
+    if user is None:
+        await message.answer("Пользователь не найден в базе.")
+        return
+    try:
+        await bot.send_message(user.telegram_id, body)
+    except TelegramAPIError as exc:
+        await message.answer(f"Не удалось отправить: {escape(str(exc))}")
+        return
+    name = user.username or user.first_name or str(user.telegram_id)
+    await message.answer(f"Отправлено пользователю {escape(name)}.")
 
 
 @router.message(Command("user_stats"))

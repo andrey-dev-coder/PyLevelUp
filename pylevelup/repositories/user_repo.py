@@ -150,6 +150,38 @@ class UserRepository:
         )
         return list((await self.session.execute(stmt)).scalars().all())
 
+    def _filter_clause(self, kind: str):
+        if kind == "active":
+            return (User.is_authorized.is_(True), User.is_banned.is_(False))
+        if kind == "banned":
+            return (User.is_banned.is_(True),)
+        if kind == "pending":
+            return (User.is_authorized.is_(False), User.is_banned.is_(False))
+        return ()
+
+    async def list_page_filtered(
+        self, kind: str, offset: int = 0, limit: int = 10
+    ) -> list[User]:
+        stmt = select(User)
+        for cond in self._filter_clause(kind):
+            stmt = stmt.where(cond)
+        stmt = stmt.order_by(User.created_at.desc()).offset(offset).limit(limit)
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def count_filtered(self, kind: str) -> int:
+        stmt = select(func.count(User.id))
+        for cond in self._filter_clause(kind):
+            stmt = stmt.where(cond)
+        return int((await self.session.execute(stmt)).scalar_one() or 0)
+
+    async def delete_user(self, user_id: int) -> bool:
+        user = await self.session.get(User, user_id)
+        if user is None:
+            return False
+        await self.session.delete(user)
+        await self.session.flush()
+        return True
+
     async def total_count(self) -> int:
         return int(
             (await self.session.execute(select(func.count(User.id)))).scalar_one() or 0
