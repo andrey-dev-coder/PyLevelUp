@@ -62,7 +62,8 @@ def _root_menu() -> InlineKeyboardMarkup:
         inline_keyboard=[
             [InlineKeyboardButton(text="👥 Пользователи", callback_data="ap:users:0")],
             [InlineKeyboardButton(text="🔑 Коды доступа", callback_data="ap:codes")],
-            [InlineKeyboardButton(text="📚 Категории", callback_data="ap:cats")],
+            [InlineKeyboardButton(text="📝 Редактор вопросов", callback_data="ape:cats")],
+            [InlineKeyboardButton(text="🗑 Удалить категорию", callback_data="ap:cats")],
             [InlineKeyboardButton(text="📥 Импорт вопросов", callback_data="ap:import")],
             [InlineKeyboardButton(text="🚩 Жалобы", callback_data="ap:reports")],
             [InlineKeyboardButton(text="📊 Дашборд", callback_data="ap:dash")],

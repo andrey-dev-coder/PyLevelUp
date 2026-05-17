@@ -1,10 +1,10 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import Text, cast, func, or_, select
+from sqlalchemy import Text, cast, delete, func, or_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from pylevelup.db.models import Question, UserProgress
+from pylevelup.db.models import DailyChallenge, Question, UserProgress
 
 
 class QuestionRepository:
@@ -140,3 +140,66 @@ class QuestionRepository:
             .limit(limit)
         )
         return list((await self.session.execute(stmt)).scalars().all())
+
+    async def list_by_topic(
+        self,
+        topic: str,
+        offset: int = 0,
+        limit: int = 10,
+    ) -> list[Question]:
+        stmt = (
+            select(Question)
+            .where(Question.topic == topic)
+            .order_by(Question.id.asc())
+            .offset(offset)
+            .limit(limit)
+        )
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def count_by_topic(self, topic: str) -> int:
+        stmt = select(func.count(Question.id)).where(Question.topic == topic)
+        return int((await self.session.execute(stmt)).scalar_one())
+
+    async def update_fields(
+        self,
+        question_id: int,
+        *,
+        text: str | None = None,
+        options: list[str] | None = None,
+        correct_index: int | None = None,
+        explanation: str | None = None,
+        difficulty: int | None = None,
+    ) -> Question | None:
+        question = await self.session.get(Question, question_id)
+        if question is None:
+            return None
+        if text is not None:
+            question.text = text
+        if options is not None:
+            question.options = options
+        if correct_index is not None:
+            question.correct_index = correct_index
+        if explanation is not None:
+            question.explanation = explanation
+        if difficulty is not None:
+            question.difficulty = difficulty
+        await self.session.flush()
+        return question
+
+    async def set_active(self, question_id: int, active: bool) -> Question | None:
+        question = await self.session.get(Question, question_id)
+        if question is None:
+            return None
+        question.is_active = active
+        await self.session.flush()
+        return question
+
+    async def delete_one(self, question_id: int) -> bool:
+        await self.session.execute(
+            delete(DailyChallenge).where(DailyChallenge.question_id == question_id)
+        )
+        result = await self.session.execute(
+            delete(Question).where(Question.id == question_id)
+        )
+        await self.session.flush()
+        return (result.rowcount or 0) > 0

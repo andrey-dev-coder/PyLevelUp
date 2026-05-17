@@ -69,3 +69,61 @@ class OpenQuestionRepository:
         if question is None:
             raise RuntimeError("open_question_upsert_failed")
         return question
+
+    async def list_by_topic(
+        self,
+        topic: str,
+        offset: int = 0,
+        limit: int = 10,
+    ) -> list[OpenQuestion]:
+        stmt = (
+            select(OpenQuestion)
+            .where(OpenQuestion.topic == topic)
+            .order_by(OpenQuestion.id.asc())
+            .offset(offset)
+            .limit(limit)
+        )
+        return list((await self.session.execute(stmt)).scalars().all())
+
+    async def count_by_topic(self, topic: str) -> int:
+        stmt = select(func.count(OpenQuestion.id)).where(OpenQuestion.topic == topic)
+        return int((await self.session.execute(stmt)).scalar_one())
+
+    async def update_fields(
+        self,
+        question_id: int,
+        *,
+        text: str | None = None,
+        ideal_answer: str | None = None,
+        checklist: list[str] | None = None,
+        difficulty: int | None = None,
+    ) -> "OpenQuestion | None":
+        question = await self.session.get(OpenQuestion, question_id)
+        if question is None:
+            return None
+        if text is not None:
+            question.text = text
+        if ideal_answer is not None:
+            question.ideal_answer = ideal_answer
+        if checklist is not None:
+            question.checklist = checklist
+        if difficulty is not None:
+            question.difficulty = difficulty
+        await self.session.flush()
+        return question
+
+    async def set_active(self, question_id: int, active: bool) -> "OpenQuestion | None":
+        question = await self.session.get(OpenQuestion, question_id)
+        if question is None:
+            return None
+        question.is_active = active
+        await self.session.flush()
+        return question
+
+    async def delete_one(self, question_id: int) -> bool:
+        from sqlalchemy import delete as _delete
+        result = await self.session.execute(
+            _delete(OpenQuestion).where(OpenQuestion.id == question_id)
+        )
+        await self.session.flush()
+        return (result.rowcount or 0) > 0
