@@ -64,6 +64,81 @@ async def _open_reports(db) -> int:
     return int((await db.execute(stmt)).scalar_one())
 
 
+async def _funnel(db, since: datetime) -> dict[str, int]:
+    user_ids_stmt = select(User.id).where(User.created_at >= since)
+    user_ids = [int(uid) for uid in (await db.execute(user_ids_stmt)).scalars().all()]
+    if not user_ids:
+        return {
+            "starts": 0,
+            "authorized": 0,
+            "attempted": 0,
+            "five_plus": 0,
+            "returned": 0,
+            "streak_7": 0,
+        }
+    starts = len(user_ids)
+    authorized_stmt = (
+        select(func.count(User.id))
+        .where(User.created_at >= since, User.is_authorized.is_(True))
+    )
+    authorized = int((await db.execute(authorized_stmt)).scalar_one() or 0)
+    attempt_counts_stmt = (
+        select(Attempt.user_id, func.count(Attempt.id))
+        .where(Attempt.user_id.in_(user_ids))
+        .group_by(Attempt.user_id)
+    )
+    attempt_counts = {
+        int(row[0]): int(row[1] or 0)
+        for row in (await db.execute(attempt_counts_stmt)).all()
+    }
+    attempted = sum(1 for c in attempt_counts.values() if c >= 1)
+    five_plus = sum(1 for c in attempt_counts.values() if c >= 5)
+    distinct_days_stmt = (
+        select(Attempt.user_id, func.count(distinct(Attempt.session_date)))
+        .where(Attempt.user_id.in_(user_ids))
+        .group_by(Attempt.user_id)
+    )
+    distinct_days = {
+        int(row[0]): int(row[1] or 0)
+        for row in (await db.execute(distinct_days_stmt)).all()
+    }
+    returned = sum(1 for c in distinct_days.values() if c >= 2)
+    streak_stmt = (
+        select(func.count(User.id))
+        .where(User.created_at >= since, User.max_streak >= 7)
+    )
+    streak_7 = int((await db.execute(streak_stmt)).scalar_one() or 0)
+    return {
+        "starts": starts,
+        "authorized": authorized,
+        "attempted": attempted,
+        "five_plus": five_plus,
+        "returned": returned,
+        "streak_7": streak_7,
+    }
+
+
+def _funnel_line(label: str, value: int, base: int) -> str:
+    if base <= 0:
+        return f"{label}: <b>{value}</b>"
+    pct = value / base * 100
+    return f"{label}: <b>{value}</b> ({pct:.0f}%)"
+
+
+def _format_funnel(rows: dict[str, int], window_label: str) -> str:
+    base = rows["starts"]
+    lines = [
+        f"<b>Воронка (юзеры пришли за {window_label})</b>",
+        _funnel_line("• /start", rows["starts"], base),
+        _funnel_line("• Авторизованы", rows["authorized"], base),
+        _funnel_line("• Ответили на 1+ вопрос", rows["attempted"], base),
+        _funnel_line("• Решили 5+ вопросов", rows["five_plus"], base),
+        _funnel_line("• Вернулись 2+ дня", rows["returned"], base),
+        _funnel_line("• Стрик 7+ дней", rows["streak_7"], base),
+    ]
+    return "\n".join(lines)
+
+
 async def _top_failed_questions(db, since: datetime, limit: int) -> list[tuple[Question, int, int]]:
     wrong_expr = func.coalesce(
         func.sum(case((Attempt.is_correct.is_(False), 1), else_=0)), 0
@@ -131,6 +206,8 @@ async def handle_admin(
         attempts_7d, correct_7d = await _attempts_count(db, week_ago)
         active_mocks = await _active_mock_sessions(db)
         open_reports = await _open_reports(db)
+        funnel_7d = await _funnel(db, week_ago)
+        funnel_30d = await _funnel(db, month_ago)
         top_failed = await _top_failed_questions(db, month_ago, TOP_FAILED_LIMIT)
     accuracy_24h = (correct_24h / attempts_24h * 100) if attempts_24h else 0.0
     accuracy_7d = (correct_7d / attempts_7d * 100) if attempts_7d else 0.0
@@ -150,6 +227,10 @@ async def handle_admin(
         "<b>Сессии и жалобы</b>",
         f"Активных mock-сессий: <b>{active_mocks}</b>",
         f"Открытых жалоб: <b>{open_reports}</b>",
+        "",
+        _format_funnel(funnel_7d, "7 дней"),
+        "",
+        _format_funnel(funnel_30d, "30 дней"),
         "",
         f"<b>Топ-{TOP_FAILED_LIMIT} самых проваливаемых вопросов (30д)</b>",
         _format_top_failed(top_failed),
