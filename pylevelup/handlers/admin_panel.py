@@ -10,13 +10,28 @@ from aiogram.types import (
     InlineKeyboardMarkup,
     Message,
 )
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy import delete, func, select
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from pylevelup.categories import CATEGORIES, custom_categories, display_name
+from pylevelup.categories import (
+    CATEGORIES,
+    CATEGORY_BY_KEY,
+    custom_categories,
+    display_name,
+    remove_custom_category,
+)
 from pylevelup.config import Settings
+from pylevelup.db.models import (
+    AccessCode,
+    DailyChallenge,
+    OpenQuestion,
+    Question,
+    UserTopicAccess,
+)
 from pylevelup.repositories import (
     ACCESS_CODE_KEY,
     AccessCodeRepository,
+    CustomCategoryRepository,
     SettingsRepository,
     TopicAccessRepository,
     UserRepository,
@@ -917,25 +932,238 @@ async def handle_delete_code(
     await safe_edit_text(call.message, "\n".join(lines), reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
 
 
+async def _count_topic_artifacts(db: AsyncSession, key: str) -> tuple[int, int, int, int]:
+    test_count = int(
+        (await db.execute(select(func.count(Question.id)).where(Question.topic == key))).scalar_one()
+    )
+    theory_count = int(
+        (
+            await db.execute(select(func.count(OpenQuestion.id)).where(OpenQuestion.topic == key))
+        ).scalar_one()
+    )
+    topic_access_count = int(
+        (
+            await db.execute(
+                select(func.count()).select_from(UserTopicAccess).where(UserTopicAccess.topic_key == key)
+            )
+        ).scalar_one()
+    )
+    codes_with_topic = (
+        await db.execute(select(AccessCode).where(AccessCode.allowed_topics.contains([key])))
+    ).scalars().all()
+    return test_count, theory_count, topic_access_count, len(codes_with_topic)
+
+
+async def _purge_topic_everywhere(db: AsyncSession, key: str) -> dict[str, int]:
+    stats: dict[str, int] = {}
+    q_ids = list(
+        (
+            await db.execute(select(Question.id).where(Question.topic == key))
+        ).scalars().all()
+    )
+    if q_ids:
+        await db.execute(delete(DailyChallenge).where(DailyChallenge.question_id.in_(q_ids)))
+    res_q = await db.execute(delete(Question).where(Question.topic == key))
+    stats["questions"] = res_q.rowcount or 0
+    res_t = await db.execute(delete(OpenQuestion).where(OpenQuestion.topic == key))
+    stats["theory"] = res_t.rowcount or 0
+    res_ta = await db.execute(delete(UserTopicAccess).where(UserTopicAccess.topic_key == key))
+    stats["topic_access"] = res_ta.rowcount or 0
+    codes = (
+        await db.execute(select(AccessCode).where(AccessCode.allowed_topics.contains([key])))
+    ).scalars().all()
+    stats["codes_touched"] = 0
+    stats["codes_deleted"] = 0
+    for ac in codes:
+        new_topics = [t for t in (ac.allowed_topics or []) if t != key]
+        if not new_topics:
+            await db.execute(delete(AccessCode).where(AccessCode.code == ac.code))
+            stats["codes_deleted"] += 1
+        else:
+            ac.allowed_topics = new_topics
+            stats["codes_touched"] += 1
+    repo = CustomCategoryRepository(db)
+    removed = await repo.delete(key)
+    stats["category_removed"] = 1 if removed else 0
+    await db.flush()
+    return stats
+
+
+def _category_admin_kb() -> InlineKeyboardMarkup:
+    rows: list[list[InlineKeyboardButton]] = []
+    customs = custom_categories()
+    if not customs:
+        rows.append(
+            [InlineKeyboardButton(text="Пока нет своих категорий", callback_data="ap:noop")]
+        )
+    else:
+        for cat in customs:
+            rows.append(
+                [
+                    InlineKeyboardButton(
+                        text=f"🗑 {cat.title}",
+                        callback_data=f"ap:catview:{cat.key}",
+                    )
+                ]
+            )
+    rows.append([InlineKeyboardButton(text="<< Панель", callback_data="ap:root")])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
 @router.callback_query(F.data == "ap:cats")
-async def handle_cats_shortcut(
+async def handle_cats_root(
     call: CallbackQuery,
     settings: Settings,
 ) -> None:
     if not _owner(call.from_user.id if call.from_user else None, settings):
         await call.answer()
         return
+    if call.message is None:
+        await call.answer()
+        return
     await call.answer()
     await safe_edit_text(
         call.message,
-        "Используй команду /categories для управления кастомными категориями.\n"
-        "Вернуться: нажми кнопку ниже.",
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text="<< Панель", callback_data="ap:root")]
-            ]
-        ),
+        "<b>Свои категории</b>\n\n"
+        "Тыкни на категорию, чтобы посмотреть и удалить её.\n"
+        "Удаление сносит саму категорию + все её вопросы (тесты и теорию) "
+        "+ права у пользователей + упоминания в кодах доступа.\n"
+        "Стандартные 14 категорий тут не показываются - их удалять нельзя.",
+        reply_markup=_category_admin_kb(),
     )
+
+
+@router.callback_query(F.data == "ap:noop")
+async def handle_cats_noop(call: CallbackQuery) -> None:
+    await call.answer()
+
+
+@router.callback_query(F.data.startswith("ap:catview:"))
+async def handle_cat_view(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    key = call.data.split(":", 2)[2]
+    if key in CATEGORY_BY_KEY:
+        await call.answer("Это стандартная категория, удалять нельзя", show_alert=True)
+        return
+    if not any(c.key == key for c in custom_categories()):
+        await call.answer("Категория не найдена", show_alert=True)
+        await safe_edit_text(
+            call.message,
+            "<b>Свои категории</b>",
+            reply_markup=_category_admin_kb(),
+        )
+        return
+    async with session_factory() as db:
+        tests, theory, ta_count, codes = await _count_topic_artifacts(db, key)
+    await call.answer()
+    title = escape(display_name(key))
+    text = (
+        f"<b>Категория:</b> {title}\n"
+        f"<b>Ключ:</b> <code>{escape(key)}</code>\n\n"
+        f"Тестовых вопросов: {tests}\n"
+        f"Теоретических карточек: {theory}\n"
+        f"Записей в правах юзеров: {ta_count}\n"
+        f"Кодов с этой темой: {codes}\n\n"
+        "Нажми <b>Удалить</b>, чтобы стереть всё перечисленное."
+    )
+    rows = [
+        [InlineKeyboardButton(text="🗑 Удалить категорию", callback_data=f"ap:catdel:{key}")],
+        [InlineKeyboardButton(text="<< Назад", callback_data="ap:cats")],
+    ]
+    await safe_edit_text(call.message, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+
+
+@router.callback_query(F.data.startswith("ap:catdel:"))
+async def handle_cat_delete_confirm(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    key = call.data.split(":", 2)[2]
+    if key in CATEGORY_BY_KEY:
+        await call.answer("Это стандартная категория, удалять нельзя", show_alert=True)
+        return
+    if not any(c.key == key for c in custom_categories()):
+        await call.answer("Категория не найдена", show_alert=True)
+        return
+    async with session_factory() as db:
+        tests, theory, ta_count, codes = await _count_topic_artifacts(db, key)
+    await call.answer()
+    title = escape(display_name(key))
+    text = (
+        f"<b>Подтверждение удаления</b>\n\n"
+        f"Категория: {title} (<code>{escape(key)}</code>)\n\n"
+        f"Будет удалено:\n"
+        f"- Тестовых вопросов: <b>{tests}</b>\n"
+        f"- Теоретических карточек: <b>{theory}</b>\n"
+        f"- Записей о доступе у юзеров: <b>{ta_count}</b>\n"
+        f"- Упоминаний в кодах доступа: <b>{codes}</b>\n"
+        f"- Сама категория\n\n"
+        "Действие необратимо. Точно удалить?"
+    )
+    rows = [
+        [
+            InlineKeyboardButton(text="✅ Да, удалить", callback_data=f"ap:catwipe:{key}"),
+        ],
+        [InlineKeyboardButton(text="❌ Отмена", callback_data=f"ap:catview:{key}")],
+    ]
+    await safe_edit_text(call.message, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
+
+
+@router.callback_query(F.data.startswith("ap:catwipe:"))
+async def handle_cat_wipe(
+    call: CallbackQuery,
+    session_factory: async_sessionmaker,
+    settings: Settings,
+) -> None:
+    if not _owner(call.from_user.id if call.from_user else None, settings):
+        await call.answer()
+        return
+    if call.data is None or call.message is None:
+        await call.answer()
+        return
+    key = call.data.split(":", 2)[2]
+    if key in CATEGORY_BY_KEY:
+        await call.answer("Это стандартная категория, удалять нельзя", show_alert=True)
+        return
+    if not any(c.key == key for c in custom_categories()):
+        await call.answer("Категория не найдена", show_alert=True)
+        return
+    title_before = display_name(key)
+    async with session_factory() as db:
+        stats = await _purge_topic_everywhere(db, key)
+        await db.commit()
+    remove_custom_category(key)
+    await call.answer("Удалена")
+    text = (
+        f"<b>Удалено</b>\n\n"
+        f"Категория: {escape(title_before)} (<code>{escape(key)}</code>)\n\n"
+        f"Тестовых вопросов: {stats.get('questions', 0)}\n"
+        f"Теоретических карточек: {stats.get('theory', 0)}\n"
+        f"Записей о доступе у юзеров: {stats.get('topic_access', 0)}\n"
+        f"Кодов изменено: {stats.get('codes_touched', 0)}\n"
+        f"Кодов удалено (опустели): {stats.get('codes_deleted', 0)}\n"
+    )
+    rows = [
+        [InlineKeyboardButton(text="<< К категориям", callback_data="ap:cats")],
+        [InlineKeyboardButton(text="<< Панель", callback_data="ap:root")],
+    ]
+    await safe_edit_text(call.message, text, reply_markup=InlineKeyboardMarkup(inline_keyboard=rows))
 
 
 @router.callback_query(F.data == "ap:import")
